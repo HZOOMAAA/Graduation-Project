@@ -1,5 +1,5 @@
 <?php
-require '../connection/connection.php';
+// No db connection needed for logout
 
 session_start();
 session_unset();
