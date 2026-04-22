@@ -15,7 +15,8 @@ if (isset($_POST['register'])) {
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
     } else {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);     
+        
         
         $insert = mysqli_query($connect, "INSERT INTO users (name, email, password, role) VALUES ('$fullname', '$email', '$hashed_password', '$role')");
         
