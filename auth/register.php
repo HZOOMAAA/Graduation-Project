@@ -5,6 +5,7 @@ $error = '';
 $success = '';
 
 
+
 if (isset($_POST['register'])) {
     $fullname = mysqli_real_escape_string($connect, $_POST['fullname']);
     $email = mysqli_real_escape_string($connect, $_POST['email']);
