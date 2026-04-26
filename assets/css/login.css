@@ -1,0 +1,202 @@
+:root {
+    --primary-navy: #1A2B48;    /* Authority & Trust */
+    --action-blue: #0052CC;     /* Professional Action */
+    --bg-soft-gray: #F4F7F9;    /* Clean Workspace */
+    --text-main: #2D3436;       /* Readability */
+    --error-red: #D63031;       /* Clear Alerts */
+    --white: #FFFFFF;
+}
+
+body {
+    background-color: var(--bg-soft-gray);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.auth-container {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(26, 43, 72, 0.1); /* Subtle Navy shadow */
+    width: 100%;
+    max-width: 400px;
+}
+h1 {
+    background: linear-gradient(90deg, #1A2B48, #0052CC, #1A2B48);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    font-weight: 800;
+    text-align: center;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+.error-msg {
+    background-color: #FFF5F5;
+    color: var(--error-red);
+    padding: 12px;
+    border-radius: 6px;
+    border-left: 4px solid var(--error-red);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: var(--primary-navy);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+input {
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #D1D9E6;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+input:focus {
+    outline: none;
+    border-color: var(--action-blue);
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+button {
+    background-color: var(--action-blue);
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #003E99;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #636E72;
+}
+
+p a {
+    color: var(--action-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+
+/* Container for the icon and input */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Styling the Icons */
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94A3B8; /* Subtle blue-gray */
+    font-size: 20px;
+    transition: color 0.3s ease;
+}
+
+/* Adjust the input to make room for the icon on the left */
+.input-group input {
+    width: 100%;
+    padding: 12px 12px 12px 45px; /* 45px left padding to clear the icon */
+    margin-bottom: 0; /* Margin is now handled by .input-group */
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+    border: 1px solid #D1D9E6;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #FCFDFF;
+}
+
+/* Interactive Effect: Icon changes color when you click the input */
+.input-group input:focus + i {
+    color: var(--action-blue);
+}
+
+.input-group input:focus {
+    border-color: var(--action-blue);
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(0, 82, 204, 0.05);
+    outline: none;
+}
+
+.error-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    animation: slideInRight 0.5s ease-out;
+}
+
+.error-content {
+    background: #FFFFFF;
+    border-left: 5px solid #D63031;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    color: #2D3436;
+}
+
+.error-content i {
+    color: #D63031;
+    font-size: 24px;
+}
+
+.error-content button {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+
+
+/* sdadsadsa */

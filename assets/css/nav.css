@@ -1,0 +1,145 @@
+/* 1. Global Reset */
+:root {
+    --primary-navy: #1A2B48;    /* Authority & Trust */
+    --action-blue: #0052CC;     /* Professional Action */
+    --bg-soft-gray: #F4F7F9;    /* Clean Workspace */
+    --text-main: #2D3436;       /* Readability */
+    --error-red: #D63031;       /* Clear Alerts */
+    --white: #FFFFFF;
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html{
+    scroll-behavior: smooth;
+}
+body{
+    font-family: "Work Sans", sans-serif;
+    background-color: var(--bg-soft-gray);
+}
+ul{
+    list-style: none;
+}
+
+/* 2. Container System */
+.container{
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive Containers */
+@media (min-width: 768px) { .container { width: 750px; } }
+@media (min-width: 992px) { .container { width: 970px; } }
+@media (min-width: 1200px) { .container { width: 1170px; } }
+
+/* 3. Header Structure */
+header {
+    background-color: var(--white);
+    border-bottom: 2px solid var(--bg-soft-gray);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+header .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    position: relative;
+}
+
+/* الخط السفلي الجمالي */
+header .container::after{
+    content: "";
+    position: absolute;
+    height: 1px;
+    background-color: #e0e0e0;
+    bottom: 0;
+    width: calc(100% - 30px);
+    left: 15px;
+}
+
+/* 4. Logo Styling */
+
+.logo  {
+    height: 40px;
+    display: block;
+}
+
+/* 5. Navigation Links */
+ .nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links > li {
+    margin-left: 30px;
+    position: relative;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--primary-navy);    
+    font-weight: 500;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover {
+color: var(--action-blue)} 
+/* 6. Dropdown Menu */
+
+ .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: var(--white);    
+    min-width: 150px;
+    top: 100%;
+    left: 0;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    z-index: 1;
+    padding: 10px 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu li a {
+    padding: 10px 20px;
+    display: block;
+    font-size: 16px;
+    color: var(--text-main);
+}
+
+.dropdown-menu li a:hover {
+    background-color: var(--bg-soft-gray);
+    color: var(--action-blue);
+}
+
+
+/* السهم الصغير */
+
+ .dropbtn i {
+    font-size: 12px;
+    margin-left: 5px;
+    color: var(--primary-navy);
+}
+
+ .profile i {
+    font-size: 24px;
+    color: var(--primary-navy);    
+    margin: 25px;
+    border-left: 1px solid black;
+    padding: 5px;
+} 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
