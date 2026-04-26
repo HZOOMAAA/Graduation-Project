@@ -152,7 +152,7 @@ if ($categories_result) {
     }
 }
 
-// Fetch applications (including chosen plan info)
+// Fetch applications — Admin manages only the early stages (assign agent)
 $applications_query = "
     SELECT a.*,
            c.name as customer_name,
@@ -165,6 +165,7 @@ $applications_query = "
     LEFT JOIN categories cat ON a.category_id = cat.category_id
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
+    WHERE a.status IN ('pending_selection', 'waiting_docs')
     ORDER BY a.created_at DESC
 ";
 $applications = mysqli_query($connect, $applications_query);
@@ -416,8 +417,8 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
         <!-- ── APPLICATIONS TAB ── -->
         <?php elseif ($active_tab === 'applications'): ?>
-            <div class="page-title">Customer Applications</div>
-            <div class="page-subtitle">Full pipeline view. Assign agents to applications that are in <strong>Waiting Docs</strong> status.</div>
+            <div class="page-title">New Customer Applications</div>
+            <div class="page-subtitle">Showing only applications in <strong>Pending Selection</strong> or <strong>Waiting Docs</strong> status. Assign an agent once the customer has selected a plan and is ready to upload documents.</div>
 
             <div class="card">
                 <h2>📄 Applications List</h2>
