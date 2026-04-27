@@ -16,14 +16,16 @@ body {
     height: 100vh;
     margin: 0;
 }
+
 .auth-container {
     background: var(--white);
     padding: 40px;
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(26, 43, 72, 0.1); /* Subtle Navy shadow */
+    box-shadow: 0 10px 25px rgba(26, 43, 72, 0.1);
     width: 100%;
     max-width: 400px;
 }
+
 h1 {
     background: linear-gradient(90deg, #1A2B48, #0052CC, #1A2B48);
     background-size: 200% auto;
@@ -40,6 +42,7 @@ h1 {
         background-position: 200% center;
     }
 }
+
 .error-msg {
     background-color: #FFF5F5;
     color: var(--error-red);
@@ -61,6 +64,7 @@ label {
     font-weight: 600;
     margin-bottom: 8px;
 }
+
 input {
     padding: 12px;
     margin-bottom: 20px;
@@ -69,6 +73,7 @@ input {
     font-size: 16px;
     transition: border-color 0.3s ease;
 }
+
 input:focus {
     outline: none;
     border-color: var(--action-blue);
@@ -108,7 +113,6 @@ p a:hover {
     text-decoration: underline;
 }
 
-
 /* Container for the icon and input */
 .input-group {
     position: relative;
@@ -121,7 +125,7 @@ p a:hover {
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #94A3B8; /* Subtle blue-gray */
+    color: #94A3B8;
     font-size: 20px;
     transition: color 0.3s ease;
 }
@@ -129,9 +133,9 @@ p a:hover {
 /* Adjust the input to make room for the icon on the left */
 .input-group input {
     width: 100%;
-    padding: 12px 12px 12px 45px; /* 45px left padding to clear the icon */
-    margin-bottom: 0; /* Margin is now handled by .input-group */
-    box-sizing: border-box; /* Ensures padding doesn't break width */
+    padding: 12px 12px 12px 45px;
+    margin-bottom: 0;
+    box-sizing: border-box;
     border: 1px solid #D1D9E6;
     border-radius: 8px;
     font-size: 15px;
@@ -196,7 +200,3 @@ p a:hover {
 @keyframes fadeOut {
     to { opacity: 0; transform: translateY(-20px); }
 }
-
-
-
-/* sdadsadsa */
