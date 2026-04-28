@@ -11,9 +11,7 @@
 </head>
 <body>
 
-    <div class="main-placeholder">
-        <h1>COVERLY CONTENT</h1>
-    </div>
+
 
     <footer>
         <div class="container">
