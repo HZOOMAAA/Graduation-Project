@@ -3,6 +3,17 @@ require_once 'includes/connection.php';
 include 'includes/header.php';
 ?>  
 <link rel="stylesheet" href="/Graduation-Project/assets/css/category.css">
+
+<!-- ── Success / Error Modal ─────────────────────────────────────────────── -->
+<div id="appModal" class="app-modal-overlay" style="display:none;">
+    <div class="app-modal-box">
+        <div class="app-modal-icon" id="appModalIcon"></div>
+        <h3 id="appModalTitle"></h3>
+        <p id="appModalMsg"></p>
+        <button class="app-modal-btn" onclick="closeAppModal()">OK</button>
+    </div>
+</div>
+
 <section class="car-insurance-section">
     <div class="container grid-container">
         
@@ -12,8 +23,8 @@ include 'includes/header.php';
                 <p>Insert car details to compare and pick the best offer</p>
             </div>
             
-            <form action="compare_offers.php" method="POST">
-                
+            <!-- action handled via JS/AJAX → submit_car_application.php -->
+            <form id="carInsuranceForm">
                 
                 <div class="input-group">
     <label>Car Brand</label>
@@ -75,7 +86,12 @@ include 'includes/header.php';
                     </div>
                 </div>
 
-                <button type="submit" class="check-btn">Check</button>
+                <button type="submit" class="check-btn" id="submitBtn">
+                    <span id="submitBtnText">Check</span>
+                    <span id="submitBtnLoader" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> Submitting...
+                    </span>
+                </button>
             </form>
         </div>
 
@@ -86,5 +102,6 @@ include 'includes/header.php';
     </div>
 </section>
 <script src="/Graduation-Project/assets/js/category.js"></script>
+<script src="/Graduation-Project/assets/js/car_application.js"></script>
 
 <?php include 'includes/footer.php'; ?>  

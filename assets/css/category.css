@@ -242,3 +242,83 @@
     background-color: var(--action-blue);
     color: #fff;
 }
+
+/* ── Application Submit Modal ──────────────────────────────────────────────── */
+.app-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 20, 40, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOverlay 0.25s ease;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.app-modal-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 36px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.app-modal-icon {
+    font-size: 56px;
+    margin-bottom: 16px;
+    line-height: 1;
+}
+
+.app-modal-icon--success { color: #00b894; }
+.app-modal-icon--error   { color: var(--error-red); }
+
+.app-modal-box h3 {
+    color: var(--primary-navy);
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.app-modal-box p {
+    color: var(--text-main);
+    font-size: 15px;
+    opacity: 0.8;
+    margin-bottom: 28px;
+    line-height: 1.6;
+}
+
+.app-modal-btn {
+    padding: 12px 40px;
+    background: var(--action-blue);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.app-modal-btn:hover {
+    background: var(--primary-navy);
+    transform: translateY(-2px);
+}
+
+/* ── Submit Button Loader ──────────────────────────────────────────────────── */
+#submitBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
