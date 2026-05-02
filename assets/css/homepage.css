@@ -155,10 +155,10 @@ nav ul li a:hover {
 }
 
 /* Background Images */
-.slide-health {background-image:url("../images/health.jfif");}
-.slide-car { background-image: url("../images/car.jfif"); } 
-.slide-life { background-image: url("../images/life.jfif"); } 
-.slide-property { background-image: url("../images/pro.jfif"); } 
+.slide-health {background-image:url("../img/health.jfif");}
+.slide-car { background-image: url("../img/car2.jfif");}
+.slide-life { background-image: url("../img/life.jfif");}
+.slide-property { background-image: url("../img/pro.jfif");}
 
 /* Buttons */
 .btn {

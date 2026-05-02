@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/homepage.css">
+    <link rel="stylesheet" href="assets/css/homepage.css">
 
 </head>
 <body>
@@ -188,20 +188,20 @@
   <div class="slider">
     <div class="slide-track">
 
-      <div class="slide"><img src="images/download.png" alt=""></div>
-      <div class="slide"><img src="images/axa.png" alt=""></div>
-      <div class="slide"><img src="images/met.png" alt=""></div>
-      <div class="slide"><img src="images/masr.png" alt=""></div>
+      <div class="slide"><img src="assets/img/download.png" alt=""></div>
+      <div class="slide"><img src="assets/img/axa.png" alt=""></div>
+      <div class="slide"><img src="assets/img/met.png" alt=""></div>
+      <div class="slide"><img src="assets/img/masr.png" alt=""></div>
 
       <!-- duplicate for smooth loop -->
-      <div class="slide"><img src="images/download.png" alt=""></div>
-      <div class="slide"><img src="images/axa.png" alt=""></div>
-      <div class="slide"><img src="images/met.png" alt=""></div>
-      <div class="slide"><img src="images/masr.png" alt=""></div>
-      <div class="slide"><img src="images/download.png" alt=""></div>
-      <div class="slide"><img src="images/axa.png" alt=""></div>
-      <div class="slide"><img src="images/met.png" alt=""></div>
-      <div class="slide"><img src="images/masr.png" alt=""></div>
+      <div class="slide"><img src="assets/img/download.png" alt=""></div>
+      <div class="slide"><img src="assets/img/axa.png" alt=""></div>
+      <div class="slide"><img src="assets/img/met.png" alt=""></div>
+      <div class="slide"><img src="assets/img/masr.png" alt=""></div>
+      <div class="slide"><img src="assets/img/download.png" alt=""></div>
+      <div class="slide"><img src="assets/img/axa.png" alt=""></div>
+      <div class="slide"><img src="assets/img/met.png" alt=""></div>
+      <div class="slide"><img src="assets/img/masr.png" alt=""></div>
 
     
 
@@ -373,8 +373,8 @@
 
 
 
-    <script src="js/swiper-bundle.min.js"></script>
+    <script src="assets/js/swiper-bundle.min.js "></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/script.js"> </script>
+    <script src="assets/js/script.js"> </script>
 </body>
 </html>
