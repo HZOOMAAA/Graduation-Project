@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/connection.php';
-include 'includes/header.php';
+include 'includes/nav2.php';
 ?>  
 <link rel="stylesheet" href="/Graduation-Project/assets/css/category.css">
 

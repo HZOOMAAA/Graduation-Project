@@ -28,12 +28,12 @@ $is_logged_in = isset($_SESSION['user_id']);
             <!-- الناف الأول (الروابط الأساسية) -->
             <nav class="main-nav">
                 <ul>
-                    <li><a href="#">Home</a></li>
+                    <li><a href="homepage.php">Home</a></li>
                     <li class="dropdown">
                         <a href="#">Categories <i class="fas fa-chevron-down" style="font-size: 12px;"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="health.html">Health</a></li>
-                            <li><a href="car.html">Car</a></li>
+                            <li><a href="category-car.php">Car</a></li>
                             <li><a href="life.html">Life</a></li>
                             <li><a href="property.html">Property</a></li>
                         </ul>
