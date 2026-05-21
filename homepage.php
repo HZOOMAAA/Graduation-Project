@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,29 +19,9 @@
 
 </head>
 <body>
-    <header>
-        <div class="container">
-            <a href="#" class="logo">COVERLY</a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li class="dropdown">
-                        <a href="#">Categories <i class="fas fa-chevron-down" style="font-size: 12px;"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="health.html">Health</a></li>
-                            <li><a href="car.html">Car</a></li>
-                            <li><a href="life.html">Life</a></li>
-                            <li><a href="property.html">Property</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="profile.html"><i class="fa-regular fa-circle-user" style="font-size: 20px;"></i></a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
+  <?php
+  include __DIR__ . '/includes/nav2.php'; 
+  ?>
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             

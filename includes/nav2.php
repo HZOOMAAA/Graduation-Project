@@ -1,3 +1,9 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$is_logged_in = isset($_SESSION['user_id']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,12 +43,20 @@
                 </ul>
             </nav>
 
-            <!-- الناف التاني (أزرار الدخول والتسجيل) -->
+            <!-- الناف التاني (أزرار الدخول والتسجيل أو صورة/أيقونة البروفايل) -->
             <nav class="auth-nav">
-                <div class="auth-buttons">
-                    <a href="login.html" class="btn-login">Login</a>
-                    <a href="register.html" class="btn-register">Register</a>
-                </div>
+                <?php if ($is_logged_in): ?>
+                    <div class="profile-container">
+                        <a href="profile.php" class="profile-btn" title="View Profile">
+                            <i class="fa-regular fa-circle-user"></i>
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div class="auth-buttons">
+                        <a href="auth/login.php" class="btn-login">Login</a>
+                        <a href="auth/register.php" class="btn-register">Register</a>
+                    </div>
+                <?php endif; ?>
             </nav>
 
         </div>

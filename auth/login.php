@@ -1,6 +1,6 @@
 <?php
 session_start(); // Essential for login sessions
-require '../includes/connection.php';
+require_once __DIR__ . '/../includes/connection.php';
 
 $error = '';
 

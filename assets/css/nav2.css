@@ -113,3 +113,37 @@ header {
     background-color: transparent;
     color: #00b894 !important;
 }
+
+/* --- Profile Button Style --- */
+.profile-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s, transform 0.3s, color 0.3s;
+}
+
+.profile-btn i {
+    color: #333;
+    font-size: 22px;
+    transition: color 0.3s;
+}
+
+.profile-btn:hover {
+    background-color: #00b894;
+    transform: scale(1.05);
+}
+
+.profile-btn:hover i {
+    color: white;
+}
