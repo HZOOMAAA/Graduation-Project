@@ -2,47 +2,81 @@
 require_once 'includes/connection.php';
 require_once 'includes/auth_check.php'; // ensures user is logged in
 
-// ── Validate application_id ────────────────────────────────────────────────────
-$application_id = isset($_GET['application_id']) ? intval($_GET['application_id']) : 0;
-if ($application_id <= 0) {
-    header('Location: /Graduation-Project/home.php');
-    exit;
-}
-
+// ── Load the application (Check session first for deferred draft, fall back to DB) ──
 $customer_id = $_SESSION['user_id'];
+$application = null;
+$appData = null;
+$application_id = 0;
 
-// ── Load the application (must belong to this customer) ───────────────────────
-$appStmt = mysqli_prepare($connect,
-    "SELECT a.*,
-            cat.name AS category_name,
-            p.name AS plan_name,
-            p.insurance_company,
-            p.base_price,
-            p.bio AS plan_bio,
-            p.eligibility_rules
-     FROM applications a
-     LEFT JOIN categories cat ON a.category_id = cat.category_id
-     LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
-     WHERE a.application_id = ? AND a.customer_id = ?"
-);
-mysqli_stmt_bind_param($appStmt, 'ii', $application_id, $customer_id);
-mysqli_stmt_execute($appStmt);
-$appResult = mysqli_stmt_get_result($appStmt);
-$application = mysqli_fetch_assoc($appResult);
+if (isset($_SESSION['temp_application_data']) && isset($_SESSION['temp_plan_id'])) {
+    $appData = $_SESSION['temp_application_data'];
+    $temp_plan_id = intval($_SESSION['temp_plan_id']);
 
-if (!$application) {
-    header('Location: /Graduation-Project/home.php');
-    exit;
+    // Fetch the chosen plan's details
+    $planStmt = mysqli_prepare($connect, "SELECT * FROM insurance_plans WHERE plan_id = ?");
+    mysqli_stmt_bind_param($planStmt, 'i', $temp_plan_id);
+    mysqli_stmt_execute($planStmt);
+    $planResult = mysqli_stmt_get_result($planStmt);
+    $plan = mysqli_fetch_assoc($planResult);
+
+    if (!$plan) {
+        header('Location: /Graduation-Project/homepage.php');
+        exit;
+    }
+
+    $application = [
+        'application_id' => 0, // Indicates session-based draft
+        'customer_id' => $customer_id,
+        'category_id' => $_SESSION['temp_category_id'] ?? 1,
+        'plan_id' => $temp_plan_id,
+        'status' => 'waiting_docs',
+        'category_name' => 'Car Insurance',
+        'plan_name' => $plan['name'],
+        'insurance_company' => $plan['insurance_company'],
+        'base_price' => $plan['base_price'],
+        'plan_bio' => $plan['bio'],
+        'eligibility_rules' => $plan['eligibility_rules'],
+        'application_data' => json_encode($appData)
+    ];
+} else {
+    // Standard URL-based fallback
+    $application_id = isset($_GET['application_id']) ? intval($_GET['application_id']) : 0;
+    if ($application_id <= 0) {
+        header('Location: /Graduation-Project/homepage.php');
+        exit;
+    }
+
+    $appStmt = mysqli_prepare($connect,
+        "SELECT a.*,
+                cat.name AS category_name,
+                p.name AS plan_name,
+                p.insurance_company,
+                p.base_price,
+                p.bio AS plan_bio,
+                p.eligibility_rules
+         FROM applications a
+         LEFT JOIN categories cat ON a.category_id = cat.category_id
+         LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
+         WHERE a.application_id = ? AND a.customer_id = ?"
+    );
+    mysqli_stmt_bind_param($appStmt, 'ii', $application_id, $customer_id);
+    mysqli_stmt_execute($appStmt);
+    $appResult = mysqli_stmt_get_result($appStmt);
+    $application = mysqli_fetch_assoc($appResult);
+
+    if (!$application) {
+        header('Location: /Graduation-Project/homepage.php');
+        exit;
+    }
+
+    // ── Guard: must have selected a plan ──────────────────────────────────────────
+    if (!$application['plan_id']) {
+        header('Location: /Graduation-Project/plans.php?application_id=' . $application_id);
+        exit;
+    }
+
+    $appData = json_decode($application['application_data'] ?? '{}', true);
 }
-
-// ── Guard: must have selected a plan ──────────────────────────────────────────
-if (!$application['plan_id']) {
-    header('Location: /Graduation-Project/plans.php?application_id=' . $application_id);
-    exit;
-}
-
-// ── Decode car data ────────────────────────────────────────────────────────────
-$appData = json_decode($application['application_data'] ?? '{}', true);
 
 // ── Status helpers ─────────────────────────────────────────────────────────────
 $allowedUploadStatuses = ['waiting_docs'];
@@ -74,7 +108,7 @@ include 'includes/header.php';
             <strong>Please wait for an agent to review your application.</strong><br>
             We'll notify you once a decision has been made.
         </p>
-        <a href="/Graduation-Project/home.php" class="pd-modal-btn">
+        <a href="/Graduation-Project/homepage.php" class="pd-modal-btn">
             <i class="bx bxs-home"></i> Back to Home
         </a>
     </div>

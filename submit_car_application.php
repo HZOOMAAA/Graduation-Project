@@ -47,35 +47,25 @@ $customer_id = $_SESSION['user_id'];
 // Get car category ID (look it up by name so it works for any DB seed)
 $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE name LIKE '%car%' LIMIT 1");
 if (!$catResult || mysqli_num_rows($catResult) === 0) {
-    // Fallback: try 'Car Insurance' or any other common name pattern
     $catResult = mysqli_query($connect, "SELECT category_id FROM categories ORDER BY category_id ASC LIMIT 1");
 }
 $catRow     = mysqli_fetch_assoc($catResult);
 $category_id = $catRow ? intval($catRow['category_id']) : 1;
 
-// ── Insert into applications ──────────────────────────────────────────────────
-$sql = "INSERT INTO applications (customer_id, category_id, status, application_data, created_at)
-        VALUES (?, ?, 'pending_selection', ?, NOW())";
+// ── Store draft details inside the PHP Session ────────────────────────────────
+$_SESSION['temp_application_data'] = [
+    'category'  => 'car',
+    'brand'     => $brand,
+    'model'     => $model,
+    'year'      => $year,
+    'price'     => $price,
+    'condition' => $condition,
+    'submitted_at' => date('Y-m-d H:i:s'),
+];
+$_SESSION['temp_category_id'] = $category_id;
 
-$stmt = mysqli_prepare($connect, $sql);
-
-if (!$stmt) {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . mysqli_error($connect)]);
-    exit;
-}
-
-mysqli_stmt_bind_param($stmt, 'iis', $customer_id, $category_id, $applicationData);
-
-if (mysqli_stmt_execute($stmt)) {
-    $application_id = mysqli_insert_id($connect);
-    echo json_encode([
-        'success'        => true,
-        'message'        => 'Application submitted successfully!',
-        'application_id' => $application_id,
-    ]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Failed to save application: ' . mysqli_stmt_error($stmt)]);
-}
-
-mysqli_stmt_close($stmt);
+echo json_encode([
+    'success' => true,
+    'message' => 'Car details saved to session draft successfully!',
+]);
 ?>

@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (result.success) {
                 // ── Redirect to plan-selection page ──────────────────────────
-                window.location.href = '/Graduation-Project/plans.php?application_id=' + result.application_id;
+                window.location.href = '/Graduation-Project/plans.php';
             } else {
                 showModal('error', 'Submission Failed', result.message || 'Something went wrong. Please try again.');
             }

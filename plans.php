@@ -2,36 +2,58 @@
 require_once 'includes/connection.php';
 require_once 'includes/auth_check.php'; // ensures user is logged in
 
-// ── Validate application_id ───────────────────────────────────────────────────
-$application_id = isset($_GET['application_id']) ? intval($_GET['application_id']) : 0;
-if ($application_id <= 0) {
-    header('Location: /Graduation-Project/home.php');
-    exit;
-}
-
-// ── Load the application (must belong to this customer) ───────────────────────
+// ── Load the application (Check session first for deferred draft, fall back to DB) ──
 $customer_id = $_SESSION['user_id'];
-$appStmt = mysqli_prepare($connect,
-    "SELECT a.*, cat.name as category_name
-     FROM applications a
-     LEFT JOIN categories cat ON a.category_id = cat.category_id
-     WHERE a.application_id = ? AND a.customer_id = ?"
-);
-mysqli_stmt_bind_param($appStmt, 'ii', $application_id, $customer_id);
-mysqli_stmt_execute($appStmt);
-$appResult = mysqli_stmt_get_result($appStmt);
-$application = mysqli_fetch_assoc($appResult);
+$application = null;
+$appData = null;
 
-if (!$application) {
-    header('Location: /Graduation-Project/home.php');
-    exit;
+if (isset($_SESSION['temp_application_data'])) {
+    $appData = $_SESSION['temp_application_data'];
+    $category_id = $_SESSION['temp_category_id'] ?? 1;
+
+    // Fetch category name
+    $catResult = mysqli_query($connect, "SELECT name FROM categories WHERE category_id = {$category_id} LIMIT 1");
+    $catRow = mysqli_fetch_assoc($catResult);
+    $category_name = $catRow ? $catRow['name'] : 'Car Insurance';
+
+    $application = [
+        'application_id' => 0, // Indicates session-based draft
+        'customer_id' => $customer_id,
+        'category_id' => $category_id,
+        'status' => 'pending_selection',
+        'plan_id' => null,
+        'category_name' => $category_name,
+        'application_data' => json_encode($appData)
+    ];
+} else {
+    // Standard URL-based fallback
+    $application_id = isset($_GET['application_id']) ? intval($_GET['application_id']) : 0;
+    if ($application_id <= 0) {
+        header('Location: /Graduation-Project/homepage.php');
+        exit;
+    }
+
+    $appStmt = mysqli_prepare($connect,
+        "SELECT a.*, cat.name as category_name
+         FROM applications a
+         LEFT JOIN categories cat ON a.category_id = cat.category_id
+         WHERE a.application_id = ? AND a.customer_id = ?"
+    );
+    mysqli_stmt_bind_param($appStmt, 'ii', $application_id, $customer_id);
+    mysqli_stmt_execute($appStmt);
+    $appResult = mysqli_stmt_get_result($appStmt);
+    $application = mysqli_fetch_assoc($appResult);
+
+    if (!$application) {
+        header('Location: /Graduation-Project/homepage.php');
+        exit;
+    }
+    $appData = json_decode($application['application_data'] ?? '{}', true);
 }
 
 // ── Only allow plan selection if still pending ────────────────────────────────
 $already_selected = ($application['status'] !== 'pending_selection');
 
-// ── Decode submitted data ─────────────────────────────────────────────────────
-$appData = json_decode($application['application_data'] ?? '{}', true);
 $car_condition = strtolower($appData['condition'] ?? '');
 $car_year      = intval($appData['year'] ?? 0);
 $car_price     = floatval($appData['price'] ?? 0);
@@ -107,16 +129,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['plan_id']) && !$alrea
     if (!in_array($plan_id, $matched_ids)) {
         $select_error = 'Invalid plan selection.';
     } else {
-        $upd = mysqli_prepare($connect,
-            "UPDATE applications SET plan_id = ?, status = 'waiting_docs' WHERE application_id = ? AND customer_id = ?"
-        );
-        mysqli_stmt_bind_param($upd, 'iii', $plan_id, $application_id, $customer_id);
-        if (mysqli_stmt_execute($upd)) {
-            // Redirect to plan details / document upload page
-            header('Location: /Graduation-Project/planDetails.php?application_id=' . $application_id);
+        if ($application['application_id'] === 0) {
+            // Store selected plan ID inside the PHP Session
+            $_SESSION['temp_plan_id'] = $plan_id;
+            header('Location: /Graduation-Project/planDetails.php');
             exit;
         } else {
-            $select_error = 'Failed to save your plan selection. Please try again.';
+            $upd = mysqli_prepare($connect,
+                "UPDATE applications SET plan_id = ?, status = 'waiting_docs' WHERE application_id = ? AND customer_id = ?"
+            );
+            mysqli_stmt_bind_param($upd, 'iii', $plan_id, $application['application_id'], $customer_id);
+            if (mysqli_stmt_execute($upd)) {
+                // Redirect to plan details / document upload page
+                header('Location: /Graduation-Project/planDetails.php?application_id=' . $application['application_id']);
+                exit;
+            } else {
+                $select_error = 'Failed to save your plan selection. Please try again.';
+            }
         }
     }
 }

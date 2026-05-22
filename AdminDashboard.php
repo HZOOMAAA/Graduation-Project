@@ -109,18 +109,16 @@ if (isset($_POST['assign_agent'])) {
     $agent_id = (int)$_POST['agent_id'];
 
     // Ensure application is in waiting_docs before assigning
-    $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND status = 'waiting_docs'");
+    $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND status = 'under_review'");
     if ($check && mysqli_num_rows($check) > 0) {
         $update = mysqli_query($connect, "UPDATE applications SET agent_id = $agent_id, status = 'under_review' WHERE application_id = $application_id");
         if ($update) {
-            $success = "Agent assigned successfully! Application is now under review.";
+            $success = "Agent assigned successfully!";
             header("Location: AdminDashboard.php?tab=applications&success=" . urlencode($success));
             exit();
         } else {
             $error = "Failed to assign application! " . mysqli_error($connect);
         }
-    } else {
-        $error = "Can only assign an agent when application is in 'Waiting Docs' status.";
     }
 }
 
@@ -165,7 +163,7 @@ $applications_query = "
     LEFT JOIN categories cat ON a.category_id = cat.category_id
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
-    WHERE a.status IN ('pending_selection', 'waiting_docs')
+    WHERE a.status IN ('under_review')
     ORDER BY a.created_at DESC
 ";
 $applications = mysqli_query($connect, $applications_query);
@@ -296,8 +294,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 <table>
                     <thead><tr><th>Stage</th><th>Count</th><th>Description</th></tr></thead>
                     <tbody>
-                        <tr><td><span class="badge" style="background:#f1f3f4;color:#5f6368;">Pending Selection</span></td><td><?php echo $stats['pending_selection']; ?></td><td style="color:#64748b;font-size:13px;">Customer submitted data — awaiting plan choice</td></tr>
-                        <tr><td><span class="badge" style="background:#e3f0ff;color:#1a73e8;">Waiting Docs</span></td><td><?php echo $stats['waiting_docs']; ?></td><td style="color:#64748b;font-size:13px;">Plan selected — customer uploading documents. Admin should assign Agent.</td></tr>
                         <tr><td><span class="badge" style="background:#fff3e0;color:#e65100;">Under Review</span></td><td><?php echo $stats['under_review']; ?></td><td style="color:#64748b;font-size:13px;">Agent is verifying documents and customer data</td></tr>
                         <tr><td><span class="badge" style="background:#fce8ff;color:#7b1fa2;">Awaiting Payment</span></td><td><?php echo $stats['awaiting_payment']; ?></td><td style="color:#64748b;font-size:13px;">Agent approved — customer must complete payment for policy issuance</td></tr>
                         <tr><td><span class="badge" style="background:#e8f5e9;color:#1b5e20;">Paid</span></td><td><?php echo $stats['paid']; ?></td><td style="color:#64748b;font-size:13px;">Payment received — policy issued and active</td></tr>
@@ -418,7 +414,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         <!-- ── APPLICATIONS TAB ── -->
         <?php elseif ($active_tab === 'applications'): ?>
             <div class="page-title">New Customer Applications</div>
-            <div class="page-subtitle">Showing only applications in <strong>Pending Selection</strong> or <strong>Waiting Docs</strong> status. Assign an agent once the customer has selected a plan and is ready to upload documents.</div>
+            <div class="page-subtitle">Assign an agent once the customer has selected a plan and uploaded the required documents.</div>
 
             <div class="card">
                 <h2>📄 Applications List</h2>
@@ -469,7 +465,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                     <td><?php echo $row['agent_name'] ? htmlspecialchars($row['agent_name']) : '<span style="color:#9ca3af;">Unassigned</span>'; ?></td>
                                     <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
                                     <td>
-                                        <?php if ($row['status'] === 'waiting_docs'): ?>
+                                        <?php if ($row['status'] === 'under_review'): ?>
                                             <form action="AdminDashboard.php" method="post" style="display:flex; gap:5px; align-items:center;">
                                                 <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
                                                 <select name="agent_id" style="padding:5px; border-radius:4px; border:1px solid #ccc; font-size:12px;" required>

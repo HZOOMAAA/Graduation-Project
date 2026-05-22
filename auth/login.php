@@ -31,7 +31,7 @@ if (isset($_POST['login'])) {
                 } elseif ($row['role'] == 'agent') {
                     header('location: ../AgentDashboard.php');
                 } else {
-                    header('location: ../home.php');
+                    header('location: ../homepage.php');
                 }
                 exit();
             } else {
