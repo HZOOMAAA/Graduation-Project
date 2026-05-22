@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['plan_id']) && !$alrea
     }
 }
 
-include 'includes/header.php';
+include 'includes/nav2.php';
 ?>
 <link rel="stylesheet" href="/Graduation-Project/assets/css/plans.css">
 

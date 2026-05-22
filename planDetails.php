@@ -92,7 +92,7 @@ $statusLabels = [
 [$statusText, $statusColor, $statusBg] = $statusLabels[$application['status']]
     ?? ['— ' . ucfirst(str_replace('_', ' ', $application['status'])), '#64748b', '#f4f7f9'];
 
-include 'includes/header.php';
+include 'includes/nav2.php';
 ?>
 <link rel="stylesheet" href="/Graduation-Project/assets/css/planDetails.css">
 
