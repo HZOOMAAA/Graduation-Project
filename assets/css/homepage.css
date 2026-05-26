@@ -1,10 +1,15 @@
 /* CSS Variables  */
 :root {
-    --primary-navy: #1A2B48;    /* Authority & Trust */
-    --action-blue: #0052CC;     /* Professional Action */
-    --bg-soft-gray: #F4F7F9;    /* Clean Workspace */
-    --text-main: #2D3436;       /* Readability */
-    --error-red: #D63031;       /* Clear Alerts */
+    --primary-navy: #1A2B48;
+    /* Authority & Trust */
+    --action-blue: #0052CC;
+    /* Professional Action */
+    --bg-soft-gray: #F4F7F9;
+    /* Clean Workspace */
+    --text-main: #2D3436;
+    /* Readability */
+    --error-red: #D63031;
+    /* Clear Alerts */
     --white: #FFFFFF;
 }
 
@@ -34,78 +39,26 @@ ul {
     padding: 0 20px;
 }
 
-@media (min-width: 768px) { .container { width: 750px; } }
-@media (min-width: 992px) { .container { width: 970px; } }
-@media (min-width: 1200px) { .container { width: 1170px; } }
+@media (min-width: 768px) {
+    .container {
+        width: 750px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 970px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        width: 1170px;
+    }
+}
+
 /* start header */
-/*Header & Navigation*/
-header {
-    position:static; /* تم التعديل من static إلى sticky ليعمل بشكل صحيح */
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    padding: 15px 0;
-}
 
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--action-blue);
-    text-decoration: none;
-}
-
-nav ul {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-}
-
-nav ul li {
-    position: relative;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-nav ul li a:hover { 
-    color: var(--action-blue); 
-}
-
-/* Dropdown Menu */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: var(--white);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-radius: 5px;
-    padding: 10px 0;
-    min-width: 150px;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.dropdown:hover .dropdown-menu {
-    display: flex;
-}
-
-.dropdown-menu li {
-    padding: 5px 20px;
-}
-/* end header */
 
 
 
@@ -129,7 +82,10 @@ nav ul li a:hover {
 .swiper-slide::before {
     content: '';
     position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.4);
     z-index: 1;
 }
@@ -139,6 +95,7 @@ nav ul li a:hover {
     z-index: 2;
     color: var(--white);
     max-width: 650px;
+    margin-top: 200px;
 }
 
 .hero-content h1 {
@@ -155,15 +112,26 @@ nav ul li a:hover {
 }
 
 /* Background Images */
-.slide-health {background-image:url("../img/health.jfif");}
-.slide-car { background-image: url("../img/car2.jfif");}
-.slide-life { background-image: url("../img/life.jfif");}
-.slide-property { background-image: url("../img/pro.jfif");}
+.slide-health {
+    background-image: url("../img/health.jfif");
+}
+
+.slide-car {
+    background-image: url("../img/car2.jfif");
+}
+
+.slide-life {
+    background-image: url("../img/life.jfif");
+}
+
+.slide-property {
+    background-image: url("../img/pro.jfif");
+}
 
 /* Buttons */
 .btn {
     display: inline-block;
-    background-color: var(--action-blue);
+    background-color: var(--primary-navy);
     color: var(--white) !important;
     padding: 15px 40px;
     text-decoration: none;
@@ -174,9 +142,10 @@ nav ul li a:hover {
 }
 
 .btn:hover {
-    background-color: var(--primary-navy);
+    background-color: var(--white);
+    color: var(--primary-navy) !important;
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* end hero */
@@ -274,9 +243,9 @@ nav ul li a:hover {
 }
 
 .slide img {
-    width: 160px;  
-    height: 50px;  
-    object-fit: contain; 
+    width: 160px;
+    height: 50px;
+    object-fit: contain;
     transition: 0.3s;
 }
 
@@ -286,63 +255,129 @@ nav ul li a:hover {
 }
 
 @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
 }
-/* end section */
 
-
-/* start section */
 /*Features Cards */
+/* ── قسم الـ Features والكروت المعدل بالكامل ── */
 .features {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    justify-content: space-around;
+    gap: 25px;
     flex-wrap: wrap;
     padding-bottom: 60px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .card {
     background: var(--white);
-    padding: 20px;
-    width: 250px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-    transition: 0.3s;
+    padding: 28px 24px;
+    width: 300px;
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    
+    /* الحل هنا: تحديد الـ transform صراحة جوه الـ transition */
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out;
+    
+    box-sizing: border-box;
+    text-align: center;
 }
 
+/* تأثير الهوفر: هيرتفع ويلف زاوية صريحة 5 درجات عشان تلاحظ الحركة فوراً */
 .card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-12px) rotate(5deg);
+    box-shadow: 0 15px 35px rgba(0, 82, 204, 0.15);
+    border-color: var(--action-blue);
+}
+
+/* تنسيق حاوية الأيقونة */
+.card-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(0, 82, 204, 0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    transition: all 0.4s ease-in-out;
+}
+
+.card:hover .card-icon-wrapper {
+    transform: scale(1.1);
+    background-color: var(--action-blue);
+}
+
+.card-icon-wrapper i {
+    font-size: 26px;
+    color: var(--action-blue);
+    transition: color 0.4s ease-in-out;
+}
+
+.card:hover .card-icon-wrapper i {
+    color: var(--white);
 }
 
 .card h3 {
+    color: var(--primary-navy);
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
     margin-bottom: 10px;
 }
 
+.card p {
+    color: var(--text-main);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.8;
+}
+/* end featueres */
+
 .text-navy {
     color: #0b1c3c;
+    flex-shrink: 0 !important; /* **السر هنا**: بيمنع الـ Flexbox إنه يضغط العنوان لما الـ Accordion يفتح */
+    white-space: nowrap; /* بيضمن إن العنوان يفضل على سطر واحد ومينزلش تحت بعضه فجأة */
 }
 
+/* 1. تعديل حاوية الكارت لمنع القفزات */
 .custom-accordion .accordion-item {
     border-radius: 8px !important;
-    overflow: hidden; 
+    overflow: hidden;
     border: 1px solid #eaeaea;
+    background-color: #fff; /* تثبيت الخلفية الافتراضية للـ item */
+    backface-visibility: hidden; /* حماية المتصفح من الهزات أثناء الـ Animation */
 }
 
-
+/* 2. تنسيق الزرار وهو مقفول */
 .custom-accordion .accordion-button {
     font-weight: bold;
     color: #333;
     background-color: #fff;
-    box-shadow: none !important; 
+    box-shadow: none !important;
     padding: 1.25rem;
+    transition: background-color 0.25s ease, color 0.25s ease; /* أنيميشن ناعم لقلب الألوان */
 }
 
+/* 3. تنسيق الزرار وهو مفتوح */
 .custom-accordion .accordion-button:not(.collapsed) {
-    background-color: #0b1c3c; 
+    background-color: #0b1c3c;
     color: #fff;
+    border-bottom: 1px solid #0b1c3c; /* الحفاظ على أبعاد الحقل ثابتة منعاً للهز */
 }
 
+/* 4. الـ SVGs بتاعة الأسهم بتاعتك زي ما هي تماماً */
 .custom-accordion .accordion-button:not(.collapsed)::after {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 }
@@ -351,168 +386,56 @@ nav ul li a:hover {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23333'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 }
 
+/* 5. تعديل الـ Body عشان يفصل الإجابة عن السؤال الكحلي بنعومة */
 .custom-accordion .accordion-body {
     background-color: #fff;
     color: #6c757d;
     line-height: 1.8;
     padding: 1.25rem;
+    border-top: 1px solid #eaeaea; /* **هنا السر**: البوردر ده بيثبت الحسابات الرأسية للـ Height أثناء الفتح */
+}
+
+/* 6. إجبار البوتسترايب على الالتزام بحركة انسيابية خطية من غير قفز مساحات */
+.custom-accordion .collapsing {
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.insurance-health-section .row, 
+.car-insurance-section .row {
+    align-items: flex-start !important; /* بيخلي العنوان والـ Accordion يبدأوا من نفس المحاذاة فوق، فاللي يفتح تحت ميهزش اللي جنبه */
 }
 /* end section */
 
 
 
-/* start footer */
-/*Footer */
-footer {
-    background-color: var(--primary-navy);
-    color: var(--white);
-    padding: 80px 0 30px;
-}
 
-footer .container {
-    display: flex;
-    flex-direction: column;
-}
-
-.footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 40px;
-}
-
-.footer-section {
-    flex: 1;
-    min-width: 250px;
-}
-
-.footer-logo {
-    height: 45px;
-    margin-bottom: 25px;
-}
-
-.footer-section p {
-    font-size: 14px;
-    line-height: 1.8;
-    color: #bdc3c7;
-    margin-bottom: 25px;
-}
-
-.footer-section h3 {
-    font-size: 20px;
-    margin-bottom: 30px;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-.footer-section h3::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background-color: var(--action-blue);
-}
-
-.footer-section ul li {
-    margin-bottom: 12px;
-}
-
-.footer-section ul li a {
-    color: #bdc3c7;
-    text-decoration: none;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.footer-section ul li a:hover {
-    color: var(--white);
-    padding-left: 8px;
-}
-
-.socials a {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.1);
-    width: 38px;
-    height: 38px;
-    display: inline-block;
-    text-align: center;
-    line-height: 38px;
-    border-radius: 50%;
-    margin-right: 10px;
-    transition: 0.3s;
-}
-
-.socials a:hover {
-    background-color: var(--action-blue);
-    transform: translateY(-5px);
-}
-
-.contact-form-footer {
-    flex: 1.5;
-}
-
-.contact-form-footer form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.contact-form-footer input, 
-.contact-form-footer textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 14px;
-    border-radius: 8px;
-    color: var(--white);
-    font-family: inherit;
-    outline: none;
-    transition: 0.3s;
-}
-
-.contact-form-footer input:focus, 
-.contact-form-footer textarea:focus {
-    border-color: var(--action-blue);
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.footer-submit-btn {
-    background-color: var(--action-blue);
-    color: var(--white);
-    border: none;
-    padding: 12px 25px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    align-self: flex-start;
-}
-
-.footer-submit-btn:hover {
-    background-color: var(--white);
-    color: var(--primary-navy);
-    transform: translateY(-2px);
-}
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: 60px;
-    padding-top: 30px;
-    font-size: 13px;
-    color: #7f8c8d;
-}
-/* end footer */
 
 /* Media Queries  */
 @media (max-width: 768px) {
-    .hero-content h1 { font-size: 2.2rem; }
-    .swiper-slide { padding-left: 5%; padding-right: 5%; text-align: center; justify-content: center; }
-    
-    .footer-content { flex-direction: column; text-align: center; }
-    .footer-section h3::after { left: 50%; transform: translateX(-50%); }
-    .footer-submit-btn { align-self: center; width: 100%; }
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .swiper-slide {
+        padding-left: 5%;
+        padding-right: 5%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-section h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .footer-submit-btn {
+        align-self: center;
+        width: 100%;
+    }
 }
 
 
@@ -533,12 +456,13 @@ footer .container {
 
 .section-subtitle {
     color: #004b87;
-; /* اللون السماوي */
+    ;
+    /* اللون السماوي */
     font-size: 0.85rem;
     letter-spacing: 2.5px;
     text-transform: uppercase;
     font-size: 24px;
-    font-weight:600;
+    font-weight: 600;
     margin-bottom: 40px;
     margin-top: 0;
     text-align: center;
@@ -551,23 +475,26 @@ footer .container {
 }
 
 .purpose-card {
-    border: 1px solid rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 45px 40px;
     flex: 1;
     min-width: 320px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
+}
+.purpose-card h2{
+    margin-bottom: 15px;
 }
 
 .purpose-card:hover {
-    transform: translateY(-5px); 
+    transform: translateY(-5px);
 }
 
 .icon-wrapper {
     width: 50px;
     height: 50px;
-    background: linear-gradient(135deg, #1b637c, #0f2439); 
+    background: linear-gradient(135deg, #1b637c, #0f2439);
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -582,7 +509,7 @@ footer .container {
 
 
 .card-title {
-    font-family: 'Playfair Display', serif; 
+    font-family: 'Playfair Display', serif;
     color: #004b87;
     font-size: 1.8rem;
     font-weight: 400;
@@ -592,7 +519,7 @@ footer .container {
 
 
 .card-text {
-    color: black; 
+    color: black;
     line-height: 1.8;
     font-size: 1rem;
     font-weight: 300;
@@ -603,6 +530,7 @@ footer .container {
     .cards-wrapper {
         flex-direction: column;
     }
+
     .purpose-card {
         padding: 30px 20px;
     }

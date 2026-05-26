@@ -14,6 +14,7 @@
     <!-- why choose -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     
     <link rel="stylesheet" href="assets/css/homepage.css">
 
@@ -29,7 +30,7 @@
                 <div class="hero-content">
                     <h1>Comprehensive Health Coverage</h1>
                     <p>Access top-tier medical networks and ensure your well-being with our tailored health insurance plans.</p>
-                    <a href="health.html" class="btn">Explore Health</a>
+                    <a href="category-health.php" class="btn">Explore Health</a>
                 </div>
             </div>
 
@@ -37,7 +38,7 @@
                 <div class="hero-content">
                     <h1>Drive with Complete Confidence</h1>
                     <p>From minor accidents to total loss, our motor insurance keeps you fully protected on every road.</p>
-                    <a href="car.html" class="btn">Get Car Quote</a>
+                    <a href="category-car.php" class="btn">Get Car Quote</a>
                 </div>
             </div>
 
@@ -137,10 +138,8 @@
         <div class="cards-wrapper">
             <!-- Mission Card -->
             <div class="purpose-card">
-                <div class="icon-wrapper">
-                    <span class="icon">🎯</span>
-                </div>
-                <h2 class="card-title">Our Mission</h2>
+
+                <h2 class="card-title"> <i class='bx bx-rocket'></i> Our Mission </h2>
                 <p class="card-text">
                     To simplify the complex world of insurance. We provide a transparent, fast, and secure digital platform where anyone can quickly check their eligibility and discover insurance plans that truly fit their life — without the jargon, delays, or friction of traditional brokers.
                 </p>
@@ -148,10 +147,8 @@
 
             <!-- Vision Card -->
             <div class="purpose-card">
-                <div class="icon-wrapper">
-                    <span class="icon">🔭</span>
-                </div>
-                <h2 class="card-title">Our Vision</h2>
+
+                <h2 class="card-title"><i class='bx bxs-binoculars' ></i> Our Vision </h2>
                 <p class="card-text">
                     To become the most trusted and user-friendly digital insurance brokerage in the region — bridging the gap between insurance providers and customers through smart technology, real-time eligibility matching, and a platform designed with people, not paperwork, at its core.
                 </p>
@@ -194,17 +191,26 @@
   <div class="features">
 
     <div class="card">
-      <h3>🛡️ Wide Coverage</h3>
+      <div class="card-icon-wrapper">
+            <i class='bx bx-shield-quarter'></i>
+        </div>
+      <h3>Wide Coverage</h3>
       <p>Insurance plans that fit all your needs.</p>
     </div>
 
     <div class="card">
-      <h3>⚡ Fast Claims</h3>
+      <div class="card-icon-wrapper">
+            <i class='bx bxs-zap' ></i>
+        </div>
+      <h3> Fast Claims</h3>
       <p>Quick and easy claim processing anytime.</p>
     </div>
 
     <div class="card">
-      <h3>🤝 Trusted Partners</h3>
+      <div class="card-icon-wrapper">
+            <i class='bx bx-user-check'></i>
+        </div>
+      <h3> Trusted Partners</h3>
       <p>We work only with reliable companies.</p>
     </div>
 
@@ -224,7 +230,7 @@
                 <div class="accordion custom-accordion" id="faqAccordion">
 
                     <!-- السؤال الأول (مفتوح افتراضياً) -->
-                    <div class="accordion-item mb-3 shadow-sm border-0">
+                    <div class="accordion-item mb-3 shadow-sm ">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                 How long does it usually take to complete a project?
@@ -238,7 +244,7 @@
                     </div>
 
                     <!-- السؤال التاني (مقفول) -->
-                    <div class="accordion-item mb-3 shadow-sm border-0">
+                    <div class="accordion-item mb-3 shadow-sm ">
                         <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 Do you provide technical support after delivery?
@@ -252,7 +258,7 @@
                     </div>
 
                     <!-- السؤال التالت (مقفول) -->
-                    <div class="accordion-item mb-3 shadow-sm border-0">
+                    <div class="accordion-item mb-3 shadow-sm ">
                         <h2 class="accordion-header" id="headingThree">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                                 What payment methods are available?
@@ -273,85 +279,9 @@
 </section>
 
 
- <footer>
-        <div class="container">
-            <div class="footer-content">
-                
-                <div class="footer-section about">
-                    <img src="images/DONE.jfif" alt="COVERLY" class="footer-logo">
-                    <p>Providing high-end technical solutions to elevate business efficiency. Trust and innovation are our core values in every project we deliver.</p>
-                    <div class="socials">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-section links">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Our Services</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section contact-form-footer">
-                    <h3>Send us a Message</h3>
-                    <form id="footer-contact-form" action="#">
-                        <input type="email" placeholder="Your Email Address" required>
-                        <textarea rows="3" placeholder="How can we help you today?" required></textarea>
-                        <button type="submit" class="footer-submit-btn">Send Message</button>
-                        
-                        <p id="success-msg" style="display: none; color: #27ae60; margin-top: 10px; font-size: 14px; font-weight: 500;">
-                            Message sent successfully!
-                        </p>
-                    </form>
-                </div>
-
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2026 COVERLY | Leading Tech Solutions. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<?php
+ include __DIR__ . '/includes/footer.php';
+ ?> 
 
 
 
