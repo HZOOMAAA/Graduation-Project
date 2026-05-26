@@ -20,7 +20,7 @@ $is_logged_in = isset($_SESSION['user_id']);
    <header>
     <div class="container">
         <!-- اللوجو على الشمال -->
-        <a href="#" class="logo">COVERLYzz</a>
+        <a href="#" class="logo">COVERLY</a>
         
         <!-- الجزء اليمين (بيضم الـ 2 ناف مع بعض) -->
         <div class="header-right">
