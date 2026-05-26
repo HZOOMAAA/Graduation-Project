@@ -35,7 +35,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                             <li><a href="category-health.php">Health</a></li>
                             <li><a href="category-car.php">Car</a></li>
                             <li><a href="life.html">Life</a></li>
-                            <li><a href="property.html">Property</a></li>
+                            <li><a href="category-property.php">Property</a></li>
                         </ul>
                     </li>
                     <li><a href="#">About Us</a></li>

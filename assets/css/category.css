@@ -6,6 +6,10 @@
     --text-main: #2D3436;       /* Readability */
     --error-red: #D63031;       /* Clear Alerts */
     --white: #FFFFFF;
+    --hub-input-bg: #F3F4F6;
+    --hub-dark: #111827;
+
+
 }
 
 /* تنسيق السكشن والكونتينر */
@@ -17,26 +21,28 @@
 
 /* هنا قسمنا الشاشة نصين باستخدام Grid */
 .grid-container {
-    max-width: 1100px;
+    /* max-width: 1100px; */
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr; /* عمودين متساويين */
+    grid-template-columns: 1.5fr 1.2fr; /* عمودين متساويين */
     gap: 40px;
-    background-color: var(--white);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    /* background-color: var(--white); */
+    /* border-radius: 12px; */
+    /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); */
     overflow: hidden;
 }
 
 /* تنسيق الهيدر بتاع الفورم */
 .form-container {
-    padding: 40px;
+    padding: 3px;
 }
 
-.header h2 {
-    color: var(--primary-navy);
-    font-size: 28px;
-    margin-bottom: 10px;
+.header h1 {
+    font-size: 2.3rem;
+    color: var(--hub-dark);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
 }
 
 .header p {
@@ -72,8 +78,8 @@
     padding: 12px 15px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    background-color: var(--bg-soft-gray);
-    color: var(--text-main);
+    background-color: var(--hub-input-bg);
+    color: var(--hub-dark);
     font-size: 15px;
     transition: border-color 0.3s ease;
 }
@@ -112,26 +118,41 @@
 
 .custom-radio input {
     margin-right: 8px;
-    accent-color: var(--action-blue); /* لتغيير لون الراديو الديفولت */
+    accent-color: var(--primary-navy); /* لتغيير لون الراديو الديفولت */
     width: 18px;
     height: 18px;
 }
 
-.check-btn {
-    width: 100%;
-    padding: 14px;
-    background-color: var(--action-blue);
-    color: var(--white);
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.insurance-actions-footer {
+    display: flex;
+    align-items: center;
+    gap: 30px;
 }
 
-.check-btn:hover {
+.insurance-submit-btn {
     background-color: var(--primary-navy);
+    color: #FFF;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
+    transition: all 0.3s;
+}
+
+.insurance-submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+}
+.insurance-cancel-link {
+    color: var(--hub-blue);
+    text-decoration: none;
+    font-weight: 600;
 }
 
 /* تنسيق الصورة */
@@ -145,7 +166,7 @@
     height: 100%;
     object-fit: cover; /* عشان الصورة تملى المساحة من غير ما تتمط */
     display: block;
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 5px;
 }
 
@@ -321,4 +342,6 @@
 #submitBtn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
-}
+}
+
+
