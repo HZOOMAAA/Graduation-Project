@@ -76,7 +76,7 @@ input:focus {
 }
 
 button {
-    background-color: var(--action-blue);
+    background-color: var(--primary-navy);
     color: white;
     padding: 14px;
     border: none;
@@ -87,9 +87,7 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #003E99;
-}
+
 
 p {
     text-align: center;
@@ -99,7 +97,7 @@ p {
 }
 
 p a {
-    color: var(--action-blue);
+    color: var(--primary-navy);
     text-decoration: none;
     font-weight: 600;
 }

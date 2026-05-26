@@ -2,6 +2,8 @@
 require_once 'includes/connection.php';
 include 'includes/nav2.php';
 ?>  
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 <link rel="stylesheet" href="/Graduation-Project/assets/css/category.css">
 
 <!-- ── Success / Error Modal ─────────────────────────────────────────────── -->
@@ -19,7 +21,7 @@ include 'includes/nav2.php';
         
         <div class="form-container">
             <div class="header">
-                <h2>Best car insurance offers and prices <i class='bx bxs-car-crash'></i></h2>
+                <h1>Best car insurance offers and prices for you  <i class='bx bxs-car-crash'></i></h1>
                 <p>Insert car details to compare and pick the best offer</p>
             </div>
             
@@ -86,12 +88,12 @@ include 'includes/nav2.php';
                     </div>
                 </div>
 
-                <button type="submit" class="check-btn" id="submitBtn">
-                    <span id="submitBtnText">Check</span>
-                    <span id="submitBtnLoader" style="display:none;">
-                        <i class="fas fa-spinner fa-spin"></i> Submitting...
-                    </span>
-                </button>
+                <div class="insurance-actions-footer">
+                    <button type="submit" class="insurance-submit-btn">
+                        <i class="fa-solid fa-arrow-right"></i> Show Results
+                    </button>
+                    <a href="index.php" class="insurance-cancel-link">Cancel</a>
+                </div>
             </form>
         </div>
 
