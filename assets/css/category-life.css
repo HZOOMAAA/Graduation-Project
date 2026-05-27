@@ -4,12 +4,12 @@
     --text-main: #374151;       /* الرمادي الداكن للنصوص الجانبية */
     --action-blue: #3B82F6;     /* الأزرق الصريح للأزرار واللينكات */
     --bg-creamy: #F9F8F6;       /* الخلفية الكريمي الهادية من الصورة */
-    --input-bg: #EEF2F6;        /* Background الرمادي الناعم للحقول */
+    --input-bg: #EEF2F6;        /* الخلفية الرمادية الناعمة للحقول */
     --white: #FFFFFF;
     --border-color: #E5E7EB;
 }
 
-/* ── تنعيم السكرول وحركة الشاشة بالكامل ─────────────────────── */
+/* ── تهيئة الشاشة وتنعيم الحركة ─────────────────────── */
 html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -41,7 +41,7 @@ body {
     width: 100%;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.1fr 0.9fr; /* النسبة الذهبية الموحدة للفورم والصورة */
+    grid-template-columns: 1.1fr 0.9fr;
     gap: 60px;
     align-items: start;
 }
@@ -51,9 +51,9 @@ body {
     padding: 20px 0;
 }
 
-.header h1 {
+.header h2 {
     color: var(--primary-navy);
-    font-size: 38px; /* حجم الخط الفخم الموحد من الصورة */
+    font-size: 38px;
     font-weight: 700;
     line-height: 1.2;
     margin-top: 0;
@@ -61,11 +61,11 @@ body {
     letter-spacing: -0.5px;
 }
 
-.header h1 i {
+.header h2 i {
     font-size: 30px;
     vertical-align: middle;
     margin-left: 5px;
-    color: var(--primary-navy);
+    color: var(--action-blue);
 }
 
 .header p {
@@ -76,26 +76,39 @@ body {
     opacity: 0.8;
 }
 
-/* ── تنسيق الحقول النظيف والـ Minimalist من الصورة ──────────────── */
+.form-container h3 {
+    color: var(--primary-navy);
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* ── تنسيق الحقول النظيف والـ Minimalist ──────────────── */
+.input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
 .input-group {
     margin-bottom: 24px;
 }
 
 .input-group label {
     display: block;
-    color: #6B7280; /* الرمادي الخفيف للـ Labels */
+    color: #6B7280;
     font-weight: 500;
     margin-bottom: 8px;
     font-size: 13px;
 }
 
-/* الحقول الرقمية والنصية */
 .input-group input[type="number"],
 .input-group input[type="text"] {
     width: 100%;
     padding: 14px 18px;
     border: 1px solid transparent;
-    border-radius: 12px; /* الكيرف الناعم المستدير من الصورة */
+    border-radius: 12px;
     background-color: var(--input-bg);
     color: var(--primary-navy);
     font-size: 15px;
@@ -111,7 +124,7 @@ body {
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
 }
 
-/* ── الـ Custom Select المطور لصفحة العربيات ────────────────────── */
+/* ── الـ Custom Select المطور ────────────────────────────────────── */
 .custom-select-wrapper {
     position: relative;
     user-select: none;
@@ -126,7 +139,7 @@ body {
     background-color: var(--input-bg);
     border: 1px solid transparent;
     border-radius: 12px;
-    color: #9CA3AF; /* لون الـ Placeholder */
+    color: #9CA3AF;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -184,7 +197,7 @@ body {
     color: var(--white);
 }
 
-/* ── الراديو بوتونز المودرن الدائرية من الصورة ────────────────────── */
+/* ── الراديو بوتونز وتنسيق الأزرار ───────────────── */
 .radio-group {
     margin-bottom: 30px;
 }
@@ -213,7 +226,7 @@ body {
 }
 
 .custom-radio input {
-    display: none; /* إخفاء الديفولت البايخ لبناء راديو الصورة */
+    display: none;
 }
 
 .custom-radio::before {
@@ -231,19 +244,11 @@ body {
 .custom-radio:has(input:checked)::before {
     border-color: var(--action-blue);
     background-color: var(--action-blue);
-    box-shadow: inset 0 0 0 4px var(--white); /* النقطة البيضاء الداخلية */
+    box-shadow: inset 0 0 0 4px var(--white);
 }
 
-/* ── منطقة الـ Footer والزرار الـ Premium من الصورة ───────────────── */
-.insurance-actions-footer {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-top: 35px;
-}
-
-.insurance-submit-btn {
-    flex: 1;
+.check-btn {
+    width: 100%;
     padding: 16px 24px;
     background-color: var(--primary-navy);
     color: var(--white);
@@ -255,34 +260,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
     transition: all 0.25s ease;
 }
 
-.insurance-submit-btn:hover {
-    /* background-color: #111827; */
+.check-btn:hover {
+    /* background-color: #2563EB; */
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-}
-
-.insurance-submit-btn i {
-    transition: transform 0.25s ease;
-}
-
-.insurance-submit-btn:hover i {
-    transform: translateX(4px); /* حركة انسيابية للسهم جهة اليمين */
-}
-
-.insurance-cancel-link {
-    color: #6B7280;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    transition: color 0.2s ease;
-}
-
-.insurance-cancel-link:hover {
-    color: var(--primary-navy);
 }
 
 /* ── 📌 التثبيت المطلق والذكي للصورة (Sticky) الممسوكة بالمسطرة ── */
@@ -294,20 +278,19 @@ body {
 
 .image-container img {
     /* position: sticky; */
-    top: 40px; /* المسافة التوب الصريحة عشان تفضل ثابتة مع السكرول */
+    top: 40px;
     transform: none;
-    
-    width: 100%; /* تملى مساحة العمود المخصص ليها في الـ Grid */
+    width: 100%;
     max-width: 500px;
-    height: 85vh; /* سحب الارتفاع الرأسي النظيف المتناسق مع الصورة */
+    height: 85vh;
     object-fit: cover;
     display: block;
-    border-radius: 40px; /* الكيرف الكبير المودرن من السكرين شوت */
+    border-radius: 40px;
     z-index: 10;
     box-sizing: border-box;
 }
 
-/* ── الـ Modal المنبثق لـ تأكيد الـ AJAX ────────────────────── */
+/* ── الـ Modal المنبثق للـ AJAX ────────────────────── */
 .app-modal-overlay {
     position: fixed;
     inset: 0;
@@ -341,7 +324,7 @@ body {
     transition: background 0.25s ease;
 }
 
-/* ── Responsive لتوافق كامل مع الشاشات الصغيرة والموبايل ────────────────── */
+/* Responsive */
 @media (max-width: 768px) {
     .grid-container {
         grid-template-columns: 1fr;
@@ -350,7 +333,7 @@ body {
     .image-container {
         position: static;
         min-height: auto;
-        order: -1; /* الصورة تظهر فوق الفورم في الموبايل */
+        order: -1;
     }
     .image-container img {
         position: static;
@@ -358,11 +341,5 @@ body {
         max-width: 100%;
         height: 300px;
         border-radius: 24px;
-    }
-    .insurance-actions-footer {
-        flex-direction: column;
-    }
-    .insurance-submit-btn {
-        width: 100%;
     }
 }
