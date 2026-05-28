@@ -160,9 +160,7 @@ include 'includes/nav2.php';
         <!-- ── Page Header ── -->
         <div class="plans-hero">
             <div class="plans-hero-inner">
-                <div class="hero-badge">
-                    <i class="bx bxs-shield-plus"></i> Application #<?php echo $application_id; ?>
-                </div>
+              
                 <h1>Choose Your Insurance Plan</h1>
                 <p>Based on your submitted details, we found <strong><?php echo count($matched_plans); ?></strong> plan<?php echo count($matched_plans) !== 1 ? 's' : ''; ?> that match your vehicle.</p>
 
