@@ -210,48 +210,56 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/AdminDashboard.css">
 </head>
 <body>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <div class="sidebar-header">
-            Admin Panel
-            <span>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></span>
-        </div>
-        <nav>
-            <a href="AdminDashboard.php?tab=overview" class="<?php echo $active_tab === 'overview' ? 'active' : ''; ?>">
-                <span class="icon">🏠</span> Overview
-            </a>
-            <a href="AdminDashboard.php?tab=applications" class="<?php echo $active_tab === 'applications' ? 'active' : ''; ?>">
-                <span class="icon">📄</span> Applications
-            </a>
-            <a href="AdminDashboard.php?tab=plans" class="<?php echo $active_tab === 'plans' ? 'active' : ''; ?>">
-                <span class="icon">🛡️</span> Insurance Plans
-            </a>
-            <a href="AdminDashboard.php?tab=manage" class="<?php echo $active_tab === 'manage' ? 'active' : ''; ?>">
-                <span class="icon">👥</span> Manage Agents
-            </a>
-            <a href="AdminDashboard.php?tab=add" class="<?php echo $active_tab === 'add' ? 'active' : ''; ?>">
-                <span class="icon">➕</span> Add Agent
-            </a>
-            <a href="AdminDashboard.php?tab=customers" class="<?php echo $active_tab === 'customers' ? 'active' : ''; ?>">
-                <span class="icon">👤</span> Customers
-            </a>
-            <a href="AdminDashboard.php?tab=add_plan" class="<?php echo $active_tab === 'add_plan' ? 'active' : ''; ?>">
-                <span class="icon">📋</span> Add Plan
-            </a>
-            <a href="AdminDashboard.php?tab=add_category" class="<?php echo $active_tab === 'add_category' ? 'active' : ''; ?>">
-                <span class="icon">📁</span> Add Category
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="/Graduation-Project/auth/logout.php">🚪 Logout</a>
-        </div>
+    <div class="sidebar-header">
+        Coverly
+        <span>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></span>
     </div>
+    <nav>
+        <a href="AdminDashboard.php?tab=overview" class="<?php echo $active_tab === 'overview' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-home'></i></span> Overview
+        </a>
+        
+        <a href="AdminDashboard.php?tab=profile" class="<?php echo $active_tab === 'profile' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-user-circle'></i></span> Admin Profile
+        </a>
 
-    <!-- Main Content -->
+        <a href="AdminDashboard.php?tab=applications" class="<?php echo $active_tab === 'applications' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-book-content'></i></span> Applications
+        </a>
+        <a href="AdminDashboard.php?tab=plans" class="<?php echo $active_tab === 'plans' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-shield'></i></span> Insurance Plans
+        </a>
+        <a href="AdminDashboard.php?tab=manage" class="<?php echo $active_tab === 'manage' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-group'></i></span> Manage Agents
+        </a>
+        <a href="AdminDashboard.php?tab=add" class="<?php echo $active_tab === 'add' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-user-plus'></i></span> Add Agent
+        </a>
+        <a href="AdminDashboard.php?tab=customers" class="<?php echo $active_tab === 'customers' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-user'></i></span> Customers
+        </a>
+        <a href="AdminDashboard.php?tab=add_plan" class="<?php echo $active_tab === 'add_plan' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-add-to-queue'></i></span> Add Plan
+        </a>
+        <a href="AdminDashboard.php?tab=add_category" class="<?php echo $active_tab === 'add_category' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-folder'></i></span> Add Category
+        </a>
+    </nav>
+    <div class="sidebar-footer">
+        <a href="/Graduation-Project/auth/logout.php"><i class='bx bx-log-out'></i>Logout</a>
+    </div>
+</div>
+
     <div class="main-content">
 
         <?php if ($error): ?>
@@ -261,54 +269,207 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
         <?php endif; ?>
 
-        <!-- ── OVERVIEW TAB ── -->
         <?php if ($active_tab === 'overview'): ?>
             <div class="page-title">Dashboard Overview</div>
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
 
-            <div style="display:grid; grid-template-columns: repeat(4,1fr); gap:20px; margin-bottom:30px;">
-                <div class="card" style="text-align:center; padding:24px;">
-                    <div style="font-size:32px;">📄</div>
-                    <div style="font-size:28px; font-weight:700; color:#1a73e8; margin:8px 0;"><?php echo $total_apps; ?></div>
-                    <div style="color:#64748b; font-size:13px;">Total Applications</div>
+            <!-- <div class="overview-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
+                    <div class="stat-card-number"><?php echo $total_apps; ?></div>
+                    <div class="stat-card-label">Total Applications</div>
                 </div>
-                <div class="card" style="text-align:center; padding:24px;">
-                    <div style="font-size:32px;">👥</div>
-                    <div style="font-size:28px; font-weight:700; color:#0f9d58; margin:8px 0;"><?php echo $total_agents; ?></div>
-                    <div style="color:#64748b; font-size:13px;">Active Agents</div>
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
+                    <div class="stat-card-number"><?php echo $total_agents; ?></div>
+                    <div class="stat-card-label">Active Agents</div>
                 </div>
-                <div class="card" style="text-align:center; padding:24px;">
-                    <div style="font-size:32px;">👤</div>
-                    <div style="font-size:28px; font-weight:700; color:#e65100; margin:8px 0;"><?php echo $total_customers; ?></div>
-                    <div style="color:#64748b; font-size:13px;">Registered Customers</div>
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
+                    <div class="stat-card-number"><?php echo $total_customers; ?></div>
+                    <div class="stat-card-label">Registered Customers</div>
                 </div>
-                <div class="card" style="text-align:center; padding:24px;">
-                    <div style="font-size:32px;">🛡️</div>
-                    <div style="font-size:28px; font-weight:700; color:#c62828; margin:8px 0;"><?php echo $total_plans; ?></div>
-                    <div style="color:#64748b; font-size:13px;">Insurance Plans</div>
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
+                    <div class="stat-card-number"><?php echo $total_plans; ?></div>
+                    <div class="stat-card-label">Insurance Plans</div>
                 </div>
             </div>
 
             <div class="card">
-                <h2>📊 Application Pipeline</h2>
+                <h2><i class='bx bx-book-content'></i> Application Pipeline</h2>
                 <table>
                     <thead><tr><th>Stage</th><th>Count</th><th>Description</th></tr></thead>
                     <tbody>
-                        <tr><td><span class="badge" style="background:#fff3e0;color:#e65100;">Under Review</span></td><td><?php echo $stats['under_review']; ?></td><td style="color:#64748b;font-size:13px;">Agent is verifying documents and customer data</td></tr>
-                        <tr><td><span class="badge" style="background:#fce8ff;color:#7b1fa2;">Awaiting Payment</span></td><td><?php echo $stats['awaiting_payment']; ?></td><td style="color:#64748b;font-size:13px;">Agent approved — customer must complete payment for policy issuance</td></tr>
-                        <tr><td><span class="badge" style="background:#e8f5e9;color:#1b5e20;">Paid</span></td><td><?php echo $stats['paid']; ?></td><td style="color:#64748b;font-size:13px;">Payment received — policy issued and active</td></tr>
-                        <tr><td><span class="badge" style="background:#fdecea;color:#c62828;">Rejected</span></td><td><?php echo $stats['rejected']; ?></td><td style="color:#64748b;font-size:13px;">Application declined by agent</td></tr>
+                        <tr><td><span class="badge" style="background:#fff3e0;color:#e65100;">Under Review</span></td><td><?php echo $stats['under_review']; ?></td><td><span class="stat-card-label">Agent is verifying documents and customer data</span></td></tr>
+                        <tr><td><span class="badge" style="background:#fce8ff;color:#7b1fa2;">Awaiting Payment</span></td><td><?php echo $stats['awaiting_payment']; ?></td><td><span class="stat-card-label">Agent approved — customer must complete payment for policy issuance</span></td></tr>
+                        <tr><td><span class="badge" style="background:#e8f5e9;color:#1b5e20;">Paid</span></td><td><?php echo $stats['paid']; ?></td><td><span class="stat-card-label">Payment received — policy issued and active</span></td></tr>
+                        <tr><td><span class="badge" style="background:#fdecea;color:#c62828;">Rejected</span></td><td><?php echo $stats['rejected']; ?></td><td><span class="stat-card-label">Application declined by agent</span></td></tr>
                     </tbody>
                 </table>
+            </div> -->
+
+            <!-- test marwan wael -->
+
+
+            <div class="overview-stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
+                    <div class="stat-card-number"><?php echo $total_customers; ?></div>
+                    <div class="stat-card-meta">
+                        <span class="label">Customers</span>
+                        <span class="stat-trend-up">↑ 11.01%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
+                    <div class="stat-card-number"><?php echo $total_apps; ?></div>
+                    <div class="stat-card-meta">
+                        <span class="label">Total Requests</span>
+                        <span class="stat-trend-down">↓ 4.05%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-group'></i></div>
+                    <div class="stat-card-number"><?php echo $total_agents; ?></div>
+                    <div class="stat-card-meta">
+                        <span class="label">Active Agents</span>
+                        <span class="stat-trend-up">↑ 2.3%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
+                    <div class="stat-card-number"><?php echo $total_plans; ?></div>
+                    <div class="stat-card-meta">
+                        <span class="label">Insurance Plans</span>
+                        <span class="stat-trend-stable">Stable</span>
+                    </div>
+                </div>
             </div>
 
-        <!-- ── ADD AGENT TAB ── -->
+            <div class="overview-twin-layout">
+                
+                <div class="card">
+                    <h2 class="card-title-main">Insurance Categories</h2>
+                    <p class="card-subtitle-main">Distribution of customer requests based on category</p>
+                    
+                    <div class="categories-progress-list">
+                        <div>
+                            <div class="progress-item-info">
+                                <span><i class='bx bx-car'></i> Car Insurance</span>
+                                <span>60%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 60%; background: var(--action-blue);"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="progress-item-info">
+                                <span><i class='bx bx-heart'></i> Health Insurance</span>
+                                <span>25%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 25%; background: #10B981;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="progress-item-info">
+                                <span><i class='bx bx-home'></i> Property Insurance</span>
+                                <span>10%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 10%; background: #F59E0B;"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="progress-item-info">
+                                <span><i class='bx bx-group'></i> Life Insurance</span>
+                                <span>5%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 5%; background: #8B5CF6;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header-wrapper">
+                        <h2 class="card-title-main">Recent Applications</h2>
+                        <a href="AdminDashboard.php?tab=applications" class="btn btn-sm btn-edit">See all</a>
+                    </div>
+
+                    <table class="recent-apps-table">
+                        <thead>
+                            <tr>
+                                <th>Customer</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th style="text-align: right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="customer-meta-name">Mahmoud Diaa</div>
+                                    <div class="customer-meta-id">ID: #1024</div>
+                                </td>
+                                <td class="category-column-text">Car Insurance</td>
+                                <td>
+                                    <span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;">Paid</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <small style="color: var(--text-muted); font-weight: 500;">Assigned</small>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td>
+                                    <div class="customer-meta-name">Yasmine Hamed</div>
+                                    <div class="customer-meta-id">ID: #1025</div>
+                                </td>
+                                <td class="category-column-text">Health Insurance</td>
+                                <td>
+                                    <span class="badge" style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;">Review</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <form action="AdminDashboard.php" method="post" class="quick-assign-form">
+                                        <input type="hidden" name="application_id" value="1025">
+                                        <select name="agent_id" class="quick-assign-select" required>
+                                            <option value="">Assign...</option>
+                                            <?php
+                                            if ($agents) {
+                                                mysqli_data_seek($agents, 0);
+                                                while ($ag = mysqli_fetch_assoc($agents)):
+                                            ?>
+                                                <option value="<?php echo $ag['user_id']; ?>"><?php echo htmlspecialchars($ag['name']); ?></option>
+                                            <?php endwhile; } ?>
+                                        </select>
+                                        <button type="submit" name="assign_agent" class="btn btn-primary quick-assign-submit">Go</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            
+            <!-- end test marwan wael -->
+
+
         <?php elseif ($active_tab === 'add'): ?>
             <div class="page-title"><?php echo $edit_agent ? 'Edit Agent' : 'Add New Agent'; ?></div>
             <div class="page-subtitle"><?php echo $edit_agent ? 'Update the agent\'s information below.' : 'Fill in the form below to create a new agent account.'; ?></div>
 
             <div class="card">
-                <h2><?php echo $edit_agent ? '✏️ Edit Agent' : '➕ New Agent'; ?></h2>
+                <h2><?php echo $edit_agent ? ' Edit Agent' : ' New Agent'; ?></h2>
                 <form action="AdminDashboard.php" method="post">
                     <?php if ($edit_agent): ?>
                         <input type="hidden" name="user_id" value="<?php echo $edit_agent['user_id']; ?>">
@@ -336,14 +497,21 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </form>
             </div>
 
-        <!-- ── MANAGE AGENTS TAB ── -->
         <?php elseif ($active_tab === 'manage'): ?>
-            <div class="page-title">Manage Agents</div>
+            <div class="page-title"><i class='bx bx-group'></i>Manage Agents</div>
             <div class="page-subtitle">View, edit or remove agent accounts from the system.</div>
-
-            <div class="card">
-                <h2>👥 Agent Accounts</h2>
-                <table>
+                        <div class="card">
+    
+                <div class="card-search-header">
+                    <h2><i class='bx bx-user'></i> Agents Accounts</h2>
+        
+                <div class="search-input-wrapper">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="agentSearchInput" class="search-grid-input" placeholder="Search by name, email or phone...">
+                 </div>
+            </div>
+            <div class="table-responsive-container">
+                <table id="agentTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -360,28 +528,43 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                     <td><?php echo $row['user_id']; ?></td>
                                     <td><?php echo htmlspecialchars($row['name']); ?></td>
                                     <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                    <td><span class="badge">Agent</span></td>
+                                    <td><span class="badge" style="background:#EBF5FF; color:#1E4ED8;">Agent</span></td>
                                     <td>
-                                        <a href="AdminDashboard.php?edit=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-edit">✏️ Edit</a>
-                                        <a href="AdminDashboard.php?delete=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this agent?');">🗑️ Delete</a>
+                                        <a href="AdminDashboard.php?edit=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-edit"><i class='bx bx-edit'></i></a>
+                                        <a href="AdminDashboard.php?delete=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this agent?');"><i class='bx bx-trash'></i></a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr><td colspan="5" class="no-data">No agents found. <a href="AdminDashboard.php?tab=add">Add one now →</a></td></tr>
                         <?php endif; ?>
+                        <tr id="customerNoResultsRow" style="display: none;">
+                            <td colspan="6" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
+                                <i class='bx bx-search-alt' style="font-size: 20px; vertical-align: middle; margin-right: 5px;"></i> No matching customers found.
+                            </td>
+                        </tr>
+
                     </tbody>
                 </table>
             </div>
 
-        <!-- ── CUSTOMERS TAB ── -->
         <?php elseif ($active_tab === 'customers'): ?>
-            <div class="page-title">Customers</div>
+            <div class="page-title"><i class='bx bx-user'></i>Customers</div>
             <div class="page-subtitle">View registered customers in the system.</div>
 
             <div class="card">
-                <h2>👤 Customer Accounts</h2>
-                <table>
+    
+                <div class="card-search-header">
+                    <h2><i class='bx bx-user'></i> Customer Accounts</h2>
+        
+                <div class="search-input-wrapper">
+                    <i class='bx bx-search'></i>
+                    <input type="text" id="customerSearchInput" class="search-grid-input" placeholder="Search by name, email or phone...">
+                 </div>
+            </div>
+
+            <div class="table-responsive-container">
+                <table id="customersTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -405,19 +588,23 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="6" class="no-data">No customers found.</td></tr>
+                            <tr class="no-data-row"><td colspan="6" class="no-data">No customers found.</td></tr>
                         <?php endif; ?>
+                        <tr id="customerNoResultsRow" style="display: none;">
+                            <td colspan="6" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
+                                <i class='bx bx-search-alt' style="font-size: 20px; vertical-align: middle; margin-right: 5px;"></i> No matching customers found.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
-        <!-- ── APPLICATIONS TAB ── -->
         <?php elseif ($active_tab === 'applications'): ?>
             <div class="page-title">New Customer Applications</div>
             <div class="page-subtitle">Assign an agent once the customer has selected a plan and uploaded the required documents.</div>
 
-            <div class="card">
-                <h2>📄 Applications List</h2>
+            <div class="table-responsive-container">
+                <h2><i class='bx bx-book-content'></i> Applications List</h2>
                 <table>
                     <thead>
                         <tr>
@@ -468,7 +655,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                         <?php if ($row['status'] === 'under_review'): ?>
                                             <form action="AdminDashboard.php" method="post" style="display:flex; gap:5px; align-items:center;">
                                                 <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
-                                                <select name="agent_id" style="padding:5px; border-radius:4px; border:1px solid #ccc; font-size:12px;" required>
+                                                <select name="agent_id" style="padding:6px; border-radius:6px; border:1px solid #D1D5DB; font-size:12px; background-color: var(--input-bg);" required>
                                                     <option value="">Select Agent...</option>
                                                     <?php
                                                     if ($agents) {
@@ -483,9 +670,9 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                                 <button type="submit" name="assign_agent" class="btn btn-sm btn-primary">Assign</button>
                                             </form>
                                         <?php elseif (in_array($row['status'], ['under_review','approved','rejected'])): ?>
-                                            <span style="color:#9ca3af; font-size:12px;">Agent: <?php echo htmlspecialchars($row['agent_name'] ?? '—'); ?></span>
+                                            <small style="color:#9ca3af;">Agent: <?php echo htmlspecialchars($row['agent_name'] ?? '—'); ?></small>
                                         <?php else: ?>
-                                            <span style="color:#9ca3af; font-size:12px;">Awaiting plan choice</span>
+                                            <small style="color:#9ca3af;">Awaiting plan choice</small>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -497,12 +684,11 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </table>
             </div>
 
-        <!-- ── INSURANCE PLANS TAB ── -->
         <?php elseif ($active_tab === 'plans'): ?>
-            <div class="page-title">Insurance Plans</div>
+            <div class="page-title"><i class='bx bx-shield'></i>Insurance Plans</div>
             <div class="page-subtitle">All available plans with their eligibility rules. Customers see these during instant quotation.</div>
-            <div class="card">
-                <h2>🛡️ Plans Catalogue</h2>
+            <div class="table-responsive-container">
+                <h2><i class='bx bx-shield'></i> Plans Catalogue</h2>
                 <table>
                     <thead>
                         <tr>
@@ -527,14 +713,14 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                         <?php
                                         $rules = json_decode($p['eligibility_rules'] ?? '{}', true);
                                         if ($rules) {
-                                            echo '<ul style="margin:0; padding-left:16px; font-size:12px; color:#374151;">';
+                                            echo '<ul style="margin:0; padding-left:16px; font-size:12px; color:#374151; line-height:1.6;">';
                                             foreach ($rules as $k => $v) {
                                                 $val = is_array($v) ? implode(', ', $v) : $v;
                                                 echo '<li><b>' . htmlspecialchars(str_replace('_',' ',$k)) . ':</b> ' . htmlspecialchars($val) . '</li>';
                                             }
                                             echo '</ul>';
                                         } else {
-                                            echo '<span style="color:#9ca3af;">None</span>';
+                                            echo '<small style="color:#9ca3af;">None</small>';
                                         }
                                         ?>
                                     </td>
@@ -547,13 +733,12 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </table>
             </div>
 
-        <!-- ── ADD PLAN TAB ── -->
         <?php elseif ($active_tab === 'add_plan'): ?>
-            <div class="page-title">Add New Insurance Plan</div>
+            <div class="page-title"><i class='bx bx-add-to-queue'></i> Add New Insurance Plan</div>
             <div class="page-subtitle">Fill in the form below to create a new insurance plan.</div>
 
             <div class="card">
-                <h2>➕ New Plan</h2>
+                <h2><i class='bx bx-add-to-queue'></i> Add New Plan</h2>
                 <form action="AdminDashboard.php" method="post">
                     <div class="form-group">
                         <label>Plan Name</label>
@@ -582,7 +767,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     </div>
                     <div class="form-group">
                         <label>Eligibility Rules <small style="color:#9ca3af;">(Must be valid JSON)</small></label>
-                        <textarea name="eligibility_rules" rows="4" placeholder='e.g. ["Rule 1", "Rule 2"]'></textarea>
+                        <textarea name="eligibility_rules" rows="4" placeholder='e.g. {"Rule 1", "Rule 2"}'></textarea>
                     </div>
                     <div class="form-actions">
                         <button type="submit" name="add_plan" class="btn btn-primary">Add Plan</button>
@@ -590,13 +775,12 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </form>
             </div>
 
-        <!-- ── ADD CATEGORY TAB ── -->
         <?php elseif ($active_tab === 'add_category'): ?>
-            <div class="page-title">Add New Category</div>
+            <div class="page-title"><i class='bx bx-folder'></i> Add New Category</div>
             <div class="page-subtitle">Create a new category for insurance plans.</div>
 
             <div class="card">
-                <h2>📁 New Category</h2>
+                <h2><i class='bx bx-folder'></i> New Category</h2>
                 <form action="AdminDashboard.php" method="post">
                     <div class="form-group">
                         <label>Category Name</label>
@@ -610,5 +794,8 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         <?php endif; ?>
 
     </div>
+
+<script src="/Graduation-Project/assets/js/admindashboard.js"></script>
+
 </body>
 </html>
