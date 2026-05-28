@@ -38,7 +38,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                             <li><a href="category-property.php">Property</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">About Us</a></li>
+                    <li><a href="about.php">About Us</a></li>
                     <!-- <li><a href="#"></a></li> -->
                 </ul>
             </nav>

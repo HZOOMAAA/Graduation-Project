@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="assets/css/about.css">
 </head>
 <body>
+    <?php include 'includes/nav2.php'; ?>  
 
     <!-- Hero Section -->
     <section class="hero">
@@ -128,6 +129,7 @@
             </div>
         </div>
     </section>
+    <?php include 'includes/footer.php'; ?>  
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
