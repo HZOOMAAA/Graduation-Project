@@ -54,6 +54,5 @@ document.addEventListener("DOMContentLoaded", function () {
     initGridSearch("customerSearchInput", "customersTable", "customerNoResultsRow");
 });
 document.addEventListener("DOMContentLoaded", function () {
-    // جرب تشغلها كدة (بدون تحديد كلاسات) عشان يدور في السطر كله أوتوماتيك ويضمن اللقطة
     initGridSearch("agentSearchInput", "agentTable", "customerNoResultsRow");
 });
