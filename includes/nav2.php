@@ -39,7 +39,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                         </ul>
                     </li>
                     <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <!-- <li><a href="#"></a></li> -->
                 </ul>
             </nav>
 
