@@ -140,6 +140,6 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
     </div>
 </section>
 
-<script src="/Graduation-Project/assets/js/category-property.js"></script>
+<script src="/Graduation-Project/assets/js/category-property.js?v=1.1"></script>
 
 <?php include 'includes/footer.php'; ?>
