@@ -3,8 +3,8 @@ require_once 'includes/connection.php';
 include 'includes/nav2.php';
 
 // سحب بيانات الجلسة تلقائياً للمستخدم المسجل
-$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
-$user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
+$user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
+$user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
 ?>  
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,6 +12,16 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <link rel="stylesheet" href="./assets/css/category-health.css?v=1.1">
+
+<!-- ── Success / Error Modal ─────────────────────────────────────────────── -->
+<div id="appModal" class="app-modal-overlay" style="display:none;">
+    <div class="app-modal-box">
+        <div class="app-modal-icon" id="appModalIcon"></div>
+        <h3 id="appModalTitle"></h3>
+        <p id="appModalMsg"></p>
+        <button class="app-modal-btn" onclick="closeAppModal()">OK</button>
+    </div>
+</div>
 
 <section class="insurance-health-section">
     <div class="insurance-main-container">
@@ -22,7 +32,7 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                 <p class="insurance-subtitle">Add your information and compare the best offers</p>
             </div>
             
-            <form action="compare_health_offers.php" method="POST" id="insuranceForm">
+            <form id="healthInsuranceForm">
                 
                 <h3 class="insurance-section-title">Primary member</h3>
                 
@@ -86,8 +96,9 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                 </div>
 
                 <div class="insurance-actions-footer">
-                    <button type="submit" class="insurance-submit-btn">
-                        <i class="fa-solid fa-arrow-right"></i> Show Results
+                    <button type="submit" class="insurance-submit-btn" id="submitBtn">
+                        <span id="submitBtnText"><i class="fa-solid fa-arrow-right"></i> Show Results</span>
+                        <span id="submitBtnLoader" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
                     </button>
                     <a href="index.php" class="insurance-cancel-link">Cancel</a>
                 </div>
@@ -105,5 +116,5 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
     </div>
 </section>
 
-<script src="./assets/js/category-health.js?v=1.1"></script>
+<script src="./assets/js/category-health.js?v=1.2"></script>
 <?php include 'includes/footer.php'; ?>

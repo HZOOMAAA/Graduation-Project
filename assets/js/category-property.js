@@ -64,38 +64,32 @@ document.getElementById('propertyInsuranceForm').addEventListener('submit', func
     const btnLoader = document.getElementById('submitBtnLoader');
     
     submitBtn.disabled = true;
-    btnText.style.display = 'none';
-    btnLoader.style.display = 'inline-block';
+    if (btnText) btnText.style.display = 'none';
+    if (btnLoader) btnLoader.style.display = 'inline-block';
     
     const formData = new FormData(this);
     
-    fetch('submit_property_application.php', {
+    fetch('/Graduation-Project/submit_property_application.php', {
         method: 'POST',
         body: formData
     })
     .then(response => response.json())
     .then(data => {
         submitBtn.disabled = false;
-        btnText.style.display = 'inline-block';
-        btnLoader.style.display = 'none';
+        if (btnText) btnText.style.display = 'inline-block';
+        if (btnLoader) btnLoader.style.display = 'none';
         
-        if(data.status === 'success') {
-            showAppModal('success', 'Application Received!', data.message || 'Property valuation submitted successfully.');
-            this.reset();
-            // ريسيت للتكست الافتراضي في الـ Custom Selects
-            document.querySelectorAll(".custom-select-trigger span").forEach((span, index) => {
-                if(index === 0) span.innerText = "Select Type";
-                if(index === 1) span.innerText = "Select Year";
-                if(index === 2) span.innerText = "Select Coverage Plan";
-            });
+        if(data.success) {
+            // Redirect directly to plans page without popup message
+            window.location.href = '/Graduation-Project/plans.php';
         } else {
             showAppModal('error', 'Error Occurred', data.message || 'Failed to analyze property data.');
         }
     })
     .catch(error => {
         submitBtn.disabled = false;
-        btnText.style.display = 'inline-block';
-        btnLoader.style.display = 'none';
-        showAppModal('error', 'Connection Error', 'Server is unreachable. Check your database connection.');
+        if (btnText) btnText.style.display = 'inline-block';
+        if (btnLoader) btnLoader.style.display = 'none';
+        showAppModal('error', 'Connection Error', 'Server is unreachable. Check your connection.');
     });
 });

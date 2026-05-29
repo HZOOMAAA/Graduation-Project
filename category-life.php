@@ -8,9 +8,9 @@ require_once 'includes/connection.php';
 include 'includes/nav2.php';
 
 // سحب بيانات الجلسة تلقائياً للمتأمن عليه
-$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
-$user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
-?>  
+$user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
+$user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
+?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,15 +30,15 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
 
 <section class="car-insurance-section">
     <div class="grid-container">
-        
+
         <div class="form-container">
             <div class="header">
                 <h2>Secure Your Family's Future <i class='bx bxs-heart-letter'></i></h2>
                 <p>Calculate your premium and protect the people you love the most</p>
             </div>
-            
+
             <form id="lifeInsuranceForm">
-                
+
                 <h3>Primary member</h3>
 
                 <div class="input-group">
@@ -52,13 +52,15 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
 
                 <div class="input-group">
                     <label>Full name*</label>
-                    <input type="text" name="client_name" value="<?php echo htmlspecialchars($user_name); ?>" placeholder="Full Name" readonly style="opacity: 0.75; cursor: not-allowed;">
+                    <input type="text" name="client_name" value="<?php echo htmlspecialchars($user_name); ?>"
+                        placeholder="Full Name" readonly style="opacity: 0.75; cursor: not-allowed;">
                 </div>
 
                 <div class="input-row">
                     <div class="input-group">
                         <label for="coverage_amount">Insurance Coverage Amount (EGP)</label>
-                        <input type="number" id="coverage_amount" name="coverage_amount" placeholder="e.g. 1000000" required>
+                        <input type="number" id="coverage_amount" name="coverage_amount" placeholder="e.g. 1000000"
+                            required>
                     </div>
 
                     <div class="input-group">
@@ -82,7 +84,8 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                 <div class="input-row">
                     <div class="input-group">
                         <label for="beneficiary_name">Primary Beneficiary Name</label>
-                        <input type="text" id="beneficiary_name" name="beneficiary_name" placeholder="Who receives the payout?" required>
+                        <input type="text" id="beneficiary_name" name="beneficiary_name"
+                            placeholder="Who receives the payout?" required>
                     </div>
 
                     <div class="input-group">
@@ -102,28 +105,12 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                     </div>
                 </div>
 
-                <div class="radio-group">
-                    <label class="radio-main-label">Do you smoke tobacco products?*</label>
-                    <div class="radio-options">
-                        <label class="custom-radio">
-                            <input type="radio" name="is_smoker" value="no" checked required>
-                            <span class="radio-text">No</span>
-                        </label>
-                        <label class="custom-radio">
-                            <input type="radio" name="is_smoker" value="yes">
-                            <span class="radio-text">Yes</span>
-                        </label>
-                    </div>
-                </div>
-
                 <button type="submit" class="check-btn" id="submitBtn">
                     <span class="btn-content" id="submitBtnText">
-                        Calculate Premium <i class="fa-solid fa-arrow-right btn-icon"></i>
-                    </span>
-                    <span id="submitBtnLoader" style="display:none;">
-                        <i class="fas fa-spinner fa-spin"></i> Processing...
+                        Show Results <i class="fa-solid fa-arrow-right btn-icon"></i>
                     </span>
                 </button>
+
             </form>
         </div>
 
@@ -134,6 +121,6 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
     </div>
 </section>
 
-<script src="/Graduation-Project/assets/js/category-life.js"></script>
+<script src="/Graduation-Project/assets/js/category-life.js?v=1.3"></script>
 
 <?php include 'includes/footer.php'; ?>

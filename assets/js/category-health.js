@@ -1,3 +1,5 @@
+// ── Dynamic spouse & children fields ──────────────────────────────────────────
+
 // دالة إضافة حقل الزوجة ديناميكياً (مرة واحدة فقط)
 function addSpouseField() {
     const container = document.getElementById('spouse-dynamic-area');
@@ -65,4 +67,113 @@ function removeChildField(id) {
     if (card) {
         card.remove();
     }
+}
+
+
+// ── AJAX Form Submission ──────────────────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('healthInsuranceForm');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        // ── Validate required fields ────────────────────────────────────────
+        const birthDay   = form.querySelector('input[name="birth_day"]').value.trim();
+        const birthMonth = form.querySelector('input[name="birth_month"]').value.trim();
+        const birthYear  = form.querySelector('input[name="birth_year"]').value.trim();
+        const chronic    = form.querySelector('input[name="family_chronic"]:checked');
+
+        if (!birthDay || !birthMonth || !birthYear) {
+            showModal('error', 'Missing Field', 'Please enter your full birthdate.');
+            return;
+        }
+
+        if (parseInt(birthDay) < 1 || parseInt(birthDay) > 31) {
+            showModal('error', 'Invalid Date', 'Birth day must be between 1 and 31.');
+            return;
+        }
+        if (parseInt(birthMonth) < 1 || parseInt(birthMonth) > 12) {
+            showModal('error', 'Invalid Date', 'Birth month must be between 1 and 12.');
+            return;
+        }
+        if (parseInt(birthYear) < 1920 || parseInt(birthYear) > new Date().getFullYear()) {
+            showModal('error', 'Invalid Date', 'Please enter a valid birth year.');
+            return;
+        }
+
+        if (!chronic) {
+            showModal('error', 'Missing Field', 'Please select chronic disease status.');
+            return;
+        }
+
+        // ── Validate spouse fields if added ─────────────────────────────────
+        const spouseCard = document.getElementById('spouse-card-node');
+        if (spouseCard) {
+            const sd = spouseCard.querySelector('input[name="spouse_day"]').value.trim();
+            const sm = spouseCard.querySelector('input[name="spouse_month"]').value.trim();
+            const sy = spouseCard.querySelector('input[name="spouse_year"]').value.trim();
+            if (!sd || !sm || !sy) {
+                showModal('error', 'Missing Field', 'Please complete the spouse birthdate or remove the spouse.');
+                return;
+            }
+        }
+
+        // ── Show loader ─────────────────────────────────────────────────────
+        document.getElementById('submitBtnText').style.display   = 'none';
+        document.getElementById('submitBtnLoader').style.display = 'inline';
+        document.getElementById('submitBtn').disabled = true;
+
+        // ── Build FormData & POST ───────────────────────────────────────────
+        const formData = new FormData(form);
+
+        try {
+            const response = await fetch('/Graduation-Project/submit_health_application.php', {
+                method: 'POST',
+                body:   formData,
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // ── Redirect to plan-selection page ──────────────────────────
+                window.location.href = '/Graduation-Project/plans.php';
+            } else {
+                showModal('error', 'Submission Failed', result.message || 'Something went wrong. Please try again.');
+            }
+        } catch (err) {
+            showModal('error', 'Network Error', 'Could not connect to server. Please check your connection.');
+        } finally {
+            document.getElementById('submitBtnText').style.display   = 'inline';
+            document.getElementById('submitBtnLoader').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+        }
+    });
+});
+
+// ── Modal Helpers ─────────────────────────────────────────────────────────────
+function showModal(type, title, message) {
+    const overlay = document.getElementById('appModal');
+    const icon    = document.getElementById('appModalIcon');
+    const titleEl = document.getElementById('appModalTitle');
+    const msgEl   = document.getElementById('appModalMsg');
+
+    icon.className = 'app-modal-icon';
+
+    if (type === 'success') {
+        icon.classList.add('app-modal-icon--success');
+        icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+    } else {
+        icon.classList.add('app-modal-icon--error');
+        icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+    }
+
+    titleEl.textContent = title;
+    msgEl.textContent   = message;
+    overlay.style.display = 'flex';
+}
+
+function closeAppModal() {
+    document.getElementById('appModal').style.display = 'none';
 }
