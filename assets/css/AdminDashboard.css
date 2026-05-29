@@ -47,6 +47,7 @@ body {
     left: 0;
     z-index: 100;
     box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-header {
@@ -58,6 +59,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    transition: padding 0.3s ease, align-items 0.3s ease;
 }
 
 .sidebar-header span {
@@ -86,6 +88,7 @@ body {
     font-weight: 500;
     border-radius: 8px;
     transition: all 0.2s ease-in-out;
+    white-space: nowrap;
 }
 
 .sidebar nav a:hover {
@@ -104,11 +107,13 @@ body {
     font-size: 18px;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .sidebar-footer {
     padding: 16px 24px;
     border-top: 1px solid #374151;
+    transition: padding 0.3s ease;
 }
 
 .sidebar-footer a {
@@ -120,11 +125,14 @@ body {
     font-size: 14px;
     font-weight: 600;
     transition: opacity 0.2s ease;
+    white-space: nowrap;
 }
 
 .sidebar-footer a:hover {
     opacity: 0.85;
 }
+
+
 
 /* ── منطقة المحتوى الرئيسي (Main Content) ────────────────────────── */
 .main-content {
@@ -430,7 +438,7 @@ body {
 
 /* ── الجداول الاحترافية (Tables) ─────────────────────────────────── */
 .table-responsive-container {
-    max-height: 500px;       /* 5 أو 6 سطور بالظبط ويفتح سكرول */
+    max-height: 400px;       /* 5 أو 6 سطور بالظبط ويفتح سكرول */
     overflow-y: auto;        /* تشغيل السكرول الرأسي تلقائياً لو الداتا زادت */
     overflow-x: auto;        /* حماية إضافية لو الشاشة صغرت في الموبايل */
     border: 1px solid var(--border-color); /* نقل البوردر الخارجي هنا لشكل أنظف */

@@ -221,7 +221,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
     <div class="sidebar">
     <div class="sidebar-header">
-        Coverly
+        Coverly 
         <span>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></span>
     </div>
     <nav>
@@ -252,7 +252,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <span class="icon"><i class='bx bx-add-to-queue'></i></span> Add Plan
         </a>
         <a href="AdminDashboard.php?tab=add_category" class="<?php echo $active_tab === 'add_category' ? 'active' : ''; ?>">
-            <span class="icon"><i class='bx bx-folder'></i></span> Add Category
+            <span class="icon"><i class='bx bx-envelope'></i></span> Messeges
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -272,43 +272,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         <?php if ($active_tab === 'overview'): ?>
             <div class="page-title">Dashboard Overview</div>
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
-
-            <!-- <div class="overview-stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
-                    <div class="stat-card-number"><?php echo $total_apps; ?></div>
-                    <div class="stat-card-label">Total Applications</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
-                    <div class="stat-card-number"><?php echo $total_agents; ?></div>
-                    <div class="stat-card-label">Active Agents</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
-                    <div class="stat-card-number"><?php echo $total_customers; ?></div>
-                    <div class="stat-card-label">Registered Customers</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
-                    <div class="stat-card-number"><?php echo $total_plans; ?></div>
-                    <div class="stat-card-label">Insurance Plans</div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2><i class='bx bx-book-content'></i> Application Pipeline</h2>
-                <table>
-                    <thead><tr><th>Stage</th><th>Count</th><th>Description</th></tr></thead>
-                    <tbody>
-                        <tr><td><span class="badge" style="background:#fff3e0;color:#e65100;">Under Review</span></td><td><?php echo $stats['under_review']; ?></td><td><span class="stat-card-label">Agent is verifying documents and customer data</span></td></tr>
-                        <tr><td><span class="badge" style="background:#fce8ff;color:#7b1fa2;">Awaiting Payment</span></td><td><?php echo $stats['awaiting_payment']; ?></td><td><span class="stat-card-label">Agent approved — customer must complete payment for policy issuance</span></td></tr>
-                        <tr><td><span class="badge" style="background:#e8f5e9;color:#1b5e20;">Paid</span></td><td><?php echo $stats['paid']; ?></td><td><span class="stat-card-label">Payment received — policy issued and active</span></td></tr>
-                        <tr><td><span class="badge" style="background:#fdecea;color:#c62828;">Rejected</span></td><td><?php echo $stats['rejected']; ?></td><td><span class="stat-card-label">Application declined by agent</span></td></tr>
-                    </tbody>
-                </table>
-            </div> -->
-
             <!-- test marwan wael -->
 
 
@@ -460,6 +423,99 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </div>
 
             </div>
+
+
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 30px; align-items: start;">
+                
+                <div class="card" style="border-left: 4px solid var(--error-red);">
+                    <h2 class="card-title-main" style="color: var(--primary-navy);"><i class='bx bx-bell-off' style="color: var(--error-red); vertical-align: middle; margin-right: 5px;"></i> Action Required</h2>
+                    <p class="card-subtitle-main">Critical items that require immediate administrator supervision.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                        
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFF5F5; border-radius: 8px;">
+                            <i class='bx bx-error-alt' style="font-size: 20px; color: var(--error-red);"></i>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #9B1C1C;">3 Unassigned Claims</div>
+                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Accident reports waiting for agent verification.</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFFBEB; border-radius: 8px;">
+                            <i class='bx bx-time-five' style="font-size: 20px; color: #D97706;"></i>
+                            <div>
+                                <div style="font-size: 13px; font-weight: 600; color: #92400E;">5 Policies Expiring</div>
+                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Customer renewals notice needs to be sent this week.</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header-wrapper">
+                        <h2 class="card-title-main"><i class='bx bx-credit-card-front' style="color: var(--action-blue); vertical-align: middle; margin-right: 5px;"></i> Recent Transactions</h2>
+                        <span style="font-size: 12px; font-weight: 600; color: #10B981; background: #D1FAE5; padding: 4px 10px; border-radius: 50px;">Live Revenue</span>
+                    </div>
+                    <p class="card-subtitle-main" style="margin-top: -10px;">Latest successful premium payments received through the hub.</p>
+
+                    <div class="table-responsive-container" style="max-height: 200px; margin-top: 15px;">
+                        <table class="recent-apps-table">
+                            <thead>
+                                <tr>
+                                    <th>Policy ID</th>
+                                    <th>Amount</th>
+                                    <th>Method</th>
+                                    <th>Date</th>
+                                    <th style="text-align: right;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong style="color: var(--primary-navy);">#POL-9942</strong></td>
+                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 8,500.00</td>
+                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bx-credit-card'></i> Credit Card</span></td>
+                                    <td style="color: var(--text-muted); font-size: 12px;">Just Now</td>
+                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong style="color: var(--primary-navy);">#POL-1082</strong></td>
+                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 3,500.00</td>
+                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bxl-paypal'></i> PayPal</span></td>
+                                    <td style="color: var(--text-muted); font-size: 12px;">20 mins ago</td>
+                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="overview-twin-layout" style="margin-bottom: 30px;">
+    
+    <div class="card">
+        <div class="card-header-wrapper">
+            <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
+            <span class="stat-trend-up">↑ 12.5% YoY</span>
+        </div>
+        <p class="card-subtitle-main">Monthly overview of total premium collection to monitor financial health.</p>
+        
+        <div id="revenueChart" style="min-height: 250px;"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header-wrapper">
+            <h2 class="card-title-main"><i class='bx bx-pie-chart-alt-2' style="color: #10B981;"></i> Risk Retention (Loss Ratio)</h2>
+            <span style="font-size: 11px; font-weight: 600; color: #1E4ED8; background: #EBF5FF; padding: 2px 8px; border-radius: 4px;">Critical KPI</span>
+        </div>
+        <p class="card-subtitle-main">Comparing total collected premiums against paid insurance claims.</p>
+        
+        <div id="lossRatioChart" style="min-height: 250px; display: flex; align-items: center; justify-content: center;"></div>
+    </div>
+
+</div>
             
             <!-- end test marwan wael -->
 
@@ -687,9 +743,30 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         <?php elseif ($active_tab === 'plans'): ?>
             <div class="page-title"><i class='bx bx-shield'></i>Insurance Plans</div>
             <div class="page-subtitle">All available plans with their eligibility rules. Customers see these during instant quotation.</div>
+
+            <div class="card">
+    
+                <div class="card-search-header">
+                    <h2><i class='bx bx-shield'></i> Plans Catalogue</h2>  
+                    
+                    <div style="flex: 1; min-width: 150px;">
+                <select id="planCategoryFilterInput" class="quick-assign-select" style="width: 100%; padding: 10px 12px; height: 40px; border-radius: 8px; font-size: 13px;">
+                    <option value="">All Categories</option>
+                    <option value="Car Insurance">Car Insurance</option>
+                    <option value="Medical Insurance">Medical Insurance</option>
+                    <option value="Property Insurance">Property Insurance</option>
+                    <option value="Retirement">Retirement</option>
+                </select>
+            </div>
+                    <div class="search-input-wrapper">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="planSearchInput" class="search-grid-input" placeholder="Search by plan name or category...">
+                    </div>
+                </div>
+
+
             <div class="table-responsive-container">
-                <h2><i class='bx bx-shield'></i> Plans Catalogue</h2>
-                <table>
+                <table id="plansTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -729,6 +806,11 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                         <?php else: ?>
                             <tr><td colspan="6" class="no-data">No plans found.</td></tr>
                         <?php endif; ?>
+                        <tr id="planNoResultsRow" style="display: none;">
+                            <td colspan="6" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
+                                <i class='bx bx-search-alt'></i> No matching insurance plans found.
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -776,25 +858,72 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             </div>
 
         <?php elseif ($active_tab === 'add_category'): ?>
-            <div class="page-title"><i class='bx bx-folder'></i> Add New Category</div>
-            <div class="page-subtitle">Create a new category for insurance plans.</div>
+            <div class="page-title"><i class='bx bx-envelope'></i>Messeges</div>
+            <div class="page-subtitle">All messages received from customers.</div>
 
-            <div class="card">
-                <h2><i class='bx bx-folder'></i> New Category</h2>
-                <form action="AdminDashboard.php" method="post">
-                    <div class="form-group">
-                        <label>Category Name</label>
-                        <input type="text" name="category_name" placeholder="Enter category name" required>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" name="add_category" class="btn btn-primary">Add Category</button>
-                    </div>
-                </form>
-            </div>
+           <div class="card">
+    
+    <div class="card-search-header">
+        <h2><i class='bx bx-envelope'></i> Contact Messages</h2>
+        
+        <div class="search-input-wrapper">
+            <i class='bx bx-search'></i>
+            <input type="text" id="messageSearchInput" class="search-grid-input" placeholder="Search messages by name, email or topic...">
+        </div>
+    </div>
+
+    <div class="table-responsive-container">
+        <table id="messagesTable">
+            <thead>
+                <tr>
+                    <th style="width: 15%;">Sender</th>
+                    <th style="width: 20%;">Email</th>
+                    <th style="width: 20%;">Subject</th>
+                    <th style="width: 30%;">Message</th>
+                    <th style="width: 15%;">Date Received</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (true): // هنسيبها true مؤقتاً عشان الداتا الوهمية تظهر وتشوف الديزاين ?>
+                    
+                    <tr>
+                        <td><strong>Ahmed Ali</strong></td>
+                        <td>ahmed.ali@mail.com</td>
+                        <td><span class="badge" style="background: #EBF5FF; color: #1E4ED8; font-weight: 600;">Car Quote Query</span></td>
+                        <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">
+                            Hello, I tried to submit a car insurance request for my Tesla but the price estimation didn't load. Please help.
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 13px;">Today, 02:30 PM</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Sarah Mostafa</strong></td>
+                        <td>sara.m@mail.com</td>
+                        <td><span class="badge" style="background: #EBF5FF; color: #1E4ED8; font-weight: 600;">Medical Insurance</span></td>
+                        <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">
+                            Do you have corporate family discounts for medical coverage? We are a team of 15 people.
+                        </td>
+                        <td style="color: var(--text-muted); font-size: 13px;">Yesterday, 11:15 AM</td>
+                    </tr>
+                    
+                <?php else: ?>
+                    <tr class="no-data-row"><td colspan="5" class="no-data">No messages received yet.</td></tr>
+                <?php endif; ?>
+                
+                <tr id="messageNoResultsRow" style="display: none;">
+                    <td colspan="5" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
+                        <i class='bx bx-search-alt' style="font-size: 20px; vertical-align: middle; margin-right: 5px;"></i> No matching messages found.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
         <?php endif; ?>
 
     </div>
 
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
 
 </body>
