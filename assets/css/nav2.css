@@ -1,12 +1,18 @@
 /* --- General Reset --- */
 :root {
-    --primary-navy: #1A2B48;    /* Authority & Trust */
-    --action-blue: #0052CC;     /* Professional Action */
-    --bg-soft-gray: #F4F7F9;    /* Clean Workspace */
-    --text-main: #2D3436;       /* Readability */
-    --error-red: #D63031;       /* Clear Alerts */
+    --primary-navy: #1A2B48;
+    /* Authority & Trust */
+    --action-blue: #0052CC;
+    /* Professional Action */
+    --bg-soft-gray: #F4F7F9;
+    /* Clean Workspace */
+    --text-main: #2D3436;
+    /* Readability */
+    --error-red: #D63031;
+    /* Clear Alerts */
     --white: #FFFFFF;
 }
+
 html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
@@ -22,7 +28,8 @@ html {
 
 body {
     background-color: #f4f4f4;
-        padding-top: 70px;  /* يترك مساحة ثابتة فوق لا يغطيها الهيدر */
+    padding-top: 70px;
+    /* يترك مساحة ثابتة فوق لا يغطيها الهيدر */
 
 }
 
@@ -33,7 +40,7 @@ header {
     width: 100%;
     z-index: 1000;
     background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 10px 0;
 }
 
@@ -41,7 +48,8 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between; /* بتفصل بين اللوجو والجزء اليمين */
+    justify-content: space-between;
+    /* بتفصل بين اللوجو والجزء اليمين */
     align-items: center;
     padding: 0 20px;
 }
@@ -57,19 +65,24 @@ header {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 40px; /* المسافة بين اللينكات والزراير */
+    gap: 40px;
+    /* المسافة بين اللينكات والزراير */
     margin-top: 10px;
 }
 
 /* --- الناف الأول (اللينكات) --- */
-.main-nav{
-    margin-top: 10px;    
+.main-nav {
+    margin-top: 10px;
 }
+
 .main-nav ul {
     display: flex;
     list-style: none;
     gap: 25px;
     align-items: center;
+    margin-bottom: 0 !important;
+    /* ده السر اللي هيمنع اللينكات إنها تترفع لفوق */
+    margin-top: 0 !important;
 
 }
 
@@ -84,46 +97,51 @@ header {
     transition: 0.3s;
 }
 
-.main-nav ul li a:hover { 
+.main-nav ul li a:hover {
     /* color: #00b894;  */
     color: var(--primary-navy);
 }
+
 /* --- Dropdown Menu --- */
 .main-nav .dropdown-menu {
-    display: none; /* السطر ده هو اللي بيخفيها */
+    display: none;
+    /* السطر ده هو اللي بيخفيها */
     position: absolute;
     top: 100%;
     left: 0;
     background: white;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     padding: 10px 0;
     min-width: 150px;
     flex-direction: column;
     gap: 10px;
-    z-index: 999; /* عشان تظهر فوق أي عناصر تانية في الصفحة */
+    z-index: 999;
+    /* عشان تظهر فوق أي عناصر تانية في الصفحة */
 }
 
 /* الإظهار عند مرور الماوس فقط */
 .main-nav .dropdown:hover .dropdown-menu {
-    display: flex; 
+    display: flex;
 }
 
 .dropdown-menu li {
-  padding: 5px 20px;
+    padding: 5px 20px;
 }
 
 /* --- الناف التاني (الزراير) --- */
 .auth-buttons {
     display: flex;
     align-items: center;
-    gap: 10px; /* المسافة بين زرار الدخول والتسجيل */
+    gap: 10px;
+    /* المسافة بين زرار الدخول والتسجيل */
 }
 
-.btn-login, .btn-register {
+.btn-login,
+.btn-register {
     text-decoration: none;
     background-color: var(--primary-navy);
-    color: white !important; 
+    color: white !important;
     padding: 8px 20px;
     border-radius: 25px;
     font-weight: 500;
@@ -131,7 +149,8 @@ header {
     border: 2px solid var(--primary-navy);
 }
 
-.btn-login:hover, .btn-register:hover {
+.btn-login:hover,
+.btn-register:hover {
     background-color: transparent;
     color: var(--primary-navy) !important;
 }
