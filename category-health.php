@@ -119,4 +119,3 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
 <script src="./assets/js/category-health.js?v=1.3"></script>
 <?php include 'includes/footer.php'; ?>
 
-booobobobobob

@@ -111,13 +111,19 @@ $statusLabels = [
 
 include 'includes/nav2.php';
 ?>
-<link rel="stylesheet" href="/Graduation-Project/assets/css/planDetails.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- why choose -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/Graduation-Project/assets/css/planDetails.css">
 
 <!-- ── Submission Success Modal ── -->
 <div class="pd-modal-overlay" id="pdModal">
     <div class="pd-modal">
         <div class="pd-modal-icon">
-            <i class="bx bxs-check-shield"></i>
+    <i class='bx bxs-check-shield'></i>
         </div>
         <h2>Application Submitted!</h2>
         <p>
@@ -449,9 +455,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             if (files.length === 1) {
-                preview.textContent = '✅ ' + files[0].name;
+                preview.textContent = ' ' + files[0].name;
             } else {
-                preview.textContent = '✅ ' + files.length + ' files selected';
+                preview.textContent = ' ' + files.length + ' files selected';
             }
         });
 
