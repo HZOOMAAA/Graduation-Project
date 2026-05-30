@@ -38,7 +38,7 @@
                 <div class="hero-content">
                     <h1>Secure Your Family's Future</h1>
                     <p>Peace of mind for the ones you love most. Discover life insurance plans designed for lifelong security.</p>
-                    <a href="life.html" class="btn">Learn About Life</a>
+                    <a href="category-life.php" class="btn">Learn About Life</a>
                 </div>
             </div>
 
@@ -46,7 +46,7 @@
                 <div class="hero-content">
                     <h1>Protect Your Most Valuable Assets</h1>
                     <p>Shield your home and property against unexpected events with our comprehensive property insurance.</p>
-                    <a href="property.html" class="btn">Protect Property</a>
+                    <a href="category-property.php" class="btn">Protect Property</a>
                 </div>
             </div>
 
@@ -210,6 +210,43 @@
 
 </section>
 
+<section class="custom-testimonials-section">
+    <div class="custom-testimonials-container">
+        <h2 class="custom-testimonials-title">Satisfied Clients</h2>
+
+        <div class="custom-testimonial-grid">
+            <div class="custom-testimonial-item">
+                <img src="assets/img/axa.png" alt="Jamie Folsom" class="custom-client-photo">
+                <h3 class="custom-client-name">Jamie Folsom</h3>
+                <p class="custom-client-quote">We’re absolutely thrilled with the house we purchased through your website! It’s even more beautiful in person than it was in the photos. Thank you for helping us find our dream home!”</p>
+                <div class="custom-client-rating">
+                    <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
+                </div>
+            </div>
+
+            <div class="custom-testimonial-item">
+                <img src="assets/img/axa.png" alt="Carrly Hopper" class="custom-client-photo">
+                <h3 class="custom-client-name">Carrly Hopper</h3>
+                <p class="custom-client-quote">The house we found on your website is perfect for our family. It's spacious, well-maintained, and located in a fantastic neighborhood. We're so excited to start making memories in our new home!”</p>
+                <div class="custom-client-rating">
+                    <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
+                </div>
+            </div>
+
+            <div class="custom-testimonial-item">
+                <img src="assets/img/axa.png" alt="Healie Davied" class="custom-client-photo">
+                <h3 class="custom-client-name">Healie Davied</h3>
+                <p class="custom-client-quote">The house I bought through your website is absolutely stunning. It’s perfect. The team takes great care to ensure listings meet the highest standards. Thank you for your professionalism!”</p>
+                <div class="custom-client-rating">
+                    <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
    <section class="py-5" style="background-color: #f4f7f9;" id="faq">
     <div class="container">
         <!-- عنوان السكشن -->
@@ -266,6 +303,35 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="locations-section py-5 bg-white">
+    <div class="container my-4">
+        <div class="row align-items-center justify-content-between">
+            
+            <div class="col-md-5 mb-5 mb-md-0">
+                <h2 class="mb-4 fw-bold" style="color: var(--primary-navy);">
+                    Our Locations
+                </h2>
+                
+                <div class="location-item ps-4 py-2" style="border-left: 4px solid var(--action-blue);">
+                    <p class="mb-0 text-muted fs-5" style="line-height: 1.8;">
+                        Offers luxury villas, apartments, townhouses, and compounds to suit all needs across Madinaty, New Cairo, and Sheikh Zayed.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <img src="assets/img/maps.png" 
+                     alt="Our Locations" 
+                     class="img-fluid rounded-4 shadow" 
+                     style="max-width: 100%; object-fit: cover;">
+            </div>
+
         </div>
     </div>
 </section>
