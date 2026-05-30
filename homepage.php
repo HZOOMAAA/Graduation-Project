@@ -1,11 +1,7 @@
+  <?php
+  include __DIR__ . '/includes/nav2.php'; 
+  ?>
 
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 
 
     <!-- nav&hero -->
@@ -18,11 +14,7 @@
     
     <link rel="stylesheet" href="assets/css/homepage.css">
 
-</head>
-<body>
-  <?php
-  include __DIR__ . '/includes/nav2.php'; 
-  ?>
+
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             
@@ -288,5 +280,3 @@
     <script src="assets/js/swiper-bundle.min.js "></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/script.js"> </script>
-</body>
-</html>

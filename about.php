@@ -22,7 +22,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
-                    <span class="badge bg-white text-primary px-3 py-2 border rounded-pill mb-3" style="color: var(--action-blue) !important;">Welcome to COVERLY</span>
+                    <!-- <span class="badge bg-white text-primary px-3 py-2 border rounded-pill mb-3" style="color: var(--action-blue) !important;">Welcome to COVERLY</span> -->
                     <h1 class="mb-4">Insurance Made <br><span class="text-highlight">Simple & Transparent.</span></h1>
                     <p class="mb-4 fs-5" style="color: var(--text-main); opacity: 0.8;">Finding the right insurance used to be confusing. We built COVERLY to help you compare policies, understand the benefits, and choose the best plan for you—all online, with zero hassle.</p>
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
@@ -42,7 +42,7 @@
             <div class="mission-section shadow-sm">
                 <div class="row align-items-center">
                     <div class="col-lg-7 mb-4 mb-lg-0 pe-lg-5">
-                        <span class="badge text-primary px-3 py-2 border rounded-pill mb-3" style="background-color: var(--white); color: var(--action-blue) !important;">Our Mission</span>
+                        <!-- <span class="badge text-primary px-3 py-2 border rounded-pill mb-3" style="background-color: var(--white); color: var(--action-blue) !important;">Our Mission</span> -->
                         <h2 class="fw-bold mb-3" style="color: var(--primary-navy);">Why We Built This Platform</h2>
                         <p class="fs-5 mb-3" style="color: var(--text-main); opacity: 0.8;">We noticed that buying insurance involves too much paperwork, hidden terms, and confusing jargon. As a team, we decided to digitize and simplify the entire process.</p>
                         <p class="fs-5 mb-0" style="color: var(--text-main); opacity: 0.8;">COVERLY acts as your personal digital broker. We gather the best medical, car, and life insurance plans from top providers, simplify the details, and present them to you clearly.</p>
@@ -57,11 +57,12 @@
 
     <!-- Services -->
     <section id="services" class="section-padding" style="background-color: var(--bg-soft-gray);">
-        <div class="container">
-            <div class="text-center mb-5">
+                    <div class="text-center mb-5">
                 <h2 class="fw-bold" style="color: var(--primary-navy);">Insurance For Everyone</h2>
                 <p class="fs-5" style="color: var(--text-main); opacity: 0.8;">Whether you are protecting your family or your business, we've got you covered.</p>
             </div>
+        <div class="container">
+
             
             <div class="row g-4 justify-content-center">
                 <div class="col-md-6">
@@ -97,38 +98,40 @@
     </section>
 
     <!-- Team Slider Section -->
-    <section class="team-slider-section">
-        <div class="container">
-            <div class="row align-items-center" id="team-slider-container">
-                
-                <div class="col-lg-5">
-                    <div class="team-img-wrapper">
-                        <div class="shape-back"></div>
-                        <div class="shape-main">
-                            <img id="team-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop" alt="Team Member">
-                        </div>
-                        <div class="shape-cutout"></div>
-                    </div>
+<section class="team-slider-section">
+    <!-- الـ Wrapper الأساسي الموحد البديل للـ Row -->
+    <div class="team-slider-wrapper" id="team-slider-container">
+        
+        <!-- صندوق الصورة والـ Shapes في أقصى الشمال -->
+        <div class="team-image-column">
+            <div class="team-img-wrapper">
+                <div class="shape-back"></div>
+                <div class="shape-main">
+                    <img id="team-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop" alt="Team Member">
                 </div>
-                
-                <div class="col-lg-7 team-content-area">
-                    <h2 class="team-header-title">Meet <br> COVERLY Team</h2>
-                    
-                    <h3 id="team-name" class="member-name">Mahmoud Diaa</h3>
-                    <p id="team-desc" class="member-desc">
-                        Mahmoud is responsible for leading our exceptional team of developers. He plays a crucial role in overseeing all stages of development, ensuring our digital products perform at the highest levels of technical efficiency and security.
-                    </p>
-                    <h5 id="team-role" class="member-role">Lead Full-Stack Developer</h5>
-                    
-                    <div class="team-slider-controls">
-                        <button onclick="changeMember(-1)"><i class="fas fa-chevron-left"></i></button>
-                        <button onclick="changeMember(1)"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                </div>
-
+                <div class="shape-cutout"></div>
             </div>
         </div>
-    </section>
+        
+        <!-- صندوق النصوص والأزرار في اليمين -->
+        <div class="team-content-column">
+            <h2 class="team-header-title">Meet <br> COVERLY Team</h2>
+            
+            <h3 id="team-name" class="member-name">Mahmoud Diaa</h3>
+            <p id="team-desc" class="member-desc">
+                Mahmoud is responsible for leading our exceptional team of developers. He plays a crucial role in overseeing all stages of development, ensuring our digital products perform at the highest levels of technical efficiency and security.
+            </p>
+            <h5 id="team-role" class="member-role">Lead Full-Stack Developer</h5>
+            
+            <!-- الأزرار هتنزل تحت براحتها بعيد عن بروز الصورة -->
+            <div class="team-slider-controls">
+                <button onclick="changeMember(-1)"><i class="fas fa-chevron-left"></i></button>
+                <button onclick="changeMember(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+    </div>
+</section>
     <?php include 'includes/footer.php'; ?>  
 
     <!-- Bootstrap JS -->

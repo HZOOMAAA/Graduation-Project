@@ -30,7 +30,7 @@ const teamMembers = [
         img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=600&auto=format&fit=crop"
     },
     {
-        name: "Laila Youssef",
+        name: "Mahmoud Diaa",
         role: "Quality Assurance",
         desc: "Laila acts as our gatekeeper of quality. She meticulously tests every feature, button, and user journey to guarantee our clients experience a completely bug-free platform.",
         img: "https://images.unsplash.com/photo-1598550874175-4d0ef436c909?q=80&w=600&auto=format&fit=crop"
