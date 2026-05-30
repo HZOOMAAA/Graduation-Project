@@ -120,8 +120,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // ── Redirect directly to plans page ────────────────────────────────
-        window.location.href = '/Graduation-Project/plans.php';
+        // ── Submit the form to PHP (which saves session data and redirects to plans.php) ──
+        form.action = '/Graduation-Project/submit_health_application.php';
+        form.method = 'POST';
+        form.submit();
     });
 });
 
