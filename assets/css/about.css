@@ -209,14 +209,14 @@ a {
 /* Cutout Box (البوكس الداكن الإضافي) */
 .shape-cutout {
     position: absolute;
-    bottom: 30px; 
+    bottom: 0px; 
     left: -30px;
-    width: 180px; 
-    height: 70px;
+    width: 150px; 
+    height: 150px;
     background-color: var(--primary-navy);
     border-radius: 40px;
-    z-index: 3;
-    border: 8px solid var(--white);
+    z-index: 1;
+    /* border: 8px solid var(--white); */
     box-shadow: 0 10px 25px rgba(26, 43, 72, 0.1);
 }
 

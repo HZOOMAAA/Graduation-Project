@@ -89,7 +89,7 @@
                         <ul class="list-unstyled service-list">
                             <li><i class="fa-solid fa-users"></i> Corporate Team Health Plans</li>
                             <li><i class="fa-solid fa-truck-fast"></i> Fleet & Logistics Insurance</li>
-                            <li><i class="fa-solid fa-fire-shield"></i> Commercial Property Coverage</li>
+                            <li><i class="fa-solid fa-shield"></i> Commercial Property Coverage</li>
                         </ul>
                     </div>
                 </div>
