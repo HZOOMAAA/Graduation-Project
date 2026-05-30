@@ -2,11 +2,9 @@
 require_once 'includes/connection.php';
 require_once 'includes/auth_check.php'; // ensures user is logged in
 
-header('Content-Type: application/json');
-
 // ── Validate method ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    header('Location: /Graduation-Project/category-health.php');
     exit;
 }
 
@@ -72,7 +70,8 @@ if ($age < 18)
     $errors[] = 'Primary member must be at least 18 years old.';
 
 if (!empty($errors)) {
-    echo json_encode(['success' => false, 'message' => implode(' ', $errors)]);
+    $_SESSION['health_form_error'] = implode(' ', $errors);
+    header('Location: /Graduation-Project/category-health.php');
     exit;
 }
 
@@ -105,10 +104,7 @@ $category_id = $catRow ? intval($catRow['category_id']) : 2;
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id'] = $category_id;
 
-echo json_encode([
-    'success' => true,
-    'message' => 'Health application saved to session draft successfully!',
-]);
+// ── Redirect to plans page ────────────────────────────────────────────────────
+header('Location: /Graduation-Project/plans.php');
+exit;
 ?>
-
-0-+
