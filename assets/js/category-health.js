@@ -120,35 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // ── Show loader ─────────────────────────────────────────────────────
-        document.getElementById('submitBtnText').style.display   = 'none';
-        document.getElementById('submitBtnLoader').style.display = 'inline';
-        document.getElementById('submitBtn').disabled = true;
-
-        // ── Build FormData & POST ───────────────────────────────────────────
-        const formData = new FormData(form);
-
-        try {
-            const response = await fetch('/Graduation-Project/submit_health_application.php', {
-                method: 'POST',
-                body:   formData,
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                // ── Redirect to plan-selection page ──────────────────────────
-                window.location.href = '/Graduation-Project/plans.php';
-            } else {
-                showModal('error', 'Submission Failed', result.message || 'Something went wrong. Please try again.');
-            }
-        } catch (err) {
-            showModal('error', 'Network Error', 'Could not connect to server. Please check your connection.');
-        } finally {
-            document.getElementById('submitBtnText').style.display   = 'inline';
-            document.getElementById('submitBtnLoader').style.display = 'none';
-            document.getElementById('submitBtn').disabled = false;
-        }
+        // ── Redirect directly to plans page ────────────────────────────────
+        window.location.href = '/Graduation-Project/plans.php';
     });
 });
 
