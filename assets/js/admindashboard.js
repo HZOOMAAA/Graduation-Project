@@ -212,3 +212,58 @@ if (document.getElementById("lossResultsChart") || document.getElementById("loss
 }
     
 });
+
+
+//popup section//
+
+/**
+ * Messages Table Popup Handler
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('messagesTable');
+    const modal = document.getElementById('messageModal');
+    const closeBtn = document.getElementById('closeModalBtn');
+
+    // التأكد من إن الجدول والـ Modal موجودين في الصفحة قبل التشغيل
+    if (!table || !modal) return;
+
+    // الاستماع للضغط على أي سطر داخل الـ tbody
+    table.querySelector('tbody').addEventListener('click', function(e) {
+        // تحديد السطر المضغطوط عليه
+        const row = e.target.closest('tr');
+        
+        // تجاهل الضغط لو كان سطر الفلتر أو سطر "لا يوجد بيانات"
+        if (!row || row.classList.contains('no-data-row') || row.id === 'messageNoResultsRow') return;
+
+        // استخراج البيانات من الخلايا بالترتيب
+        const sender = row.cells[0].innerText.trim();
+        const email = row.cells[1].innerText.trim();
+        const subject = row.cells[2].innerText.trim();
+        const message = row.cells[3].innerText.trim(); 
+        const date = row.cells[4].innerText.trim();
+
+        // حقن البيانات داخل الـ Popup
+        document.getElementById('modalSender').innerText = sender;
+        document.getElementById('modalEmail').innerText = email;
+        document.getElementById('modalSubject').innerText = subject;
+        document.getElementById('modalMessageText').innerText = message;
+        document.getElementById('modalDate').innerText = date;
+
+        // إظهار الـ Popup بإضافة كلاس الـ show
+        modal.classList.add('show');
+    });
+
+    // قفل الـ Popup عند الضغط على زر الإغلاق (X)
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            modal.classList.remove('show');
+        });
+    }
+
+    // قفل الـ Popup عند الضغط في أي مكان خارج الصندوق الأبيض
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+        }
+    });
+});

@@ -919,6 +919,38 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         </table>
     </div>
 </div>
+
+  <!-- popup -->
+   <div id="messageModal" class="custom-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title-wrapper">
+                    <i class='bx bx-envelope' style="font-size: 20px; color: #1E4ED8; vertical-align: middle;"></i>
+                    <h3 id="modalSubject" style="display: inline-block; margin-left: 5px;">Subject</h3>
+                </div>
+                <span class="close-btn" id="closeModalBtn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="info-group">
+                    <strong>Sender:</strong> <span id="modalSender"></span>
+                </div>
+                <div class="info-group">
+                    <strong>Email:</strong> <span id="modalEmail"></span>
+                </div>
+                <div class="info-group">
+                    <strong>Date:</strong> <span id="modalDate"></span>
+                </div>
+                <hr class="modal-divider">
+                <div class="message-content">
+                    <strong>Message:</strong>
+                    <p id="modalMessageText"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- endpopup -->
+
+
         <?php endif; ?>
 
     </div>

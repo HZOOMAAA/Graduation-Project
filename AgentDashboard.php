@@ -149,22 +149,27 @@ $cnt = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agent Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/AgentDashboard.css">
 </head>
 <body>
 
 <div class="sidebar">
     <div class="sidebar-header">
-        Agent Panel
+        Coverly
         <span>Welcome, <?php echo htmlspecialchars($_SESSION['name'] ?? 'Agent'); ?></span>
     </div>
     <nav>
         <?php
         $nav = [
-            'applications' => ['📋', 'Under Review',      'under_review',     '#e65100'],
-            'awaiting'     => ['💳', 'Awaiting Payment',  'awaiting_payment', '#7b1fa2'],
-            'paid'         => ['✅', 'Paid / Issued',      'paid',             '#1b5e20'],
-            'rejected'     => ['❌', 'Rejected',           'rejected',         '#c62828'],
+            'applications' => ['<i class="bx bx-book-open"></i>', 'Under Review',      'under_review',     '#e65100'],
+            'awaiting'     => ['<i class="bx bx-credit-card"></i>', 'Awaiting Payment',  'awaiting_payment', '#7b1fa2'],
+            'paid'         => ['<i class="bx bx-check-circle"></i>', 'Paid / Issued',      'paid',             '#1b5e20'],
+            'rejected'     => ['<i class="bx bx-x-circle"></i>', 'Rejected',           'rejected',         '#c62828'],
         ];
         foreach ($nav as $tab => [$icon, $label, $status, $color]):
             $is_active = ($active_tab === $tab || ($active_tab === 'details' && $tab === 'applications'));
@@ -172,31 +177,31 @@ $cnt = [
         <a href="AgentDashboard.php?tab=<?php echo $tab; ?>" class="<?php echo $is_active ? 'active' : ''; ?>">
             <span class="icon"><?php echo $icon; ?></span> <?php echo $label; ?>
             <?php if ($cnt[$status] > 0): ?>
-                <span style="margin-left:auto; background:<?php echo $color; ?>; color:#fff; border-radius:12px; padding:2px 8px; font-size:11px;"><?php echo $cnt[$status]; ?></span>
+                <span class="sidebar-badge" style="background:<?php echo $color; ?>;"><?php echo $cnt[$status]; ?></span>
             <?php endif; ?>
         </a>
         <?php endforeach; ?>
     </nav>
     <div class="sidebar-footer">
-        <a href="/Graduation-Project/auth/logout.php">🚪 Logout</a>
+        <a href="/Graduation-Project/auth/logout.php"><i class='bx bx-log-out'></i> Logout</a>
     </div>
 </div>
 
 <div class="main-content">
 
     <?php if ($error): ?>
-        <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+        <div class="alert alert-error"><i class='bx bx-error-circle'></i> <?php echo htmlspecialchars($error); ?></div>
     <?php endif; ?>
     <?php if ($success): ?>
-        <div class="alert alert-success"><?php echo htmlspecialchars($success); ?></div>
+        <div class="alert alert-success"><i class='bx bx-check-circle'></i> <?php echo htmlspecialchars($success); ?></div>
     <?php endif; ?>
 
     <?php
     $tab_config = [
-        'applications' => ['📋 My Work Queue',      'Applications assigned to you for document verification and approval.'],
-        'awaiting'     => ['💳 Awaiting Payment',    'Approved applications waiting for customer payment and policy issuance.'],
-        'paid'         => ['✅ Paid & Issued',        'Fully completed policies. Payment received and policy document issued.'],
-        'rejected'     => ['❌ Rejected Applications','Applications that were rejected after review.'],
+        'applications' => ['<i class="bx bx-book-open"></i> My Work Queue',      'Applications assigned to you for document verification and approval.'],
+        'awaiting'     => ['<i class="bx bx-credit-card"></i> Awaiting Payment',    'Approved applications waiting for customer payment and policy issuance.'],
+        'paid'         => ['<i class="bx bx-check-circle"></i> Paid & Issued',        'Fully completed policies. Payment received and policy document issued.'],
+        'rejected'     => ['<i class="bx bx-x-circle"></i> Rejected Applications','Applications that were rejected after review.'],
     ];
     $cols_review = ['App ID','Customer','Category','Chosen Plan','Final Price','Date','Action'];
     $cols_awaiting = ['App ID','Customer','Category','Plan','Final Price','Date','Action'];
@@ -204,219 +209,219 @@ $cnt = [
     $cols_rejected = ['App ID','Customer','Category','Date'];
     ?>
 
-    <!-- ── LIST TABS ── -->
     <?php if (in_array($active_tab, ['applications','awaiting','paid','rejected'])): ?>
         <?php [$title, $subtitle] = $tab_config[$active_tab]; ?>
-        <div class="page-title"><?php echo $title; ?></div>
-        <div class="page-subtitle"><?php echo $subtitle; ?></div>
-
-        <div class="card">
-            <h2><?php echo $title; ?></h2>
-            <table>
-                <thead>
-                    <tr>
-                        <?php
-                        $headers = match($active_tab) {
-                            'applications' => $cols_review,
-                            'awaiting'     => $cols_awaiting,
-                            'paid'         => $cols_paid,
-                            default        => $cols_rejected,
-                        };
-                        foreach ($headers as $h) echo "<th>$h</th>";
-                        ?>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($applications && mysqli_num_rows($applications) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($applications)): ?>
-                            <?php
-                            // For paid rows we need policy info
-                            $row_policy = null;
-                            if ($active_tab === 'paid') {
-                                $row_policy = mysqli_fetch_assoc(mysqli_query($connect, "SELECT policy_number FROM policies WHERE application_id = {$row['application_id']} LIMIT 1"));
-                            }
-                            ?>
-                            <tr>
-                                <td><?php echo $row['application_id']; ?></td>
-                                <td><?php echo htmlspecialchars($row['customer_name'] ?? 'Unknown'); ?></td>
-                                <?php if ($active_tab === 'paid'): ?>
-                                    <td><?php echo htmlspecialchars($row['customer_email'] ?? 'N/A'); ?></td>
-                                <?php else: ?>
-                                    <td><?php echo htmlspecialchars($row['category_name'] ?? 'N/A'); ?></td>
-                                <?php endif; ?>
-                                <?php if ($active_tab !== 'rejected'): ?>
-                                    <td>
-                                        <?php if ($row['plan_name']): ?>
-                                            <span class="badge" style="background:#fff3e0; color:#e65100;"><?php echo htmlspecialchars($row['plan_name']); ?></span>
-                                        <?php else: ?>—<?php endif; ?>
-                                    </td>
-                                    <td><?php echo $row['final_price'] ? '<strong>$' . number_format($row['final_price'], 2) . '</strong>' : '—'; ?></td>
-                                <?php endif; ?>
-                                <?php if ($active_tab === 'paid'): ?>
-                                    <td>
-                                        <?php if ($row_policy): ?>
-                                            <code style="font-size:12px; background:#f1f3f4; padding:2px 6px; border-radius:4px;"><?php echo htmlspecialchars($row_policy['policy_number']); ?></code>
-                                        <?php else: ?>—<?php endif; ?>
-                                    </td>
-                                <?php else: ?>
-                                    <td><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
-                                    <td>
-                                        <a href="AgentDashboard.php?tab=details&id=<?php echo $row['application_id']; ?>" class="btn btn-sm btn-primary">📄 View</a>
-                                    </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php endwhile; ?>
-                    <?php else: ?>
-                        <tr><td colspan="7" class="no-data">No applications in this stage.</td></tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+        <div class="page-header-block">
+            <div class="page-title"><?php echo $title; ?></div>
+            <div class="page-subtitle"><?php echo $subtitle; ?></div>
         </div>
 
-    <!-- ── DETAILS TAB ── -->
-    <?php elseif ($active_tab === 'details' && $app_details): ?>
-        <div class="page-title">Application #<?php echo $app_details['application_id']; ?></div>
-        <div class="page-subtitle">Full application review — customer data, chosen plan, documents, and decisions.</div>
+        <div class="card card-table-wrapper">
+            <div class="card-header-title">
+                <h2><?php echo $title; ?></h2>
+            </div>
+            <div class="table-responsive-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <?php
+                            $headers = match($active_tab) {
+                                'applications' => $cols_review,
+                                'awaiting'     => $cols_awaiting,
+                                'paid'         => $cols_paid,
+                                default        => $cols_rejected,
+                            };
+                            foreach ($headers as $h) echo "<th>$h</th>";
+                            ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($applications && mysqli_num_rows($applications) > 0): ?>
+                            <?php while ($row = mysqli_fetch_assoc($applications)): ?>
+                                <?php
+                                $row_policy = null;
+                                if ($active_tab === 'paid') {
+                                    $row_policy = mysqli_fetch_assoc(mysqli_query($connect, "SELECT policy_number FROM policies WHERE application_id = {$row['application_id']} LIMIT 1"));
+                                }
+                                ?>
+                                <tr>
+                                    <td><span class="txt-bold">#<?php echo $row['application_id']; ?></span></td>
+                                    <td><span class="txt-medium"><?php echo htmlspecialchars($row['customer_name'] ?? 'Unknown'); ?></span></td>
+                                    <?php if ($active_tab === 'paid'): ?>
+                                        <td class="txt-muted"><?php echo htmlspecialchars($row['customer_email'] ?? 'N/A'); ?></td>
+                                    <?php else: ?>
+                                        <td><span class="badge badge-light-blue"><?php echo htmlspecialchars($row['category_name'] ?? 'N/A'); ?></span></td>
+                                    <?php endif; ?>
+                                    <?php if ($active_tab !== 'rejected'): ?>
+                                        <td>
+                                            <?php if ($row['plan_name']): ?>
+                                                <span class="badge badge-plan"><?php echo htmlspecialchars($row['plan_name']); ?></span>
+                                            <?php else: ?>—<?php endif; ?>
+                                        </td>
+                                        <td><?php echo $row['final_price'] ? '<span class="price-tag">$' . number_format($row['final_price'], 2) . '</span>' : '—'; ?></td>
+                                    <?php endif; ?>
+                                    <?php if ($active_tab === 'paid'): ?>
+                                        <td>
+                                            <?php if ($row_policy): ?>
+                                                <code class="policy-code"><?php echo htmlspecialchars($row_policy['policy_number']); ?></code>
+                                            <?php else: ?>—<?php endif; ?>
+                                        </td>
+                                    <?php else: ?>
+                                        <td class="txt-muted"><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
+                                        <td>
+                                            <a href="AgentDashboard.php?tab=details&id=<?php echo $row['application_id']; ?>" class="btn btn-sm btn-primary-action" title="View Details"><i class='bx bx-right-arrow-alt'></i></a>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr><td colspan="7" class="no-data"><i class='bx bx-folder-open'></i><br>No applications in this stage.</td></tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        <!-- Status Banner -->
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; padding:14px 20px; background:#fff; border-radius:10px; border:1px solid #eef0f3;">
-            <span style="font-size:13px; color:#64748b;">Current Status:</span>
-            <span class="badge" style="font-size:14px; <?php echo statusBadgeStyle($app_details['status']); ?>">
+    <?php elseif ($active_tab === 'details' && $app_details): ?>
+        <div class="page-header-block">
+            <div class="page-title">Application #<?php echo $app_details['application_id']; ?></div>
+            <div class="page-subtitle">Full application review — customer data, chosen plan, documents, and decisions.</div>
+        </div>
+
+        <div class="status-banner-card">
+            <span class="status-label-text">Current Status:</span>
+            <span class="badge badge-status-main" style="<?php echo statusBadgeStyle($app_details['status']); ?>">
                 <?php echo statusLabel($app_details['status']); ?>
             </span>
         </div>
 
-        <!-- Customer Info -->
         <div class="card">
-            <h2 style="border-bottom:1px solid #eef0f3; padding-bottom:12px; margin-bottom:20px;">👤 Customer Information</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; font-size:14px; color:#374151;">
-                <p><strong>Name:</strong> <?php echo htmlspecialchars($app_details['customer_name']); ?></p>
-                <p><strong>Email:</strong> <?php echo htmlspecialchars($app_details['email']); ?></p>
-                <p><strong>Phone:</strong> <?php echo htmlspecialchars($app_details['phone'] ?? 'N/A'); ?></p>
-                <p><strong>Address:</strong> <?php echo htmlspecialchars($app_details['address'] ?? 'N/A'); ?></p>
-                <p><strong>Category:</strong> <?php echo htmlspecialchars($app_details['category_name']); ?></p>
-                <p><strong>Applied On:</strong> <?php echo date('F d, Y h:i A', strtotime($app_details['created_at'])); ?></p>
+            <h2><i class='bx bx-user-pin'></i> Customer Information</h2>
+            <div class="info-grid-layout">
+                <div class="info-item"><i class='bx bx-user'></i> <div><strong>Name:</strong> <span><?php echo htmlspecialchars($app_details['customer_name']); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-envelope'></i> <div><strong>Email:</strong> <span><?php echo htmlspecialchars($app_details['email']); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-phone'></i> <div><strong>Phone:</strong> <span><?php echo htmlspecialchars($app_details['phone'] ?? 'N/A'); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-map'></i> <div><strong>Address:</strong> <span><?php echo htmlspecialchars($app_details['address'] ?? 'N/A'); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-category'></i> <div><strong>Category:</strong> <span class="badge badge-light-blue"><?php echo htmlspecialchars($app_details['category_name']); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-calendar'></i> <div><strong>Applied On:</strong> <span><?php echo date('F d, Y h:i A', strtotime($app_details['created_at'])); ?></span></div></div>
             </div>
+            
             <?php if ($app_details['application_data']): ?>
-            <div style="margin-top:20px; padding-top:20px; border-top:1px solid #eef0f3;">
-                <h3 style="font-size:15px; margin-bottom:10px;">📝 Application Data:</h3>
+            <div class="app-data-section">
+                <h3><i class='bx bx-edit-alt'></i> Application Technical Data</h3>
                 <?php $data = json_decode($app_details['application_data'], true); ?>
                 <?php if ($data): ?>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:13px; background:#f7f8fa; padding:15px; border-radius:8px;">
+                    <div class="technical-grid-box">
                         <?php foreach ($data as $k => $v): ?>
-                            <p><strong><?php echo ucwords(str_replace('_',' ',$k)); ?>:</strong> <?php echo htmlspecialchars((string)$v); ?></p>
+                            <p><strong><?php echo ucwords(str_replace('_',' ',$k)); ?>:</strong> <span><?php echo htmlspecialchars((string)$v); ?></span></p>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
-                    <pre style="background:#f7f8fa; padding:15px; border-radius:5px; font-size:13px;"><?php echo htmlspecialchars($app_details['application_data']); ?></pre>
+                    <pre class="raw-json-box"><?php echo htmlspecialchars($app_details['application_data']); ?></pre>
                 <?php endif; ?>
             </div>
             <?php endif; ?>
         </div>
 
-        <!-- Chosen Plan -->
         <?php if ($app_details['plan_name']): ?>
-        <div class="card">
-            <h2>🛡️ Customer's Chosen Plan</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; font-size:14px; color:#374151;">
-                <p><strong>Plan Name:</strong> <span class="badge" style="background:#fff3e0; color:#e65100;"><?php echo htmlspecialchars($app_details['plan_name']); ?></span></p>
-                <p><strong>Insurance Company:</strong> <?php echo htmlspecialchars($app_details['insurance_company']); ?></p>
-                <p><strong>Base Price:</strong> $<?php echo number_format($app_details['base_price'], 2); ?></p>
-                <p><strong>Final Quoted Price:</strong> <span style="font-size:18px; font-weight:700; color:#1b5e20;">$<?php echo number_format($app_details['final_price'], 2); ?></span></p>
+        <div class="card plan-showcase-card">
+            <h2><i class='bx bxs-shield-quarter'></i> Customer's Chosen Plan</h2>
+            <div class="info-grid-layout">
+                <div class="info-item"><i class='bx bx-shield'></i> <div><strong>Plan Name:</strong> <span class="badge badge-plan"><?php echo htmlspecialchars($app_details['plan_name']); ?></span></div></div>
+                <div class="info-item"><i class='bx bxs-bank'></i> <div><strong>Company:</strong> <span><?php echo htmlspecialchars($app_details['insurance_company']); ?></span></div></div>
+                <div class="info-item"><i class='bx bx-money'></i> <div><strong>Base Price:</strong> <span class="txt-medium">$<?php echo number_format($app_details['base_price'], 2); ?></span></div></div>
+                <div class="info-item"><i class='bx bxs-wallet'></i> <div><strong>Final Quoted Price:</strong> <span class="final-price-highlight">$<?php echo number_format($app_details['final_price'], 2); ?></span></div></div>
             </div>
             <?php if ($app_details['plan_bio']): ?>
-                <p style="margin-top:12px; font-size:13px; color:#64748b; border-top:1px solid #eef0f3; padding-top:12px;"><?php echo htmlspecialchars($app_details['plan_bio']); ?></p>
+                <div class="plan-bio-text">
+                    <i class='bx bx-info-circle'></i> <?php echo htmlspecialchars($app_details['plan_bio']); ?>
+                </div>
             <?php endif; ?>
         </div>
         <?php endif; ?>
 
-        <!-- Documents -->
         <div class="card">
-            <h2>📁 Attached Documents</h2>
+            <h2><i class='bx bxs-file-doc'></i> Attached Verification Documents</h2>
             <?php if ($documents && mysqli_num_rows($documents) > 0): ?>
-                <table>
-                    <thead><tr><th>Type</th><th>File</th><th>Uploaded</th><th>Action</th></tr></thead>
-                    <tbody>
-                        <?php while ($doc = mysqli_fetch_assoc($documents)): ?>
-                            <tr>
-                                <td><strong><?php echo htmlspecialchars($doc['doc_type']); ?></strong></td>
-                                <td><?php echo htmlspecialchars($doc['file_path']); ?></td>
-                                <td><?php echo date('M d, Y', strtotime($doc['uploaded_at'])); ?></td>
-                                <td><a href="/Graduation-Project/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn btn-sm btn-edit">🔍 View</a></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+                <div class="table-responsive-container">
+                    <table class="minimal-table">
+                        <thead><tr><th>Document Type</th><th>File Path Name</th><th>Uploaded Date</th><th>Action</th></tr></thead>
+                        <tbody>
+                            <?php while ($doc = mysqli_fetch_assoc($documents)): ?>
+                                <tr>
+                                    <td><span class="txt-medium"><i class='bx bx-file' style="color:var(--action-blue);"></i> <?php echo htmlspecialchars($doc['doc_type']); ?></span></td>
+                                    <td class="txt-muted font-mono"><?php echo htmlspecialchars($doc['file_path']); ?></td>
+                                    <td class="txt-muted"><?php echo date('M d, Y', strtotime($doc['uploaded_at'])); ?></td>
+                                    <td><a href="/Graduation-Project/<?php echo htmlspecialchars($doc['file_path']); ?>" target="_blank" class="btn btn-sm btn-view-doc"><i class='bx bx-show-alt'></i> View File</a></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
             <?php else: ?>
-                <p class="no-data">No documents attached yet.</p>
+                <div class="no-data-embedded"><i class='bx bx-shield-x'></i> No documents attached to this application.</div>
             <?php endif; ?>
         </div>
 
-        <!-- ── DECISION CARDS (context-sensitive) ── -->
-
         <?php if ($app_details['status'] === 'under_review'): ?>
-        <!-- Agent Approval Decision -->
-        <div class="card" style="background:#f8fafc; border:1px solid #e2e8f0;">
-            <h2>⚙️ Application Decision</h2>
-            <p style="font-size:14px; color:#64748b; margin-bottom:20px;">Review all data above, then make your decision. Approving will move the customer to the Payment stage.</p>
-            <form action="AgentDashboard.php" method="post" style="display:flex; gap:15px;">
+        <div class="card decision-card review-action-card">
+            <h2><i class='bx bxs-cog animate-spin'></i> Require Action: Review Decision</h2>
+            <p class="decision-desc">Please carefully review all the documentation and form parameters submitted above before rendering a decision.</p>
+            <form action="AgentDashboard.php" method="post" class="decision-buttons-flex">
                 <input type="hidden" name="application_id" value="<?php echo $app_details['application_id']; ?>">
-                <button type="submit" name="update_status" value="awaiting_payment" class="btn btn-success">✅ Approve — Request Payment</button>
-                <button type="submit" name="update_status" value="rejected" class="btn btn-delete">❌ Reject Application</button>
+                <button type="submit" name="update_status" value="awaiting_payment" class="btn btn-success"><i class='bx bxs-check-circle'></i> Approve & Request Payment</button>
+                <button type="submit" name="update_status" value="rejected" class="btn btn-delete"><i class='bx bxs-x-circle'></i> Reject Application</button>
             </form>
         </div>
 
         <?php elseif ($app_details['status'] === 'awaiting_payment'): ?>
-        <!-- Payment Confirmation & Policy Issuance -->
-        <div class="card" style="background:#fdf4ff; border:1px solid #e1bee7;">
-            <h2>💳 Confirm Payment & Issue Policy</h2>
-            <p style="font-size:14px; color:#64748b; margin-bottom:20px;">
-                Once the customer has paid (via Fawry, bank card, or cash), fill in the details below to issue the official policy.
-                The system will auto-generate a policy number.
-            </p>
+        <div class="card decision-card payment-action-card">
+            <h2><i class='bx bxs-credit-card-front'></i> Process Payment Confirmation & Policy Issuance</h2>
+            <p class="decision-desc">Upon verification of direct payment execution via Fawry, Bank Transfer, or physical counter cash receipt, record references to generate the system legal policy ledger.</p>
             <form action="AgentDashboard.php" method="post">
                 <input type="hidden" name="application_id" value="<?php echo $app_details['application_id']; ?>">
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px;">
+                <div class="form-inputs-row">
                     <div class="form-group">
-                        <label>Payment Reference</label>
+                        <label>Payment Reference Code</label>
                         <input type="text" name="payment_ref" placeholder="e.g. FAWRY-00123456" required>
                     </div>
                     <div class="form-group">
-                        <label>Policy Start Date</label>
+                        <label>Policy Cover Start Date</label>
                         <input type="date" name="start_date" value="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                     <div class="form-group">
-                        <label>Policy End Date</label>
+                        <label>Policy Cover Expiration Date</label>
                         <input type="date" name="end_date" value="<?php echo date('Y-m-d', strtotime('+1 year')); ?>" required>
                     </div>
                 </div>
-                <div style="margin-top:10px;">
-                    <button type="submit" name="issue_policy" class="btn btn-success">🧾 Confirm Payment & Issue Policy</button>
+                <div class="form-submit-wrapper">
+                    <button type="submit" name="issue_policy" class="btn btn-success-filled"><i class='bx bxs-receipt'></i> Authorize Payment & Issue System Policy Ledger</button>
                 </div>
             </form>
         </div>
 
         <?php elseif ($app_details['status'] === 'paid' && $policy): ?>
-        <!-- Policy Issued — Info Display -->
-        <div class="card" style="background:#e8f5e9; border:1px solid #a5d6a7;">
-            <h2>🧾 Policy Issued</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; font-size:14px; color:#1b5e20;">
-                <p><strong>Policy Number:</strong> <code style="background:#c8e6c9; padding:3px 8px; border-radius:4px;"><?php echo htmlspecialchars($policy['policy_number']); ?></code></p>
-                <p><strong>Payment Ref:</strong> <?php echo htmlspecialchars($policy['payment_ref'] ?? 'N/A'); ?></p>
-                <p><strong>Valid From:</strong> <?php echo date('F d, Y', strtotime($policy['start_date'])); ?></p>
-                <p><strong>Valid Until:</strong> <?php echo date('F d, Y', strtotime($policy['end_date'])); ?></p>
-                <p><strong>Policy Status:</strong> <?php echo ucfirst($policy['status']); ?></p>
-                <p><strong>Document:</strong> <a href="/Graduation-Project/<?php echo htmlspecialchars($policy['document_path']); ?>" class="btn btn-sm btn-edit">📥 Download PDF</a></p>
+        <div class="card decision-card policy-success-card">
+            <h2><i class='bx bxs-badge-check' style="color: var(--success-green);"></i> Policy Legal Ledger Successfully Issued</h2>
+            <div class="policy-details-grid">
+                <p><strong><i class='bx bxs-key'></i> Policy Number:</strong> <code class="policy-code-large"><?php echo htmlspecialchars($policy['policy_number']); ?></code></p>
+                <p><strong><i class='bx bx-receipt'></i> Payment Reference:</strong> <span class="txt-medium"><?php echo htmlspecialchars($policy['payment_ref'] ?? 'N/A'); ?></span></p>
+                <p><strong><i class='bx bx-calendar-check'></i> Valid Commencement Date:</strong> <span class="txt-medium"><?php echo date('F d, Y', strtotime($policy['start_date'])); ?></span></p>
+                <p><strong><i class='bx bx-calendar-x'></i> Valid Expiration Date:</strong> <span class="txt-medium"><?php echo date('F d, Y', strtotime($policy['end_date'])); ?></span></p>
+                <p><strong><i class='bx bxs-info-circle'></i> Operations Status:</strong> <span class="badge badge-success-pill"><?php echo ucfirst($policy['status']); ?></span></p>
+                <p><strong><i class='bx bx-download'></i> Legal Document:</strong> <a href="/Graduation-Project/<?php echo htmlspecialchars($policy['document_path']); ?>" class="btn btn-sm btn-download-pdf"><i class='bx bxs-file-pdf'></i> Download Official PDF Ledger</a></p>
             </div>
         </div>
 
         <?php elseif ($app_details['status'] === 'rejected'): ?>
-        <div class="card" style="background:#fdecea; border:1px solid #ef9a9a;">
-            <p style="color:#c62828; font-weight:600;">❌ This application was rejected. No further action required.</p>
+        <div class="card decision-card policy-rejected-card">
+            <p class="rejection-text-banner"><i class='bx bx-message-rounded-x'></i> Operational Notice: This contractual application instance has been definitively rejected. Lockout protocol enabled.</p>
         </div>
         <?php endif; ?>
 
-        <a href="AgentDashboard.php?tab=applications" class="btn btn-cancel">← Back to List</a>
+        <div class="back-action-container">
+            <a href="AgentDashboard.php?tab=applications" class="btn btn-cancel"><i class='bx bx-arrow-back'></i> Return to Work Queue</a>
+        </div>
 
     <?php endif; ?>
 </div>

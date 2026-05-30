@@ -704,3 +704,129 @@ table tr:last-child td {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* popup */
+
+/* تحويل سطور الجدول الحقيقية لعناصر قابلة للضغط */
+#messagesTable tbody tr:not(.no-data-row):not(#messageNoResultsRow) {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+#messagesTable tbody tr:not(.no-data-row):not(#messageNoResultsRow):hover {
+    background-color: rgba(30, 78, 216, 0.04); /* خلفية زرقاء خفيفة جداً عند الهوفر */
+}
+
+/* الشاشة الخلفية المعتمة للـ Popup */
+.custom-modal {
+    display: none; 
+    position: fixed;
+    z-index: 1050; /* أعلى من الـ Sidebar والـ Headers */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4); /* لون داكن ناعم متوافق مع نظام الـ dark/light */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+/* عند تفعيل الـ Popup */
+.custom-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+/* الصندوق الأبيض المحتوي على الرسالة */
+.modal-content {
+    background-color: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transform: scale(0.95);
+    transition: transform 0.25s ease;
+}
+
+.custom-modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* هيدر الـ Popup */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-title-wrapper h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* زرار الإغلاق */
+.close-btn {
+    font-size: 24px;
+    font-weight: 500;
+    color: #94a3b8;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #334155;
+}
+
+/* بيانات المرسل والوقت */
+.modal-body {
+    padding-top: 16px;
+}
+
+.info-group {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-main);
+}
+
+.info-group strong {
+    color: var(--text-muted);
+    display: inline-block;
+    width: 80px;
+    font-weight: 500;
+}
+
+.modal-divider {
+    border: 0;
+    border-top: 1px solid #f1f5f9;
+    margin: 16px 0;
+}
+
+/* عرض نص الرسالة بالكامل */
+.message-content strong {
+    color: var(--text-muted);
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.message-content p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-main);
+    white-space: pre-line; /* عشان يحافظ على المسافات والسطور الجديدة في الرسالة */
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #f1f5f9;
+}
