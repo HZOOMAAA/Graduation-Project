@@ -1,19 +1,28 @@
 /* ═══════════════════════════════════════════════════════════
-   PAYMOB SIMULATION GATEWAY PAGE — Premium CSS Stylesheet
-   Designed for Coverly Insurance Systems Integration
+   PAYMOB SIMULATION GATEWAY PAGE — Unified CSS Stylesheet
+   Designed & Optimized for COVERLY Insurance Systems Infrastructure
    ═══════════════════════════════════════════════════════════ */
 
 :root {
-    --pm-dark: #121824;
-    --pm-purple: #6f2cf3;
-    --pm-purple-dark: #581fd1;
-    --pm-light-purple: #f3edff;
-    --pm-gray-bg: #f8f9fc;
-    --pm-text-muted: #6b7280;
-    --pm-text-dark: #1f2937;
-    --pm-border: #e5e7eb;
-    --pm-success: #10b981;
-    --pm-danger: #ef4444;
+    --navy:        #1A2B48;
+    --blue:        #0052CC;
+    --blue-light:  #e8f0fe;
+    --green:       #00b894;
+    --green-light: #e6f9f5;
+    --purple:      #7c3aed;
+    --purple-light:#f3eeff;
+    --orange:      #e65100;
+    --orange-light:#fff3e0;
+    --red:         #dc2626;
+    --red-light:   #fef2f2;
+    --gray:        #64748b;
+    --gray-light:  #f4f7f9;
+    --white:       #ffffff;
+    --border:      #e2e8f0;
+    --shadow:      0 4px 24px rgba(26,43,72,0.08);
+    --shadow-lg:   0 12px 48px rgba(26,43,72,0.14);
+    
+    /* الأنواع الثابتة للخطوط لضمان دقة الـ Layout */
     --font-hdr: 'Montserrat', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
 }
@@ -25,9 +34,10 @@
 }
 
 body {
-    background: radial-gradient(circle at 10% 20%, rgba(239, 246, 255, 0.4) 0%, rgba(243, 237, 255, 0.4) 100%), #f8fafc;
+    /* دمج ألوان الـ Light المريحة وراء الكارت الموحد */
+    background: radial-gradient(circle at 10% 20%, var(--blue-light) 0%, var(--purple-light) 100%), var(--gray-light);
     font-family: var(--font-body);
-    color: var(--pm-text-dark);
+    color: var(--navy);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,10 +48,10 @@ body {
 /* Secure Top Banner */
 .secure-top-bar {
     width: 100%;
-    background: #111827;
-    color: #9ca3af;
+    background: var(--navy);
+    color: var(--gray-light);
     font-size: 12px;
-    padding: 10px 24px;
+    padding: 12px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,27 +64,28 @@ body {
 }
 
 .text-success {
-    color: var(--pm-success);
+    color: var(--green);
 }
 
 .sandbox-tag {
-    background: rgba(111, 44, 243, 0.15);
-    color: #a855f7;
-    padding: 2px 8px;
-    border-radius: 4px;
+    /* background: var(--blue); */
+    /* color: var(--purple); */
+    padding: 4px 10px;
+    border-radius: 6px;
     font-weight: 700;
     font-size: 11px;
+    /* border: 1px solid rgba(124, 58, 237, 0.15); */
 }
 
 /* Outer layout frame */
 .paymob-outer {
-    max-width: 960px;
+    max-width: 980px;
     width: 100%;
-    background: white;
+    background: var(--white);
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(18, 24, 36, 0.08);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
-    border: 1px solid var(--pm-border);
+    border: 1px solid var(--border);
 }
 
 /* Inner Grid container */
@@ -86,9 +97,9 @@ body {
 
 /* Left Column - Invoice details */
 .invoice-section {
-    background-color: var(--pm-gray-bg);
+    background-color: var(--gray-light);
     padding: 40px;
-    border-right: 1px solid var(--pm-border);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -106,7 +117,7 @@ body {
     font-weight: 800;
     font-size: 20px;
     letter-spacing: 1px;
-    color: var(--pm-dark);
+    color: var(--navy);
 }
 
 .paymob-badge {
@@ -115,7 +126,7 @@ body {
 
 .paymob-badge .pow-text {
     font-size: 9px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     text-transform: uppercase;
     display: block;
     letter-spacing: 0.5px;
@@ -125,11 +136,11 @@ body {
     font-family: var(--font-hdr);
     font-weight: 800;
     font-size: 16px;
-    color: var(--pm-dark);
+    color: var(--navy);
 }
 
 .paymob-badge .purple-txt {
-    color: var(--pm-purple);
+    color: var(--blue); /* تحويل التدفق لـ هويتك الزرقاء المعتمدة */
 }
 
 .merchant-box {
@@ -139,7 +150,7 @@ body {
 .merchant-box .lbl {
     font-size: 10px;
     font-weight: 700;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     letter-spacing: 1px;
     display: block;
     margin-bottom: 4px;
@@ -148,12 +159,12 @@ body {
 .merchant-box .val {
     font-size: 17px;
     font-weight: 700;
-    color: var(--pm-dark);
+    color: var(--navy);
 }
 
 .divider {
     height: 1px;
-    background: var(--pm-border);
+    background: var(--border);
     margin: 20px 0;
 }
 
@@ -161,7 +172,7 @@ body {
     font-family: var(--font-hdr);
     font-size: 13px;
     font-weight: 700;
-    color: var(--pm-dark);
+    color: var(--navy);
     margin-bottom: 15px;
     display: flex;
     align-items: center;
@@ -172,12 +183,12 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 13px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     margin-bottom: 12px;
 }
 
 .invoice-row .val-dark {
-    color: var(--pm-dark);
+    color: var(--navy);
     font-weight: 600;
     text-align: right;
     max-width: 160px;
@@ -187,17 +198,17 @@ body {
 }
 
 .price-box {
-    background: var(--pm-light-purple);
+    background: var(--blue-light);
     border-radius: 14px;
     padding: 20px;
     margin-top: 15px;
-    border: 1px solid rgba(111, 44, 243, 0.1);
+    border: 1px solid rgba(0, 82, 204, 0.1);
 }
 
 .price-header {
     font-size: 11px;
     font-weight: 700;
-    color: var(--pm-purple);
+    color: var(--blue);
     letter-spacing: 0.5px;
     text-transform: uppercase;
     margin-bottom: 4px;
@@ -212,14 +223,14 @@ body {
 .price-amount .currency {
     font-size: 14px;
     font-weight: 700;
-    color: var(--pm-purple);
+    color: var(--blue);
 }
 
 .price-amount .number {
     font-family: var(--font-hdr);
     font-size: 26px;
     font-weight: 800;
-    color: var(--pm-dark);
+    color: var(--navy);
 }
 
 .security-standards {
@@ -231,14 +242,14 @@ body {
 .std-item {
     font-size: 11px;
     font-weight: 600;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
 .std-item i {
-    color: var(--pm-success);
+    color: var(--green);
 }
 
 
@@ -249,6 +260,7 @@ body {
     flex-direction: column;
     justify-content: center;
     position: relative;
+    background: var(--white);
 }
 
 .payment-hdr {
@@ -259,7 +271,7 @@ body {
     font-family: var(--font-hdr);
     font-size: 20px;
     font-weight: 700;
-    color: var(--pm-dark);
+    color: var(--navy);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -267,12 +279,12 @@ body {
 }
 
 .payment-title i {
-    color: var(--pm-purple);
+    color: var(--blue);
 }
 
 .payment-subtitle {
     font-size: 14px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     line-height: 1.4;
 }
 
@@ -282,9 +294,9 @@ body {
 }
 
 .input-lbl {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     letter-spacing: 0.8px;
     display: block;
     margin-bottom: 8px;
@@ -299,32 +311,33 @@ body {
 .field-icon {
     position: absolute;
     left: 16px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     font-size: 16px;
 }
 
 .field-input {
     width: 100%;
     padding: 14px 16px 14px 46px;
-    border: 1px solid var(--pm-border);
+    border: 1px solid var(--border);
     border-radius: 12px;
     font-size: 15px;
     font-family: var(--font-body);
     font-weight: 600;
-    color: var(--pm-dark);
-    transition: all 0.2s;
-    background: white;
+    color: var(--navy);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--white);
 }
 
 .field-input::placeholder {
-    color: #9ca3af;
+    color: var(--gray);
+    opacity: 0.6;
     font-weight: 500;
 }
 
 .field-input:focus {
     outline: none;
-    border-color: var(--pm-purple);
-    box-shadow: 0 0 0 4px rgba(111, 44, 243, 0.08);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(0, 82, 204, 0.08);
 }
 
 .col-grid {
@@ -355,12 +368,12 @@ body {
 
 /* Alert Banner */
 .alert-error {
-    background: #fef2f2;
-    border: 1px solid #fee2e2;
-    color: var(--pm-danger);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 13px;
+    background: var(--red-light);
+    border: 1px solid rgba(220, 38, 38, 0.15);
+    color: var(--red);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13.5px;
     font-weight: 600;
     margin-bottom: 20px;
     display: flex;
@@ -377,8 +390,8 @@ body {
 /* Submit Paymob Button */
 .submit-pay-btn {
     width: 100%;
-    background: var(--pm-purple);
-    color: white;
+    background: linear-gradient(135deg, var(--blue) 0%, #1d4ed8 100%);
+    color: var(--white);
     font-family: var(--font-body);
     font-weight: 700;
     font-size: 15px;
@@ -391,14 +404,13 @@ body {
     align-items: center;
     gap: 10px;
     margin-top: 10px;
-    transition: all 0.2s;
-    box-shadow: 0 4px 15px rgba(111, 44, 243, 0.2);
+    transition: all 0.25s;
+    box-shadow: 0 4px 15px rgba(0, 82, 204, 0.2);
 }
 
 .submit-pay-btn:hover {
-    background: var(--pm-purple-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(111, 44, 243, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 82, 204, 0.3);
 }
 
 .submit-pay-btn:active {
@@ -408,7 +420,7 @@ body {
 .secure-disclaimer {
     margin-top: 25px;
     font-size: 11px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     line-height: 1.5;
     display: flex;
     align-items: flex-start;
@@ -416,7 +428,7 @@ body {
 }
 
 .secure-disclaimer i {
-    color: var(--pm-purple);
+    color: var(--blue);
     font-size: 13px;
     margin-top: 1px;
 }
@@ -428,7 +440,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: white;
+    background: var(--white);
     border-radius: 0 24px 24px 0;
     z-index: 10;
     display: flex;
@@ -449,11 +461,11 @@ body {
 }
 
 .gateway-logo .pm-p1 {
-    color: var(--pm-dark);
+    color: var(--navy);
 }
 
 .gateway-logo .pm-p2 {
-    color: var(--pm-purple);
+    color: var(--blue);
 }
 
 /* Dual Ring Spinner */
@@ -471,10 +483,10 @@ body {
     width: 64px;
     height: 64px;
     margin: 8px;
-    border: 5px solid var(--pm-purple);
+    border: 5px solid var(--blue);
     border-radius: 50%;
     animation: spinner-ring-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: var(--pm-purple) transparent transparent transparent;
+    border-color: var(--blue) transparent transparent transparent;
 }
 .spinner-ring div:nth-child(1) { animation-delay: -0.45s; }
 .spinner-ring div:nth-child(2) { animation-delay: -0.3s; }
@@ -489,13 +501,13 @@ body {
     font-family: var(--font-hdr);
     font-size: 20px;
     font-weight: 700;
-    color: var(--pm-dark);
+    color: var(--navy);
     margin-bottom: 10px;
 }
 
 .proc-desc {
     font-size: 14px;
-    color: var(--pm-text-muted);
+    color: var(--gray);
     line-height: 1.5;
     max-width: 320px;
 }
@@ -512,7 +524,7 @@ body {
     }
     .invoice-section {
         border-right: none;
-        border-bottom: 1px solid var(--pm-border);
+        border-bottom: 1px solid var(--border);
         padding: 30px;
     }
     .payment-section {

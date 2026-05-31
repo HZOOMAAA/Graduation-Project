@@ -1,25 +1,27 @@
-/* ── 📌 1️⃣ تجنب استخدام * الشاملة لحماية الـ Includes ── */
+/* ── 📌 1️⃣ خطوط مودرن وتجهيز الحماية لـ Includes ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 .main-content, 
 .payment-card, 
 .payment-card * {
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif; /* خط إنتر المعتمد عالمياً للـ Tech Brands */
 }
 
 /* الاستايل الأساسي للخلفية والمساحة */
 .body {
-    background: #eff6ff; /* اللون الأزرق الخفيف المعتمد */
+    background: #f8fafc; /* خلفية أهدى وأريح للعين */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
-/* ── 📌 2️⃣ عزل حاوية كارت الدفع (بدل الحاوية العامة) ── */
+/* ── 📌 2️⃣ عزل حاوية كارت الدفع ── */
 .payment-page-container {
     width: 100%;
-    max-width: 940px;
+    max-width: 1000px; /* زيادة مساحة الجريد للراحة البصرية */
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 24px;
 }
 
 /* سنترة الكارت بالملي في منتصف الشاشة */
@@ -28,186 +30,241 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
+    /* خلفية إضاءة خفيفة وراء الكارت للحركة الصايعة */
+    background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.05), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(123, 31, 162, 0.03), transparent 40%);
 }
 
-/* ── 📌 3️⃣ ديزاين الـ Card والتفاصيل (بتاعتك الموزونة بنظافة) ── */
+/* ── 📌 3️⃣ ديزاين الـ Card والتفاصيل (اللمسة الـ Premium) ── */
 .payment-card {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 40px;
+    border-radius: 24px; /* زوايا أنعم ومودرن أكتر */
+    padding: 50px 40px;
     color: #0f172a;
-    /* تنعيم الشادو عشان يبقى مودرن وأخف */
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); 
-    border: 1px solid #e2e8f0;
+    /* شادو ثلاثي الأبعاد فائق النعومة */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 
+                0 20px 40px -4px rgba(15, 23, 42, 0.06); 
+    border: 1px solid rgba(226, 232, 240, 0.8);
     width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* خط تجميلي ملون فوق الكارت يدي انطباع البراند */
+.payment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary-navy), var(--action-blue));
 }
 
 .card-header {
     text-align: center;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #e2e8f0;
-    padding-bottom: 20px;
+    margin-bottom: 35px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .card-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #0f172a;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .card-subtitle {
     color: #64748b;
-    font-size: 13px;
-    margin-top: 5px;
+    font-size: 14px;
+    margin-top: 8px;
+    font-weight: 400;
 }
 
 /* الـ Grid لبيانات الوثيقة والمبلغ */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 24px;
     background: #f8fafc;
-    padding: 20px;
-    border-radius: 12px;
-    border: 1px solid #f1f5f9;
-    margin-bottom: 30px;
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(241, 245, 249, 0.9);
+    margin-bottom: 40px;
 }
 
 .info-label {
-    font-size: 10px;
+    font-size: 11px;
     text-transform: uppercase;
-    color: #64748b;
-    font-weight: 600;
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.5px;
     display: block;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .info-value {
-    font-size: 14px;
+    font-size: 14.5px;
     color: #1e293b;
     font-weight: 600;
 }
 
 .info-amount {
-    border-left: 2px solid #e2e8f0;
-    padding-left: 20px;
+    border-left: 2px dashed #e2e8f0; /* خط منقوش شيك للفصل */
+    padding-left: 24px;
 }
 
 .amount-value {
-    font-size: 20px;
-    color: #2563eb; /* الأزرق الصريح للـ Brand */
-    font-weight: 700;
+    font-size: 22px;
+    color: #2563eb; 
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .section-title {
-    font-size: 16px;
-    color: #1e293b;
+    font-size: 18px;
+    color: #0f172a;
     margin-bottom: 6px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.3px;
 }
 
 .section-subtitle {
     color: #64748b;
-    font-size: 12px;
-    margin-bottom: 20px;
+    font-size: 13px;
+    margin-bottom: 24px;
 }
 
-/* جريد بوابات الدفع (فيزا، فوري...) */
+/* جريد بوابات الدفع */
 .payment-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
 }
 
 .payment-option {
     border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 24px 16px;
+    border-radius: 16px;
+    padding: 32px 24px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     background: #ffffff;
+    position: relative;
 }
 
+/* لمسة الـ Hover المجنونة */
 .payment-option:hover {
     border-color: #2563eb;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px rgba(37, 99, 235, 0.08);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.06), 
+                0 10px 10px -5px rgba(37, 99, 235, 0.04);
+}
+
+/* تأثير نبض خفيف للبوابة اللى بيقف عليها الماوس */
+.payment-option:active {
+    transform: scale(0.98) translateY(-2px);
 }
 
 .payment-icon {
-    height: 40px;
+    height: 44px;
     object-fit: contain;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.03));
+    transition: transform 0.2s ease;
+}
+
+.payment-option:hover .payment-icon {
+    transform: scale(1.08); /* تكبير اللوجو سنة مع الـ hover */
 }
 
 .payment-name {
-    font-size: 15px;
-    color: #1e293b;
-    font-weight: 600;
-    margin-bottom: 4px;
+    font-size: 16px;
+    color: #0f172a;
+    font-weight: 700;
+    margin-bottom: 6px;
 }
 
 .payment-desc {
-    font-size: 11px;
+    font-size: 12px;
     color: #64748b;
-    margin-bottom: 15px;
-    min-height: 32px;
-    line-height: 1.4;
+    margin-bottom: 20px;
+    min-height: 36px;
+    line-height: 1.5;
 }
 
 .btn-continue {
-    background: #f1f5f9;
-    color: #1e293b;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 12px;
+    background: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
 }
 
+/* تحول الزرار لـ Gradient البراند عند الـ Hover */
 .payment-option:hover .btn-continue {
-    background: #2563eb;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
 }
 
 .secure-banner {
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     color: #64748b;
-    border-top: 1px solid #e2e8f0;
-    padding-top: 20px;
-    margin-top: 30px;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 24px;
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .icon-secure {
     color: #10b981;
-    margin-right: 6px;
+    font-size: 15px;
 }
 
 /* ── 📌 4️⃣ الـ Responsive الموزون لحماية الشاشات الصغيرة ── */
 @media (max-width: 768px) {
+    .payment-card {
+        padding: 30px 20px;
+    }
     .info-grid { 
-        grid-template-columns: repeat(2, 1fr); 
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 16px;
     }
     .payment-grid { 
         grid-template-columns: 1fr; 
+        gap: 16px;
     }
     .info-amount { 
         border-left: none; 
         padding-left: 0; 
-        border-top: 1px solid #e2e8f0;
-        padding-top: 15px;
+        border-top: 1px dashed #e2e8f0;
+        padding-top: 16px;
     }
     .main-content {
-        padding: 30px 10px;
+        padding: 40px 12px;
+    }
+    .card-title {
+        font-size: 22px;
     }
 }

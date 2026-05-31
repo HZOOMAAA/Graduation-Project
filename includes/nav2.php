@@ -64,67 +64,101 @@ $notif_count = count($notif_apps);
 
             <!-- الناف التاني (أزرار الدخول والتسجيل أو صورة/أيقونة البروفايل) -->
             <nav class="auth-nav">
-                <?php if ($is_logged_in): ?>
-                    <div style="display:flex;align-items:center;gap:10px;">
+    <?php if ($is_logged_in): ?>
+        <div style="display:flex;align-items:center;gap:10px;">
 
+            <div class="notif-wrapper">
+                <button class="notif-bell-btn <?php echo ($notif_count > 0) ? 'has-notif' : ''; ?>" id="notifBellBtn" aria-label="Payment Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                    
+                    <?php if ($notif_count > 0): ?>
+                        <span class="notif-badge"><?php echo $notif_count; ?></span>
+                    <?php endif; ?>
+                </button>
+                
+                <div class="notif-dropdown" id="notifDropdown">
+                    <div class="notif-dropdown-header">
+                        <i class="fa-solid fa-credit-card"></i>
                         <?php if ($notif_count > 0): ?>
-                        <!-- 🔔 Notification Bell -->
-                        <div class="notif-wrapper">
-                            <button class="notif-bell-btn has-notif" id="notifBellBtn" aria-label="Payment Notifications">
-                                <i class="fa-solid fa-bell"></i>
-                                <span class="notif-badge"><?php echo $notif_count; ?></span>
-                            </button>
-                            <div class="notif-dropdown" id="notifDropdown">
-                                <div class="notif-dropdown-header">
-                                    <i class="fa-solid fa-credit-card"></i>
-                                    Payment Required (<?php echo $notif_count; ?>)
+                            Payment Required (<?php echo $notif_count; ?>)
+                        <?php else: ?>
+                            Notifications
+                        <?php endif; ?>
+                    </div>
+                    
+                    <div class="notif-list">
+                        <?php if ($notif_count > 0): ?>
+                            <?php foreach ($notif_apps as $na): ?>
+                            <div class="notif-item">
+                                <div class="notif-item-icon">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i>
                                 </div>
-                                <div class="notif-list">
-                                    <?php foreach ($notif_apps as $na): ?>
-                                    <div class="notif-item">
-                                        <div class="notif-item-icon">
-                                            <i class="fa-solid fa-file-invoice-dollar"></i>
-                                        </div>
-                                        <div class="notif-item-body">
-                                            <div class="notif-item-title">
-                                                <?php echo htmlspecialchars($na['plan_name'] ?? 'Insurance Plan'); ?>
-                                            </div>
-                                            <div class="notif-item-sub">
-                                                <?php echo htmlspecialchars($na['category_name'] ?? ''); ?>
-                                                <?php if ($na['final_price'] > 0): ?>
-                                                — EGP <?php echo number_format($na['final_price'], 2); ?>
-                                                <?php endif; ?>
-                                            </div>
-                                            <a href="/Graduation-Project/payment.php?app_id=<?php echo (int)$na['application_id']; ?>"
-                                               class="notif-pay-btn">
-                                                <i class="fa-solid fa-arrow-right"></i> Pay Now
-                                            </a>
-                                        </div>
+                                <div class="notif-item-body">
+                                    <div class="notif-item-title">
+                                        <?php echo htmlspecialchars($na['plan_name'] ?? 'Insurance Plan'); ?>
                                     </div>
-                                    <?php endforeach; ?>
+                                    <div class="notif-item-sub">
+                                        <?php echo htmlspecialchars($na['category_name'] ?? ''); ?>
+                                        <?php if ($na['final_price'] > 0): ?>
+                                        — EGP <?php echo number_format($na['final_price'], 2); ?>
+                                        <?php endif; ?>
+                                    </div>
+                                    <a href="/Graduation-Project/payment.php?app_id=<?php echo (int)$na['application_id']; ?>"
+                                       class="notif-pay-btn">
+                                        <i class="fa-solid fa-arrow-right"></i> Pay Now
+                                    </a>
                                 </div>
                             </div>
-                        </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="notif-item" style="justify-content: center; padding: 30px 20px; text-align: center; color: #888;">
+                                <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                    <i class="fa-solid fa-bell-slash" style="font-size: 24px; color: #ccc;"></i>
+                                    <span style="font-size: 13px; font-weight: 500; line-height: 1.5;">All caught up!<br>No pending payments.</span>
+                                </div>
+                            </div>
                         <?php endif; ?>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Profile Icon -->
-                        <div class="profile-container">
-                            <a href="profile.php" class="profile-btn" title="View Profile">
-                                <i class="fa-regular fa-circle-user"></i>
-                            </a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <div class="auth-buttons">
-                        <a href="auth/login.php" class="btn-login">Login</a>
-                        <a href="auth/register.php" class="btn-register">Register</a>
-                    </div>
-                <?php endif; ?>
-            </nav>
+            <div class="profile-container">
+                <a href="profile.php" class="profile-btn" title="View Profile">
+                    <i class="fa-regular fa-circle-user"></i>
+                </a>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="auth-buttons">
+            <a href="auth/login.php" class="btn-login">Login</a>
+            <a href="auth/register.php" class="btn-register">Register</a>
+        </div>
+    <?php endif; ?>
+</nav>
 
         </div>
     </div>
 </header>
-    
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const notifBellBtn = document.getElementById("notifBellBtn");
+    const notifDropdown = document.getElementById("notifDropdown");
+
+    if (notifBellBtn && notifDropdown) {
+        // 1. عند الضغط على زرار الجرس
+        notifBellBtn.addEventListener("click", function (event) {
+            event.stopPropagation(); // بيمنع الـ Click إنه يسمع في باقي الصفحة
+            notifDropdown.classList.toggle("open");
+        });
+
+        // 2. حركة صايعة: لو داس في أي مكان بره الـ Dropdown يقفله فوراً
+        document.addEventListener("click", function (event) {
+            if (!notifDropdown.contains(event.target) && !notifBellBtn.contains(event.target)) {
+                notifDropdown.classList.remove("open");
+            }
+        });
+    }
+});
+  </script>  
 </body>
 </html>

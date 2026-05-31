@@ -68,78 +68,81 @@ include 'includes/nav2.php';
 <title>Secure Payment — COVERLY</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link rel="stylesheet" href="/Graduation-Project/assets/css/payment.css">
 
 <main class="main-content">
-    <div class="container">
-        <div class="payment-card">
+    <div class="payment-page-container"> <div class="payment-card">
+            
             <div class="card-header">
+                <i class='bx bx-shield-quarter' style="font-size: 48px; color: #1A2B48; margin-bottom: 12px; display: inline-block;"></i>
                 <h1 class="card-title">Insurance Payment Portal</h1>
-                <p class="card-subtitle">Secure payment for your approved insurance application</p>
+                <p class="card-subtitle">Secure payment encryption framework for your approved insurance policy</p>
             </div>
 
             <div class="info-grid">
                 <div>
-                    <span class="info-label">Company</span>
+                    <span class="info-label"><i class='bx bxs-business' style="vertical-align: middle; margin-right: 4px;"></i> Company</span>
                     <h3 class="info-value"><?php echo $company; ?></h3>
                 </div>
                 <div>
-                    <span class="info-label">Customer Name</span>
+                    <span class="info-label"><i class='bx bxs-user-detail' style="vertical-align: middle; margin-right: 4px;"></i> Customer Name</span>
                     <h3 class="info-value" id="customerName"><?php echo $customer_name; ?></h3>
                 </div>
                 <div>
-                    <span class="info-label">Policy Reference Prefix</span>
+                    <span class="info-label"><i class='bx bx-barcode' style="vertical-align: middle; margin-right: 4px;"></i> Policy Reference</span>
                     <h3 class="info-value">
-                        <span style="background:#f0e6ff;color:#7b1fa2;padding:3px 12px;border-radius:20px;font-size:13px;font-weight:700;">
+                        <span style="background: rgba(37, 99, 235, 0.08); color: #2563eb; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid rgba(37, 99, 235, 0.15);">
                             <?php echo $pol_prefix; ?>-<?php echo date('Y'); ?>-XXXXXXXX
                         </span>
                     </h3>
                 </div>
                 <div>
-                    <span class="info-label">Plan</span>
-                    <h3 class="info-value" style="font-size:15px;"><?php echo $plan_name; ?></h3>
-                </div>
-                <div>
-                    <span class="info-label">Category</span>
-                    <h3 class="info-value"><?php echo $category_name; ?></h3>
+                    <span class="info-label"><i class='bx bxs-layer' style="vertical-align: middle; margin-right: 4px;"></i> Plan & Category</span>
+                    <h3 class="info-value" style="font-size: 14px; font-weight: 600; line-height: 1.4;">
+                        <?php echo $plan_name; ?> <br>
+                        <small style="color: #64748b; font-weight: 400; font-size: 12px;">Category: <?php echo $category_name; ?></small>
+                    </h3>
                 </div>
                 <div class="info-amount">
-                    <span class="info-label">Total Amount Due</span>
+                    <span class="info-label"><i class='bx bx-credit-card-front' style="vertical-align: middle; margin-right: 4px;"></i> Total Amount Due</span>
                     <h2 class="amount-value">EGP <?php echo $amount; ?></h2>
                 </div>
             </div>
 
             <h2 class="section-title">Select Payment Method</h2>
-            <p class="section-subtitle">Choose your preferred payment provider to continue securely.</p>
+            <p class="section-subtitle">Choose your preferred audited payment merchant infrastructure below.</p>
 
             <div class="payment-grid">
 
                 <div class="payment-option" onclick="location.href='paymob_initiate.php?app_id=<?php echo $app_id; ?>&provider=visa'">
                     <img src="https://cdn-icons-png.flaticon.com/512/349/349221.png" alt="Visa" class="payment-icon">
-                    <h3 class="payment-name">Visa</h3>
-                    <p class="payment-desc">Pay securely using Visa via Paymob portal.</p>
-                    <button class="btn-continue">Continue</button>
+                    <h3 class="payment-name">Visa Card</h3>
+                    <p class="payment-desc">Pay securely using international Visa gateway routed via Paymob framework.</p>
+                    <button class="btn-continue">Proceed to Checkout <i class='bx bx-right-arrow-alt' style="vertical-align: middle; font-size: 16px; margin-left: 4px;"></i></button>
                 </div>
 
-                <div class="payment-option" onclick="location.href='fawry.php?app_id=<?php echo $app_id; ?>'">
+                
+                <!-- <div class="payment-option" onclick="location.href='fawry.php?app_id=<?php echo $app_id; ?>'">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Fawry_logo.svg/320px-Fawry_logo.svg.png" alt="Fawry" class="payment-icon" style="object-fit:contain;">
-                    <h3 class="payment-name">Fawry</h3>
-                    <p class="payment-desc">Complete your payment through Fawry services.</p>
-                    <button class="btn-continue">Continue</button>
-                </div>
+                    <h3 class="payment-name">Fawry Pay</h3>
+                    <p class="payment-desc">Generate a secure reference payment code valid at any local Fawry retailer machine.</p>
+                    <button class="btn-continue">Generate Code <i class='bx bx-right-arrow-alt' style="vertical-align: middle; font-size: 16px; margin-left: 4px;"></i></button>
+                </div> -->
 
                 <div class="payment-option" onclick="location.href='paymob_initiate.php?app_id=<?php echo $app_id; ?>&provider=mastercard'">
                     <img src="https://cdn-icons-png.flaticon.com/512/196/196561.png" alt="Mastercard" class="payment-icon">
                     <h3 class="payment-name">Mastercard</h3>
-                    <p class="payment-desc">Secure Mastercard payment via Paymob portal.</p>
-                    <button class="btn-continue">Continue</button>
+                    <p class="payment-desc">Secure end-to-end tokenized Mastercard processing through active Paymob API.</p>
+                    <button class="btn-continue">Proceed to Checkout <i class='bx bx-right-arrow-alt' style="vertical-align: middle; font-size: 16px; margin-left: 4px;"></i></button>
                 </div>
 
             </div>
 
             <div class="secure-banner">
-                <p><i class="fas fa-shield-alt icon-secure"></i> All transactions are end-to-end encrypted. Your card data is never stored.</p>
+                <p><i class='bx bxs-lock-alt icon-secure' style="font-size: 16px; color: #10b981; vertical-align: middle;"></i> <b>SSL Secured & Encrypted:</b> All data packets are strictly tokenized. Card telemetry is never logged on COVERLY main servers.</p>
             </div>
+            
         </div>
     </div>
 </main>

@@ -69,7 +69,7 @@ $is_mc         = ($provider === 'mastercard');
 <div class="paymob-outer">
     <!-- Top Secure Lock Banner -->
     <div class="secure-top-bar">
-        <span><i class="fa-solid fa-lock text-success"></i> 256-Bit SSL Secured Transaction Channel</span>
+        <span><i class="fa-solid fa-lock text-"></i> 256-Bit SSL Secured Transaction Channel</span>
         <span class="sandbox-tag"><i class="fa-solid fa-flask"></i> Paymob Sandbox Environment</span>
     </div>
 
