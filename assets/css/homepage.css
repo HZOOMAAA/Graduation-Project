@@ -285,10 +285,10 @@ ul {
     border-radius: 14px;
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-    
+
     /* الحل هنا: تحديد الـ transform صراحة جوه الـ transition */
     transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out, border-color 0.4s ease-in-out;
-    
+
     box-sizing: border-box;
     text-align: center;
 }
@@ -343,12 +343,15 @@ ul {
     margin: 0;
     opacity: 0.8;
 }
+
 /* end featueres */
 
 .text-navy {
     color: #0b1c3c;
-    flex-shrink: 0 !important; /* **السر هنا**: بيمنع الـ Flexbox إنه يضغط العنوان لما الـ Accordion يفتح */
-    white-space: nowrap; /* بيضمن إن العنوان يفضل على سطر واحد ومينزلش تحت بعضه فجأة */
+    flex-shrink: 0 !important;
+    /* **السر هنا**: بيمنع الـ Flexbox إنه يضغط العنوان لما الـ Accordion يفتح */
+    white-space: nowrap;
+    /* بيضمن إن العنوان يفضل على سطر واحد ومينزلش تحت بعضه فجأة */
 }
 
 /* 1. تعديل حاوية الكارت لمنع القفزات */
@@ -356,8 +359,10 @@ ul {
     border-radius: 8px !important;
     overflow: hidden;
     border: 1px solid #eaeaea;
-    background-color: #fff; /* تثبيت الخلفية الافتراضية للـ item */
-    backface-visibility: hidden; /* حماية المتصفح من الهزات أثناء الـ Animation */
+    background-color: #fff;
+    /* تثبيت الخلفية الافتراضية للـ item */
+    backface-visibility: hidden;
+    /* حماية المتصفح من الهزات أثناء الـ Animation */
 }
 
 /* 2. تنسيق الزرار وهو مقفول */
@@ -367,14 +372,16 @@ ul {
     background-color: #fff;
     box-shadow: none !important;
     padding: 1.25rem;
-    transition: background-color 0.25s ease, color 0.25s ease; /* أنيميشن ناعم لقلب الألوان */
+    transition: background-color 0.25s ease, color 0.25s ease;
+    /* أنيميشن ناعم لقلب الألوان */
 }
 
 /* 3. تنسيق الزرار وهو مفتوح */
 .custom-accordion .accordion-button:not(.collapsed) {
     background-color: #0b1c3c;
     color: #fff;
-    border-bottom: 1px solid #0b1c3c; /* الحفاظ على أبعاد الحقل ثابتة منعاً للهز */
+    border-bottom: 1px solid #0b1c3c;
+    /* الحفاظ على أبعاد الحقل ثابتة منعاً للهز */
 }
 
 /* 4. الـ SVGs بتاعة الأسهم بتاعتك زي ما هي تماماً */
@@ -392,17 +399,21 @@ ul {
     color: #6c757d;
     line-height: 1.8;
     padding: 1.25rem;
-    border-top: 1px solid #eaeaea; /* **هنا السر**: البوردر ده بيثبت الحسابات الرأسية للـ Height أثناء الفتح */
+    border-top: 1px solid #eaeaea;
+    /* **هنا السر**: البوردر ده بيثبت الحسابات الرأسية للـ Height أثناء الفتح */
 }
 
 /* 6. إجبار البوتسترايب على الالتزام بحركة انسيابية خطية من غير قفز مساحات */
 .custom-accordion .collapsing {
     transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
-.insurance-health-section .row, 
+
+.insurance-health-section .row,
 .car-insurance-section .row {
-    align-items: flex-start !important; /* بيخلي العنوان والـ Accordion يبدأوا من نفس المحاذاة فوق، فاللي يفتح تحت ميهزش اللي جنبه */
+    align-items: flex-start !important;
+    /* بيخلي العنوان والـ Accordion يبدأوا من نفس المحاذاة فوق، فاللي يفتح تحت ميهزش اللي جنبه */
 }
+
 /* end section */
 
 
@@ -483,7 +494,8 @@ ul {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
 }
-.purpose-card h2{
+
+.purpose-card h2 {
     margin-bottom: 15px;
 }
 
@@ -591,5 +603,92 @@ ul {
 
     header {
         padding: 10px 0;
+    }
+}
+
+
+/* تنسيقات قسم آراء العملاء */
+.custom-testimonials-section {
+    background-color: var(--white, #FFFFFF);
+    padding: 5rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-testimonials-container {
+    max-width: 1200px;
+    width: 100%;
+    text-align: center;
+}
+
+.custom-testimonials-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: var(--primary-navy, #1A2B48);
+    margin-bottom: 4rem;
+    font-weight: 700;
+}
+
+.custom-testimonial-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.custom-testimonial-item {
+    flex: 1;
+    min-width: 300px;
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.custom-client-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.custom-client-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--primary-navy, #1A2B48);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.custom-client-quote {
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-main, #2D3436);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    flex-grow: 1;
+}
+
+.custom-client-rating {
+    margin-top: auto;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+.custom-star {
+    color: #F1C40F;
+    /* لون النجوم الذهبي */
+}
+
+/* التجاوب مع شاشات الموبايل */
+@media (max-width: 768px) {
+    .custom-testimonials-title {
+        font-size: 2.5rem;
+        margin-bottom: 2.5rem;
     }
 }
