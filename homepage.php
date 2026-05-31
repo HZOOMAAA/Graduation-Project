@@ -247,64 +247,74 @@
 
 
 
-   <section class="py-5" style="background-color: #f4f7f9;" id="faq">
-    <div class="container">
-        <!-- عنوان السكشن -->
-        <h2 class="text-center mb-5 fw-bold text-navy">Frequently Asked Questions</h2>
+   <section class="faq-section" id="faq">
+    <div class="faq-container">
+        <!-- Section Title -->
+        <h2 class="faq-title">Frequently asked questions</h2>
         
-        <!-- توسيط المحتوى وتحديد عرضه -->
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                
-                <div class="accordion custom-accordion" id="faqAccordion">
+        <div class="faq-accordion" id="faqAccordion">
 
-                    <!-- السؤال الأول (مفتوح افتراضياً) -->
-                    <div class="accordion-item mb-3 shadow-sm ">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                How long does it usually take to complete a project?
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                The turnaround time depends on the size and requirements of the project, but on average, we deliver projects within 2 to 4 weeks.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- السؤال التاني (مقفول) -->
-                    <div class="accordion-item mb-3 shadow-sm ">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Do you provide technical support after delivery?
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                Yes, we provide ongoing technical support and maintenance to ensure everything runs smoothly after the final delivery.
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- السؤال التالت (مقفول) -->
-                    <div class="accordion-item mb-3 shadow-sm ">
-                        <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                What payment methods are available?
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
-                            <div class="accordion-body">
-                                We accept various payment methods including bank transfers, credit cards, and PayPal. Payment terms are usually split into milestones.
-                            </div>
-                        </div>
-                    </div>
-
+            <!-- Question 1 (open by default) -->
+            <div class="faq-item active">
+                <button class="faq-question" aria-expanded="true" data-target="faqAnswer1">
+                    <span>How long does it usually take to complete a project?</span>
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="faq-answer show" id="faqAnswer1">
+                    <p><b>The turnaround time depends on the size and requirements of the project, but on average, we deliver projects within 2 to 4 weeks.</b></p>
                 </div>
-
             </div>
-        </div>
+
+            <!-- Question 2 -->
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false" data-target="faqAnswer2">
+                    <span>Do you provide technical support after delivery?</span>
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="faq-answer" id="faqAnswer2">
+                    <p><b>Yes, we provide ongoing technical support and maintenance to ensure everything runs smoothly after the final delivery.</b></p>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false" data-target="faqAnswer3">
+                    <span>What payment methods are available?</span>
+                    <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="faq-answer" id="faqAnswer3">
+                    <p><b>We accept various payment methods including bank transfers, credit cards, and PayPal. Payment terms are usually split into milestones.</b></p>
+                </div>
+            </div>
+          
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        faqItems.forEach(item => {
+            const btn = item.querySelector('.faq-question');
+            btn.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                
+                // Close all items
+                faqItems.forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+                    i.querySelector('.faq-answer').classList.remove('show');
+                });
+                
+                // Open clicked item if it was closed
+                if (!isActive) {
+                    item.classList.add('active');
+                    btn.setAttribute('aria-expanded', 'true');
+                    item.querySelector('.faq-answer').classList.add('show');
+                }
+            });
+        });
+    });
+    </script>
 </section>
 
 
