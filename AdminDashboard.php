@@ -103,6 +103,41 @@ if (isset($_POST['add_plan'])) {
     }
 }
 
+// Handle Edit Plan
+if (isset($_POST['edit_plan'])) {
+    $id = (int)$_POST['plan_id'];
+    $name = mysqli_real_escape_string($connect, $_POST['name']);
+    $category_id = (int)$_POST['category_id'];
+    $company = mysqli_real_escape_string($connect, $_POST['insurance_company']);
+    $details = mysqli_real_escape_string($connect, $_POST['bio']);
+    $price = (float)$_POST['base_price'];
+    
+    $eligibility_raw = trim($_POST['eligibility_rules']);
+    $eligibility = 'NULL';
+    $json_is_valid = true;
+
+    if ($eligibility_raw !== '') {
+        if (json_decode($eligibility_raw) === null && json_last_error() !== JSON_ERROR_NONE) {
+            $json_is_valid = false;
+        } else {
+            $eligibility = "'" . mysqli_real_escape_string($connect, $eligibility_raw) . "'";
+        }
+    }
+
+    if (!$json_is_valid) {
+        $error = "Eligibility rules must be valid JSON format.";
+    } else {
+        $update = mysqli_query($connect, "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility WHERE plan_id = $id");
+        if ($update) {
+            $success = "Insurance plan updated successfully!";
+            header("Location: AdminDashboard.php?tab=plans&success=" . urlencode($success));
+            exit();
+        } else {
+            $error = "Failed to update insurance plan! " . mysqli_error($connect);
+        }
+    }
+}
+
 // Handle Assign Agent — only allowed when status = waiting_docs
 if (isset($_POST['assign_agent'])) {
     $application_id = (int)$_POST['application_id'];
@@ -122,18 +157,8 @@ if (isset($_POST['assign_agent'])) {
     }
 }
 
-// Handle Add Category
-if (isset($_POST['add_category'])) {
-    $cat_name = mysqli_real_escape_string($connect, $_POST['category_name']);
-    $insert_cat = mysqli_query($connect, "INSERT INTO categories (name) VALUES ('$cat_name')");
-    if ($insert_cat) {
-        $success = "Category added successfully!";
-        header("Location: AdminDashboard.php?tab=add_category&success=" . urlencode($success));
-        exit();
-    } else {
-        $error = "Failed to add category! " . mysqli_error($connect);
-    }
-}
+
+
 
 // Fetch agents
 $agents = mysqli_query($connect, "SELECT * FROM users WHERE role = 'agent'");
@@ -186,6 +211,17 @@ $all_plans = mysqli_query($connect, "
     LEFT JOIN categories cat ON p.category_id = cat.category_id
     ORDER BY cat.name, p.base_price ASC
 ");
+
+// Fetch all contact messages for viewer
+mysqli_query($connect, "CREATE TABLE IF NOT EXISTS contact_messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    subject VARCHAR(200) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
+$all_messages = mysqli_query($connect, "SELECT * FROM contact_messages ORDER BY created_at DESC");
 
 // Edit agent fetch
 $edit_agent = null;
@@ -251,8 +287,8 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         <a href="AdminDashboard.php?tab=add_plan" class="<?php echo $active_tab === 'add_plan' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-add-to-queue'></i></span> Add Plan
         </a>
-        <a href="AdminDashboard.php?tab=add_category" class="<?php echo $active_tab === 'add_category' ? 'active' : ''; ?>">
-            <span class="icon"><i class='bx bx-envelope'></i></span> Messeges
+        <a href="AdminDashboard.php?tab=messages" class="<?php echo $active_tab === 'messages' ? 'active' : ''; ?>">
+            <span class="icon"><i class='bx bx-envelope'></i></span> Messages  
         </a>
     </nav>
     <div class="sidebar-footer">
@@ -775,6 +811,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                             <th>Company</th>
                             <th>Base Price</th>
                             <th>Eligibility Rules</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -783,7 +820,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                 <tr>
                                     <td><?php echo $p['plan_id']; ?></td>
                                     <td><strong><?php echo htmlspecialchars($p['name']); ?></strong></td>
-                                    <td><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
+                                    <td class="search-plan-category"><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($p['insurance_company']); ?></td>
                                     <td><strong>$<?php echo number_format($p['base_price'], 2); ?></strong></td>
                                     <td>
@@ -801,13 +838,20 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                         }
                                         ?>
                                     </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-edit edit-plan-btn" 
+                                                data-id="<?php echo $p['plan_id']; ?>" 
+                                                data-plan="<?php echo htmlspecialchars(json_encode($p), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <i class='bx bx-edit'></i> Edit
+                                        </button>
+                                    </td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
-                            <tr><td colspan="6" class="no-data">No plans found.</td></tr>
+                            <tr><td colspan="7" class="no-data">No plans found.</td></tr>
                         <?php endif; ?>
                         <tr id="planNoResultsRow" style="display: none;">
-                            <td colspan="6" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
+                            <td colspan="7" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted); font-style: italic;">
                                 <i class='bx bx-search-alt'></i> No matching insurance plans found.
                             </td>
                         </tr>
@@ -816,22 +860,24 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             </div>
 
         <?php elseif ($active_tab === 'add_plan'): ?>
-            <div class="page-title"><i class='bx bx-add-to-queue'></i> Add New Insurance Plan</div>
+             <div class="page-title"><i class='bx bx-add-to-queue'></i> Add New Insurance Plan</div>
             <div class="page-subtitle">Fill in the form below to create a new insurance plan.</div>
 
             <div class="card">
                 <h2><i class='bx bx-add-to-queue'></i> Add New Plan</h2>
-                <form action="AdminDashboard.php" method="post">
+                <form action="AdminDashboard.php" method="post" id="addPlanForm">
                     <div class="form-group">
                         <label>Plan Name</label>
                         <input type="text" name="name" placeholder="Enter plan name" required>
                     </div>
                     <div class="form-group">
                         <label>Category</label>
-                        <select name="category_id" required>
+                        <select name="category_id" id="planCategorySelect" required>
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo $cat['category_id']; ?>"><?php echo htmlspecialchars($cat['name']); ?></option>
+                                <option value="<?php echo $cat['category_id']; ?>" data-name="<?php echo htmlspecialchars(strtolower($cat['name'])); ?>">
+                                    <?php echo htmlspecialchars($cat['name']); ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -847,17 +893,345 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                         <label>Details / Bio</label>
                         <textarea name="bio" rows="4" placeholder="Enter plan details" required></textarea>
                     </div>
+
+                    <!-- Dynamic Eligibility Rules Builder -->
                     <div class="form-group">
-                        <label>Eligibility Rules <small style="color:#9ca3af;">(Must be valid JSON)</small></label>
-                        <textarea name="eligibility_rules" rows="4" placeholder='e.g. {"Rule 1", "Rule 2"}'></textarea>
+                        <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules <small style="color:#9ca3af;">(Auto-generated based on category)</small></label>
+                        <p id="selectCategoryHint" style="color:#9ca3af; font-size:13px; margin:8px 0;">
+                            <i class='bx bx-info-circle'></i> Please select a category above to see the eligibility rule fields.
+                        </p>
+
+                        <!-- Car Insurance Rules -->
+                        <div id="rules-car" class="eligibility-rules-panel" style="display:none;">
+                            <div class="rules-grid">
+                                <div class="rule-field">
+                                    <label>Car Condition Allowed</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="condition" data-type="array" value="new"> New</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="condition" data-type="array" value="used"> Used</label>
+                                    </div>
+                                </div>
+                                <div class="rule-field">
+                                    <label>Min Year</label>
+                                    <input type="number" class="rule-input" data-key="min_year" data-type="number" placeholder="e.g. 2015">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Year</label>
+                                    <input type="number" class="rule-input" data-key="max_year" data-type="number" placeholder="e.g. 2025">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Min Car Value (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="min_price" data-type="number" placeholder="e.g. 100000">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Car Value (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="max_price" data-type="number" placeholder="e.g. 2000000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Health Insurance Rules -->
+                        <div id="rules-health" class="eligibility-rules-panel" style="display:none;">
+                            <div class="rules-grid">
+                                <div class="rule-field">
+                                    <label>Min Age</label>
+                                    <input type="number" class="rule-input" data-key="min_age" data-type="number" placeholder="e.g. 18">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Age</label>
+                                    <input type="number" class="rule-input" data-key="max_age" data-type="number" placeholder="e.g. 65">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Chronic Conditions Allowed?</label>
+                                    <select class="rule-input" data-key="chronic_allowed" data-type="boolean">
+                                        <option value="">-- Leave empty --</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <div class="rule-field">
+                                    <label>Covers Spouse?</label>
+                                    <select class="rule-input" data-key="covers_spouse" data-type="boolean">
+                                        <option value="">-- Leave empty --</option>
+                                        <option value="true">Yes</option>
+                                        <option value="false">No</option>
+                                    </select>
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Children</label>
+                                    <input type="number" class="rule-input" data-key="max_children" data-type="number" placeholder="e.g. 4">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Life Insurance Rules -->
+                        <div id="rules-life" class="eligibility-rules-panel" style="display:none;">
+                            <div class="rules-grid">
+                                <div class="rule-field">
+                                    <label>Min Age</label>
+                                    <input type="number" class="rule-input" data-key="min_age" data-type="number" placeholder="e.g. 21">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Age</label>
+                                    <input type="number" class="rule-input" data-key="max_age" data-type="number" placeholder="e.g. 60">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Min Coverage (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="min_coverage" data-type="number" placeholder="e.g. 50000">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Coverage (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="max_coverage" data-type="number" placeholder="e.g. 5000000">
+                                </div>
+                                <div class="rule-field" style="grid-column: 1 / -1;">
+                                    <label>Allowed Policy Terms</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="allowed_terms" data-type="array" value="10_years"> 10 Years</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="allowed_terms" data-type="array" value="20_years"> 20 Years</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="allowed_terms" data-type="array" value="30_years"> 30 Years</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="allowed_terms" data-type="array" value="whole_life"> Whole Life</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Property Insurance Rules -->
+                        <div id="rules-property" class="eligibility-rules-panel" style="display:none;">
+                            <div class="rules-grid">
+                                <div class="rule-field" style="grid-column: 1 / -1;">
+                                    <label>Allowed Property Types</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="property_types_allowed" data-type="array" value="apartment"> Apartment</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="property_types_allowed" data-type="array" value="villa"> Villa</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="property_types_allowed" data-type="array" value="townhouse"> Townhouse</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="property_types_allowed" data-type="array" value="commercial"> Commercial</label>
+                                    </div>
+                                </div>
+                                <div class="rule-field">
+                                    <label>Min Property Value (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="min_property_value" data-type="number" placeholder="e.g. 500000">
+                                </div>
+                                <div class="rule-field">
+                                    <label>Max Property Value (EGP)</label>
+                                    <input type="number" class="rule-input" data-key="max_property_value" data-type="number" placeholder="e.g. 10000000">
+                                </div>
+                                <div class="rule-field" style="grid-column: 1 / -1;">
+                                    <label>Allowed Coverage Types</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="coverage_types_allowed" data-type="array" value="basic"> Basic</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="coverage_types_allowed" data-type="array" value="comprehensive"> Comprehensive</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="coverage_types_allowed" data-type="array" value="fire_only"> Fire Only</label>
+                                        <label class="checkbox-label"><input type="checkbox" class="rule-input" data-key="coverage_types_allowed" data-type="array" value="natural_disaster"> Natural Disaster</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- JSON Preview -->
+                        <div id="jsonPreview" style="display:none; margin-top:12px;">
+                            <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
+                                <i class='bx bx-code-alt'></i> Generated JSON (auto-filled)
+                            </label>
+                            <pre id="jsonPreviewText" style="background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
+                        </div>
+
+                        <!-- Hidden field that holds the final JSON -->
+                        <input type="hidden" name="eligibility_rules" id="eligibilityRulesHidden">
                     </div>
+
                     <div class="form-actions">
                         <button type="submit" name="add_plan" class="btn btn-primary">Add Plan</button>
                     </div>
                 </form>
             </div>
 
-        <?php elseif ($active_tab === 'add_category'): ?>
+            <style>
+                .eligibility-rules-panel {
+                    background: var(--bg-soft-gray, #f4f7f9);
+                    border: 1px solid #e5e7eb;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-top: 8px;
+                    animation: fadeSlideIn 0.3s ease;
+                }
+                @keyframes fadeSlideIn {
+                    from { opacity: 0; transform: translateY(-8px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                .rules-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 16px;
+                }
+                @media (max-width: 600px) {
+                    .rules-grid { grid-template-columns: 1fr; }
+                }
+                .rule-field label {
+                    display: block;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #374151;
+                    margin-bottom: 6px;
+                }
+                .rule-field input[type="number"],
+                .rule-field select {
+                    width: 100%;
+                    padding: 10px 12px;
+                    border: 1px solid #d1d5db;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    background: #fff;
+                    transition: border-color 0.2s;
+                }
+                .rule-field input[type="number"]:focus,
+                .rule-field select:focus {
+                    border-color: #0052CC;
+                    outline: none;
+                    box-shadow: 0 0 0 3px rgba(0,82,204,0.1);
+                }
+                .checkbox-group {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 12px;
+                }
+                .checkbox-label {
+                    display: flex !important;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 14px !important;
+                    font-weight: 400 !important;
+                    color: #4b5563 !important;
+                    cursor: pointer;
+                    padding: 6px 12px;
+                    background: #fff;
+                    border: 1px solid #d1d5db;
+                    border-radius: 8px;
+                    transition: all 0.2s;
+                }
+                .checkbox-label:hover {
+                    border-color: #0052CC;
+                    background: #f0f5ff;
+                }
+                .checkbox-label input:checked + .checkbox-label,
+                .checkbox-label:has(input:checked) {
+                    background: #e8effa;
+                    border-color: #0052CC;
+                    color: #0052CC !important;
+                    font-weight: 600 !important;
+                }
+            </style>
+
+            <script>
+            (function() {
+                const categorySelect = document.getElementById('planCategorySelect');
+                const hint = document.getElementById('selectCategoryHint');
+                const preview = document.getElementById('jsonPreview');
+                const previewText = document.getElementById('jsonPreviewText');
+                const hiddenField = document.getElementById('eligibilityRulesHidden');
+                const allPanels = document.querySelectorAll('.eligibility-rules-panel');
+
+                // Map category names to panel IDs
+                function getCategoryKey(name) {
+                    name = name.toLowerCase();
+                    if (name.includes('car') || name.includes('motor') || name.includes('vehicle')) return 'car';
+                    if (name.includes('health') || name.includes('medical')) return 'health';
+                    if (name.includes('life')) return 'life';
+                    if (name.includes('property') || name.includes('home')) return 'property';
+                    return null;
+                }
+
+                categorySelect.addEventListener('change', function() {
+                    const selected = this.options[this.selectedIndex];
+                    const catName = selected.getAttribute('data-name') || '';
+                    const key = getCategoryKey(catName);
+
+                    // Hide all panels
+                    allPanels.forEach(p => p.style.display = 'none');
+
+                    if (key) {
+                        const panel = document.getElementById('rules-' + key);
+                        if (panel) {
+                            panel.style.display = 'block';
+                            hint.style.display = 'none';
+                        }
+                    } else {
+                        hint.style.display = 'block';
+                        preview.style.display = 'none';
+                        hiddenField.value = '';
+                    }
+                    buildJson();
+                });
+
+                // Build JSON from all visible rule inputs
+                function buildJson() {
+                    const visiblePanel = document.querySelector('.eligibility-rules-panel[style*="display: block"], .eligibility-rules-panel[style*="display:block"]');
+                    if (!visiblePanel) {
+                        hiddenField.value = '';
+                        preview.style.display = 'none';
+                        return;
+                    }
+
+                    const inputs = visiblePanel.querySelectorAll('.rule-input');
+                    const json = {};
+
+                    // Group array-type checkboxes
+                    const arrayGroups = {};
+
+                    inputs.forEach(input => {
+                        const key = input.getAttribute('data-key');
+                        const type = input.getAttribute('data-type');
+
+                        if (type === 'array') {
+                            // Checkbox array
+                            if (!arrayGroups[key]) arrayGroups[key] = [];
+                            if (input.checked) {
+                                arrayGroups[key].push(input.value);
+                            }
+                        } else if (type === 'boolean') {
+                            if (input.value !== '') {
+                                json[key] = input.value === 'true';
+                            }
+                        } else if (type === 'number') {
+                            if (input.value !== '') {
+                                json[key] = parseFloat(input.value);
+                            }
+                        } else {
+                            if (input.value.trim() !== '') {
+                                json[key] = input.value.trim();
+                            }
+                        }
+                    });
+
+                    // Merge array groups
+                    for (const [key, arr] of Object.entries(arrayGroups)) {
+                        if (arr.length > 0) {
+                            json[key] = arr;
+                        }
+                    }
+
+                    // Update hidden field and preview
+                    if (Object.keys(json).length > 0) {
+                        const jsonStr = JSON.stringify(json, null, 2);
+                        hiddenField.value = JSON.stringify(json);
+                        previewText.textContent = jsonStr;
+                        preview.style.display = 'block';
+                    } else {
+                        hiddenField.value = '';
+                        preview.style.display = 'none';
+                    }
+                }
+
+                // Attach listeners to all rule inputs
+                document.addEventListener('input', function(e) {
+                    if (e.target.classList.contains('rule-input')) buildJson();
+                });
+                document.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('rule-input')) buildJson();
+                });
+            })();
+            </script>
+
+        <?php elseif ($active_tab === 'messages'): ?>
             <div class="page-title"><i class='bx bx-envelope'></i>Messeges</div>
             <div class="page-subtitle">All messages received from customers.</div>
 
@@ -877,35 +1251,23 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <thead>
                 <tr>
                     <th style="width: 15%;">Sender</th>
-                    <th style="width: 20%;">Email</th>
-                    <th style="width: 20%;">Subject</th>
-                    <th style="width: 30%;">Message</th>
+                    <th style="width: 15%;">Email</th>
+                    <th style="width: 15%;">Message</th>
                     <th style="width: 15%;">Date Received</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (true): // هنسيبها true مؤقتاً عشان الداتا الوهمية تظهر وتشوف الديزاين ?>
-                    
-                    <tr>
-                        <td><strong>Ahmed Ali</strong></td>
-                        <td>ahmed.ali@mail.com</td>
-                        <td><span class="badge" style="background: #EBF5FF; color: #1E4ED8; font-weight: 600;">Car Quote Query</span></td>
-                        <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">
-                            Hello, I tried to submit a car insurance request for my Tesla but the price estimation didn't load. Please help.
-                        </td>
-                        <td style="color: var(--text-muted); font-size: 13px;">Today, 02:30 PM</td>
-                    </tr>
-
-                    <tr>
-                        <td><strong>Sarah Mostafa</strong></td>
-                        <td>sara.m@mail.com</td>
-                        <td><span class="badge" style="background: #EBF5FF; color: #1E4ED8; font-weight: 600;">Medical Insurance</span></td>
-                        <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">
-                            Do you have corporate family discounts for medical coverage? We are a team of 15 people.
-                        </td>
-                        <td style="color: var(--text-muted); font-size: 13px;">Yesterday, 11:15 AM</td>
-                    </tr>
-                    
+                <?php if ($all_messages && mysqli_num_rows($all_messages) > 0): ?>
+                    <?php while ($msg = mysqli_fetch_assoc($all_messages)): ?>
+                        <tr>
+                            <td><strong><?php echo htmlspecialchars($msg['name']); ?></strong></td>
+                            <td><?php echo htmlspecialchars($msg['email']); ?></td>
+                            <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);">
+                                <?php echo htmlspecialchars($msg['message']); ?>
+                            </td>
+                            <td style="color: var(--text-muted); font-size: 13px;"><?php echo date('M d, Y, h:i A', strtotime($msg['created_at'])); ?></td>
+                        </tr>
+                    <?php endwhile; ?>
                 <?php else: ?>
                     <tr class="no-data-row"><td colspan="5" class="no-data">No messages received yet.</td></tr>
                 <?php endif; ?>
@@ -957,6 +1319,368 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
+
+<!-- Edit Plan Modal -->
+<div id="editPlanModal" class="custom-modal">
+    <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+        <div class="modal-header">
+            <div class="modal-title-wrapper">
+                <i class='bx bx-shield' style="font-size: 20px; color: #3B82F6; vertical-align: middle;"></i>
+                <h3 style="display: inline-block; margin-left: 5px; font-size: 18px; font-weight: 700;">Edit Insurance Plan</h3>
+            </div>
+            <span class="close-btn" id="closeEditPlanModalBtn">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form action="AdminDashboard.php" method="post" id="editPlanForm">
+                <input type="hidden" name="plan_id" id="edit-plan-id">
+
+                <div class="form-group">
+                    <label>Plan Name</label>
+                    <input type="text" name="name" id="edit-plan-name" placeholder="Enter plan name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select name="category_id" id="edit-plan-category" required>
+                        <option value="">Select a category</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?php echo $cat['category_id']; ?>" data-name="<?php echo htmlspecialchars(strtolower($cat['name'])); ?>">
+                                <?php echo htmlspecialchars($cat['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Insurance Company</label>
+                    <input type="text" name="insurance_company" id="edit-plan-company" placeholder="Enter insurance company name" required>
+                </div>
+                <div class="form-group">
+                    <label>Base Price</label>
+                    <input type="number" step="0.01" name="base_price" id="edit-plan-price" placeholder="Enter base price" required>
+                </div>
+                <div class="form-group">
+                    <label>Details / Bio</label>
+                    <textarea name="bio" id="edit-plan-bio" rows="3" placeholder="Enter plan details" required></textarea>
+                </div>
+
+                <!-- Dynamic Eligibility Rules Builder for Edit Modal -->
+                <div class="form-group">
+                    <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules</label>
+                    
+                    <!-- Car Insurance Rules -->
+                    <div id="edit-rules-car" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                        <div class="rules-grid">
+                            <div class="rule-field">
+                                <label>Car Condition Allowed</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="condition" data-type="array" value="new"> New</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="condition" data-type="array" value="used"> Used</label>
+                                </div>
+                            </div>
+                            <div class="rule-field">
+                                <label>Min Year</label>
+                                <input type="number" class="edit-rule-input" data-key="min_year" data-type="number" placeholder="e.g. 2015">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Year</label>
+                                <input type="number" class="edit-rule-input" data-key="max_year" data-type="number" placeholder="e.g. 2025">
+                            </div>
+                            <div class="rule-field">
+                                <label>Min Car Value (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="min_price" data-type="number" placeholder="e.g. 100000">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Car Value (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="max_price" data-type="number" placeholder="e.g. 2000000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Insurance Rules -->
+                    <div id="edit-rules-health" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                        <div class="rules-grid">
+                            <div class="rule-field">
+                                <label>Min Age</label>
+                                <input type="number" class="edit-rule-input" data-key="min_age" data-type="number" placeholder="e.g. 18">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Age</label>
+                                <input type="number" class="edit-rule-input" data-key="max_age" data-type="number" placeholder="e.g. 65">
+                            </div>
+                            <div class="rule-field">
+                                <label>Chronic Conditions Allowed?</label>
+                                <select class="edit-rule-input" data-key="chronic_allowed" data-type="boolean">
+                                    <option value="">-- Leave empty --</option>
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                            <div class="rule-field">
+                                <label>Covers Spouse?</label>
+                                <select class="edit-rule-input" data-key="covers_spouse" data-type="boolean">
+                                    <option value="">-- Leave empty --</option>
+                                    <option value="true">Yes</option>
+                                    <option value="false">No</option>
+                                </select>
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Children</label>
+                                <input type="number" class="edit-rule-input" data-key="max_children" data-type="number" placeholder="e.g. 4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Life Insurance Rules -->
+                    <div id="edit-rules-life" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                        <div class="rules-grid">
+                            <div class="rule-field">
+                                <label>Min Age</label>
+                                <input type="number" class="edit-rule-input" data-key="min_age" data-type="number" placeholder="e.g. 21">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Age</label>
+                                <input type="number" class="edit-rule-input" data-key="max_age" data-type="number" placeholder="e.g. 60">
+                            </div>
+                            <div class="rule-field">
+                                <label>Min Coverage (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="min_coverage" data-type="number" placeholder="e.g. 50000">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Coverage (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="max_coverage" data-type="number" placeholder="e.g. 5000000">
+                            </div>
+                            <div class="rule-field" style="grid-column: 1 / -1;">
+                                <label>Allowed Policy Terms</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="allowed_terms" data-type="array" value="10_years"> 10 Years</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="allowed_terms" data-type="array" value="20_years"> 20 Years</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="allowed_terms" data-type="array" value="30_years"> 30 Years</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="allowed_terms" data-type="array" value="whole_life"> Whole Life</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Insurance Rules -->
+                    <div id="edit-rules-property" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                        <div class="rules-grid">
+                            <div class="rule-field" style="grid-column: 1 / -1;">
+                                <label>Allowed Property Types</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="property_types_allowed" data-type="array" value="apartment"> Apartment</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="property_types_allowed" data-type="array" value="villa"> Villa</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="property_types_allowed" data-type="array" value="townhouse"> Townhouse</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="property_types_allowed" data-type="array" value="commercial"> Commercial</label>
+                                </div>
+                            </div>
+                            <div class="rule-field">
+                                <label>Min Property Value (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="min_property_value" data-type="number" placeholder="e.g. 500000">
+                            </div>
+                            <div class="rule-field">
+                                <label>Max Property Value (EGP)</label>
+                                <input type="number" class="edit-rule-input" data-key="max_property_value" data-type="number" placeholder="e.g. 10000000">
+                            </div>
+                            <div class="rule-field" style="grid-column: 1 / -1;">
+                                <label>Allowed Coverage Types</label>
+                                <div class="checkbox-group">
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="coverage_types_allowed" data-type="array" value="basic"> Basic</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="coverage_types_allowed" data-type="array" value="comprehensive"> Comprehensive</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="coverage_types_allowed" data-type="array" value="fire_only"> Fire Only</label>
+                                    <label class="checkbox-label"><input type="checkbox" class="edit-rule-input" data-key="coverage_types_allowed" data-type="array" value="natural_disaster"> Natural Disaster</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- JSON Preview in Edit Modal -->
+                    <div id="edit-jsonPreview" style="display:none; margin-top:12px;">
+                        <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
+                            <i class='bx bx-code-alt'></i> Generated JSON (auto-filled)
+                        </label>
+                        <pre id="edit-jsonPreviewText" style="background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
+                    </div>
+
+                    <!-- Hidden field to hold rules JSON -->
+                    <input type="hidden" name="eligibility_rules" id="edit-eligibilityRulesHidden">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" name="edit_plan" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-cancel" id="cancelEditPlanModalBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const editModal = document.getElementById('editPlanModal');
+    const closeBtn = document.getElementById('closeEditPlanModalBtn');
+    const cancelBtn = document.getElementById('cancelEditPlanModalBtn');
+    const categorySelect = document.getElementById('edit-plan-category');
+    const hiddenField = document.getElementById('edit-eligibilityRulesHidden');
+    const preview = document.getElementById('edit-jsonPreview');
+    const previewText = document.getElementById('edit-jsonPreviewText');
+    const allPanels = document.querySelectorAll('.edit-eligibility-rules-panel');
+
+    function getCategoryKey(name) {
+        name = name.toLowerCase();
+        if (name.includes('car') || name.includes('motor') || name.includes('vehicle')) return 'car';
+        if (name.includes('health') || name.includes('medical')) return 'health';
+        if (name.includes('life')) return 'life';
+        if (name.includes('property') || name.includes('home')) return 'property';
+        return null;
+    }
+
+    // Toggle rules panel inside edit modal
+    function toggleRulesPanel() {
+        const selected = categorySelect.options[categorySelect.selectedIndex];
+        const catName = selected ? (selected.getAttribute('data-name') || '') : '';
+        const key = getCategoryKey(catName);
+
+        allPanels.forEach(p => p.style.display = 'none');
+
+        if (key) {
+            const panel = document.getElementById('edit-rules-' + key);
+            if (panel) {
+                panel.style.display = 'block';
+            }
+        } else {
+            preview.style.display = 'none';
+            hiddenField.value = '';
+        }
+        buildJson();
+    }
+
+    categorySelect.addEventListener('change', toggleRulesPanel);
+
+    // Build JSON for Edit Rules Panel
+    function buildJson() {
+        const visiblePanel = document.querySelector('.edit-eligibility-rules-panel[style*="display: block"], .edit-eligibility-rules-panel[style*="display:block"]');
+        if (!visiblePanel) {
+            hiddenField.value = '';
+            preview.style.display = 'none';
+            return;
+        }
+
+        const inputs = visiblePanel.querySelectorAll('.edit-rule-input');
+        const json = {};
+        const arrayGroups = {};
+
+        inputs.forEach(input => {
+            const key = input.getAttribute('data-key');
+            const type = input.getAttribute('data-type');
+
+            if (type === 'array') {
+                if (!arrayGroups[key]) arrayGroups[key] = [];
+                if (input.checked) {
+                    arrayGroups[key].push(input.value);
+                }
+            } else if (type === 'boolean') {
+                if (input.value !== '') {
+                    json[key] = input.value === 'true';
+                }
+            } else if (type === 'number') {
+                if (input.value !== '') {
+                    json[key] = parseFloat(input.value);
+                }
+            } else {
+                if (input.value.trim() !== '') {
+                    json[key] = input.value.trim();
+                }
+            }
+        });
+
+        for (const [key, arr] of Object.entries(arrayGroups)) {
+            if (arr.length > 0) {
+                json[key] = arr;
+            }
+        }
+
+        if (Object.keys(json).length > 0) {
+            const jsonStr = JSON.stringify(json, null, 2);
+            hiddenField.value = JSON.stringify(json);
+            previewText.textContent = jsonStr;
+            preview.style.display = 'block';
+        } else {
+            hiddenField.value = '';
+            preview.style.display = 'none';
+        }
+    }
+
+    // Attach listener for real-time validation / preview compilation
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('edit-rule-input')) buildJson();
+    });
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('edit-rule-input')) buildJson();
+    });
+
+    // Populate Modal with Plan Data
+    document.querySelectorAll('.edit-plan-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const plan = JSON.parse(this.getAttribute('data-plan'));
+
+            // Basic Fields
+            document.getElementById('edit-plan-id').value = plan.plan_id;
+            document.getElementById('edit-plan-name').value = plan.name;
+            document.getElementById('edit-plan-category').value = plan.category_id;
+            document.getElementById('edit-plan-company').value = plan.insurance_company;
+            document.getElementById('edit-plan-price').value = plan.base_price;
+            document.getElementById('edit-plan-bio').value = plan.bio;
+
+            // Trigger Rules Panel Display
+            toggleRulesPanel();
+
+            // Populate Rules from JSON
+            let rules = {};
+            try {
+                rules = JSON.parse(plan.eligibility_rules || '{}');
+            } catch(err) {}
+
+            const visiblePanel = document.querySelector('.edit-eligibility-rules-panel[style*="display: block"], .edit-eligibility-rules-panel[style*="display:block"]');
+            if (visiblePanel) {
+                const inputs = visiblePanel.querySelectorAll('.edit-rule-input');
+                inputs.forEach(input => {
+                    const key = input.getAttribute('data-key');
+                    const type = input.getAttribute('data-type');
+                    const ruleVal = rules[key];
+
+                    if (type === 'array') {
+                        input.checked = Array.isArray(ruleVal) && ruleVal.includes(input.value);
+                    } else if (type === 'boolean') {
+                        if (ruleVal !== undefined) {
+                            input.value = ruleVal ? 'true' : 'false';
+                        } else {
+                            input.value = '';
+                        }
+                    } else {
+                        input.value = ruleVal !== undefined ? ruleVal : '';
+                    }
+                });
+            }
+
+            // Rebuild JSON to establish correct preview state
+            buildJson();
+
+            // Open Modal
+            editModal.classList.add('show');
+        });
+    });
+
+    // Close Modal Event Handlers
+    function closeModal() {
+        editModal.classList.remove('show');
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', function(e) {
+        if (e.target === editModal) closeModal();
+    });
+})();
+</script>
 
 </body>
 </html>

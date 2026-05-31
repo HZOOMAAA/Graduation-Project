@@ -40,8 +40,9 @@
                 <div class="footer-section contact-form-footer">
                     <h3>Send us a Message</h3>
                     <form id="footer-contact-form" action="#">
-                        <input type="email" placeholder="Your Email Address" required>
-                        <textarea rows="3" placeholder="How can we help you today?" required></textarea>
+                        <input type="text" name="name" placeholder="Your Name">
+                        <input type="email" name="email" placeholder="Your Email Address">
+                        <textarea name="message" rows="3" placeholder="How can we help you today?"></textarea>
                         <button type="submit" class="footer-submit-btn">Send Message</button>
                         
                         <p id="success-msg" style="display: none; color: #27ae60; margin-top: 10px; font-size: 14px; font-weight: 500;">
@@ -59,13 +60,48 @@
     </footer>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('footer-contact-form');
+    const successMsg = document.getElementById('success-msg');
 
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
 
+            const formData = new FormData(contactForm);
 
-
-
-
-
+            // Use root relative path to always resolve correctly regardless of subfolder depth
+            fetch('/Graduation-Project/includes/handle_contact.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    successMsg.style.display = 'block';
+                    successMsg.style.color = '#27ae60';
+                    successMsg.innerText = data.message;
+                    contactForm.reset();
+                    setTimeout(() => {
+                        successMsg.style.display = 'none';
+                    }, 5000);
+                } else {
+                    successMsg.style.display = 'block';
+                    successMsg.style.color = '#e74c3c';
+                    successMsg.innerText = 'Error: ' + data.message;
+                }
+            })
+            .catch(err => {
+                console.error('Submission error:', err);
+                successMsg.style.display = 'block';
+                successMsg.style.color = '#e74c3c';
+                successMsg.innerText = 'Something went wrong. Please try again.';
+            });
+        });
+    }
+});
+</script>
 
 <script src="../assets/js/script.js"></script>
 </body>

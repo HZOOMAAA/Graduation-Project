@@ -346,73 +346,104 @@ ul {
 
 /* end featueres */
 
-.text-navy {
-    color: #0b1c3c;
-    flex-shrink: 0 !important;
-    /* **السر هنا**: بيمنع الـ Flexbox إنه يضغط العنوان لما الـ Accordion يفتح */
-    white-space: nowrap;
-    /* بيضمن إن العنوان يفضل على سطر واحد ومينزلش تحت بعضه فجأة */
+/* ===== FAQ Section ===== */
+.faq-section {
+    background-color: #fff;
+    padding: 80px 0;
 }
 
-/* 1. تعديل حاوية الكارت لمنع القفزات */
-.custom-accordion .accordion-item {
-    border-radius: 8px !important;
+.faq-container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 5%;
+    margin: 0 auto;
+}
+
+.faq-title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin-bottom: 50px;
+    letter-spacing: -0.5px;
+}
+
+.faq-accordion {
+    width: 100%;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e8ecf1;
+}
+
+.faq-item:first-child {
+    border-top: 1px solid #e8ecf1;
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    text-align: left;
+    transition: background-color 0.3s ease;
+    font-family: inherit;
+}
+
+.faq-item.active .faq-question {
+    background-color: #e8effa;
+}
+
+.faq-question:hover {
+    background-color: #f0f4fa;
+}
+
+.faq-item.active .faq-question:hover {
+    background-color: #e8effa;
+}
+
+.faq-arrow {
+    width: 22px;
+    height: 22px;
+    color: #4a7cdb;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    margin-left: 16px;
+}
+
+.faq-item.active .faq-arrow {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
     overflow: hidden;
-    border: 1px solid #eaeaea;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    padding: 0 28px;
     background-color: #fff;
-    /* تثبيت الخلفية الافتراضية للـ item */
-    backface-visibility: hidden;
-    /* حماية المتصفح من الهزات أثناء الـ Animation */
 }
 
-/* 2. تنسيق الزرار وهو مقفول */
-.custom-accordion .accordion-button {
-    font-weight: bold;
-    color: #333;
-    background-color: #fff;
-    box-shadow: none !important;
-    padding: 1.25rem;
-    transition: background-color 0.25s ease, color 0.25s ease;
-    /* أنيميشن ناعم لقلب الألوان */
+.faq-answer.show {
+    max-height: 200px;
+    padding: 8px 28px 24px 28px;
 }
 
-/* 3. تنسيق الزرار وهو مفتوح */
-.custom-accordion .accordion-button:not(.collapsed) {
-    background-color: #0b1c3c;
-    color: #fff;
-    border-bottom: 1px solid #0b1c3c;
-    /* الحفاظ على أبعاد الحقل ثابتة منعاً للهز */
+.faq-answer p {
+    color: #5a6577;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
 }
 
-/* 4. الـ SVGs بتاعة الأسهم بتاعتك زي ما هي تماماً */
-.custom-accordion .accordion-button:not(.collapsed)::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-}
+/* end FAQ section */
 
-.custom-accordion .accordion-button.collapsed::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23333'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-}
-
-/* 5. تعديل الـ Body عشان يفصل الإجابة عن السؤال الكحلي بنعومة */
-.custom-accordion .accordion-body {
-    background-color: #fff;
-    color: #6c757d;
-    line-height: 1.8;
-    padding: 1.25rem;
-    border-top: 1px solid #eaeaea;
-    /* **هنا السر**: البوردر ده بيثبت الحسابات الرأسية للـ Height أثناء الفتح */
-}
-
-/* 6. إجبار البوتسترايب على الالتزام بحركة انسيابية خطية من غير قفز مساحات */
-.custom-accordion .collapsing {
-    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-.insurance-health-section .row,
-.car-insurance-section .row {
-    align-items: flex-start !important;
-    /* بيخلي العنوان والـ Accordion يبدأوا من نفس المحاذاة فوق، فاللي يفتح تحت ميهزش اللي جنبه */
-}
 
 /* end section */
 
