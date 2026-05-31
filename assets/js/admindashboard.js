@@ -217,6 +217,7 @@ if (document.getElementById("lossResultsChart") || document.getElementById("loss
 //popup section//
 
 /**
+ /**
  * Messages Table Popup Handler
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -229,25 +230,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // الاستماع للضغط على أي سطر داخل الـ tbody
     table.querySelector('tbody').addEventListener('click', function(e) {
-        // تحديد السطر المضغطوط عليه
+        // تحديد السطر المضغوط عليه
         const row = e.target.closest('tr');
         
         // تجاهل الضغط لو كان سطر الفلتر أو سطر "لا يوجد بيانات"
         if (!row || row.classList.contains('no-data-row') || row.id === 'messageNoResultsRow') return;
 
-        // استخراج البيانات من الخلايا بالترتيب
-        const sender = row.cells[0].innerText.trim();
-        const email = row.cells[1].innerText.trim();
-        const subject = row.cells[2].innerText.trim();
-        const message = row.cells[3].innerText.trim(); 
-        const date = row.cells[4].innerText.trim();
+        // ── 📌 إعادة ضبط الـ Indexes بناءً على الـ 4 أعمدة الحقيقية بالجدول ──
+        const sender  = row.cells[0].innerText.trim();
+        const email   = row.cells[1].innerText.trim();
+        const message = row.cells[2].innerText.trim(); // الرسالة هي العمود الثالث (Index 2)
+        const date    = row.cells[3].innerText.trim(); // التاريخ هو العمود الرابع (Index 3)
 
         // حقن البيانات داخل الـ Popup
         document.getElementById('modalSender').innerText = sender;
         document.getElementById('modalEmail').innerText = email;
-        document.getElementById('modalSubject').innerText = subject;
         document.getElementById('modalMessageText').innerText = message;
         document.getElementById('modalDate').innerText = date;
+        
+        // تكة صايعة للـ UI: بما إن مفيش Subject، هنحط عنوان ثابت أو نكتب Message Details
+        const modalSubjectElement = document.getElementById('modalSubject');
+        if (modalSubjectElement) {
+            modalSubjectElement.innerText = "Inquiry from " + sender;
+        }
 
         // إظهار الـ Popup بإضافة كلاس الـ show
         modal.classList.add('show');

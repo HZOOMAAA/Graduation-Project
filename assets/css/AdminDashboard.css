@@ -1,10 +1,14 @@
 /* ── باليت الألوان المعتمدة للـ Dashboard ────────────────────── */
 :root {
-    --primary-navy: #111827;    /* الأسود الفخم للعناوين والـ Text الأساسي */
-    --action-blue: #3B82F6;     /* الأزرق الصريح للـ Sidebar النشط والأزرار */
+    --primary-navy: #111827;
+    /* الأسود الفخم للعناوين والـ Text الأساسي */
+    --action-blue: #3B82F6;
+    /* الأزرق الصريح للـ Sidebar النشط والأزرار */
     --action-blue-hover: #2563EB;
-    --sidebar-bg: #1F2937;      /* الرمادي الغامق الفاخر للـ Sidebar */
-    --bg-creamy: #F9F8F6;       /* الخلفية الكريمي الموحدة من الصورة */
+    --sidebar-bg: #1F2937;
+    /* الرمادي الغامق الفاخر للـ Sidebar */
+    --bg-creamy: #F9F8F6;
+    /* الخلفية الكريمي الموحدة من الصورة */
     --card-bg: #FFFFFF;
     --text-main: #374151;
     --text-muted: #64748B;
@@ -37,7 +41,8 @@ body {
 /* ── الـ Sidebar الفخم والمستقر ─────────────────────────────────── */
 .sidebar {
     width: 260px;
-    background-color: #1F2937; /* الرمادي الغامق الفاخر */
+    background-color: #1F2937;
+    /* الرمادي الغامق الفاخر */
     color: #F3F4F6;
     display: flex;
     flex-direction: column;
@@ -70,18 +75,21 @@ body {
 
 .sidebar nav {
     flex: 1;
-    padding: 15px 12px; /* تقليص البادينج الرأسي بسيط جداً ليعطي مساحة لكل العناصر بدون سكرول داخلي */
+    padding: 15px 12px;
+    /* تقليص البادينج الرأسي بسيط جداً ليعطي مساحة لكل العناصر بدون سكرول داخلي */
     display: flex;
     flex-direction: column;
     gap: 5px;
-    overflow-y: auto; /* حماية هندسية لو الشاشة صغرت */
+    overflow-y: auto;
+    /* حماية هندسية لو الشاشة صغرت */
 }
 
 .sidebar nav a {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 11px 16px; /* بادينج متناسق جداً للمظهر المودرن */
+    padding: 11px 16px;
+    /* بادينج متناسق جداً للمظهر المودرن */
     color: #D1D5DB;
     text-decoration: none;
     font-size: 14px;
@@ -98,7 +106,8 @@ body {
 
 /* حالة الـ Active للزرار النشط بما فيهم الـ Profile الجديد */
 .sidebar nav a.active {
-    background-color: #3B82F6; /* الأزرق الصريح المعتمد من الصورة */
+    background-color: #3B82F6;
+    /* الأزرق الصريح المعتمد من الصورة */
     color: #FFFFFF;
     font-weight: 600;
 }
@@ -136,7 +145,8 @@ body {
 
 /* ── منطقة المحتوى الرئيسي (Main Content) ────────────────────────── */
 .main-content {
-    margin-left: 260px; /* نفس عرض السايدبار تماماً */
+    margin-left: 260px;
+    /* نفس عرض السايدبار تماماً */
     flex: 1;
     padding: 40px;
     box-sizing: border-box;
@@ -284,7 +294,8 @@ body {
 /* ── 2️⃣ الـ Layout المزدوج (تقسيم الشاشة لعمودين) ── */
 .overview-twin-layout {
     display: grid;
-    grid-template-columns: 1fr 1.2fr; /* عمود يسار للمحافظ ويمين للجدول الحركي */
+    grid-template-columns: 1fr 1.2fr;
+    /* عمود يسار للمحافظ ويمين للجدول الحركي */
     gap: 30px;
     align-items: start;
 }
@@ -425,6 +436,7 @@ body {
     .overview-stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
     .overview-twin-layout {
         grid-template-columns: 1fr;
     }
@@ -438,11 +450,16 @@ body {
 
 /* ── الجداول الاحترافية (Tables) ─────────────────────────────────── */
 .table-responsive-container {
-    max-height: 400px;       /* 5 أو 6 سطور بالظبط ويفتح سكرول */
-    overflow-y: auto;        /* تشغيل السكرول الرأسي تلقائياً لو الداتا زادت */
-    overflow-x: auto;        /* حماية إضافية لو الشاشة صغرت في الموبايل */
-    border: 1px solid var(--border-color); /* نقل البوردر الخارجي هنا لشكل أنظف */
-    border-radius: 8px;      /* كيرف خفيف للحاوية */
+    max-height: 400px;
+    /* 5 أو 6 سطور بالظبط ويفتح سكرول */
+    overflow-y: auto;
+    /* تشغيل السكرول الرأسي تلقائياً لو الداتا زادت */
+    overflow-x: auto;
+    /* حماية إضافية لو الشاشة صغرت في الموبايل */
+    border: 1px solid var(--border-color);
+    /* نقل البوردر الخارجي هنا لشكل أنظف */
+    border-radius: 8px;
+    /* كيرف خفيف للحاوية */
     margin-bottom: 15px;
 }
 
@@ -461,9 +478,12 @@ table th {
     padding: 12px 16px;
     border-bottom: 1px solid var(--border-color);
     font-size: 13px;
-    position: sticky;        /* تثبيت الهيدر */
-    top: 0;                  /* يلزق فوق خالص جوه الكونتينر */
-    z-index: 5;              /* يفضل فوق النصوص دايماً */
+    position: sticky;
+    /* تثبيت الهيدر */
+    top: 0;
+    /* يلزق فوق خالص جوه الكونتينر */
+    z-index: 5;
+    /* يفضل فوق النصوص دايماً */
 }
 
 table td {
@@ -495,6 +515,7 @@ table tr:last-child td {
 .table-responsive-container::-webkit-scrollbar-thumb:hover {
     background: #9CA3AF;
 }
+
 .no-data {
     text-align: center;
     padding: 32px !important;
@@ -652,7 +673,8 @@ table tr:last-child td {
     transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 18px;
-    pointer-events: none; /* عشان متغطيش على كليكة الماوس */
+    pointer-events: none;
+    /* عشان متغطيش على كليكة الماوس */
 }
 
 /* الحقل المودرن النظيف القابل للتكرار */
@@ -691,15 +713,18 @@ table tr:last-child td {
     body {
         flex-direction: column;
     }
+
     .sidebar {
         width: 100%;
         position: static;
         height: auto;
     }
+
     .main-content {
         margin-left: 0;
         padding: 20px;
     }
+
     .overview-stats-grid {
         grid-template-columns: 1fr;
     }
@@ -715,19 +740,22 @@ table tr:last-child td {
 }
 
 #messagesTable tbody tr:not(.no-data-row):not(#messageNoResultsRow):hover {
-    background-color: rgba(30, 78, 216, 0.04); /* خلفية زرقاء خفيفة جداً عند الهوفر */
+    background-color: rgba(30, 78, 216, 0.04);
+    /* خلفية زرقاء خفيفة جداً عند الهوفر */
 }
 
 /* الشاشة الخلفية المعتمة للـ Popup */
 .custom-modal {
-    display: none; 
+    display: none;
     position: fixed;
-    z-index: 1050; /* أعلى من الـ Sidebar والـ Headers */
+    z-index: 1050;
+    /* أعلى من الـ Sidebar والـ Headers */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(15, 23, 42, 0.4); /* لون داكن ناعم متوافق مع نظام الـ dark/light */
+    background-color: rgba(15, 23, 42, 0.4);
+    /* لون داكن ناعم متوافق مع نظام الـ dark/light */
     align-items: center;
     justify-content: center;
     opacity: 0;
@@ -824,9 +852,101 @@ table tr:last-child td {
     font-size: 14px;
     line-height: 1.6;
     color: var(--text-main);
-    white-space: pre-line; /* عشان يحافظ على المسافات والسطور الجديدة في الرسالة */
+    white-space: pre-line;
+    /* عشان يحافظ على المسافات والسطور الجديدة في الرسالة */
     background: #f8fafc;
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #f1f5f9;
+}
+
+/* ── 📌 لوحة شروط القبول (تأكيد الظهور والنظافة البصرية) ── */
+.eligibility-rules-panel {
+    background: var(--gray-light) !important;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    margin-top: 16px;
+    width: 100% !important;
+    /* حماية صريحة لضمان إنها لما تاخد بلوك من الـ JS تفرش علطول */
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* تقسيم الحقول داخل اللوحة بنظام الـ Grid */
+.rules-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+}
+
+/* الحقل الفردي داخل الجريد */
+.rule-field {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+/* عنوان الحقل الداخلي */
+.rule-field label {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: var(--navy) !important;
+    margin-bottom: 2px;
+}
+
+/* استايل حقول الإدخال (Inputs & Selects) */
+.rule-field input[type="number"],
+.rule-field select {
+    width: 100% !important;
+    padding: 12px 14px !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: var(--navy) !important;
+    background-color: var(--input-bg) !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rule-field input[type="number"]::placeholder {
+    color: var(--gray);
+    opacity: 0.6;
+    background-color: var(--gray-light) !important;
+
+}
+
+.rule-field input[type="number"]:focus,
+.rule-field select:focus {
+    outline: none !important;
+    border-color: var(--blue) !important;
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1) !important;
+}
+
+/* مجموعات الـ Checkbox */
+.checkbox-group {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px 20px !important;
+    padding: 6px 0 !important;
+}
+
+.checkbox-label {
+    font-size: 13.5px !important;
+    font-weight: 600 !important;
+    color: var(--navy) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+    user-select: none;
+}
+
+/* ── 🔒 إرجاع الـ Checkbox لشكل المتصفح الأصلي لضمان ظهوره 100% وبدون اختفاء ── */
+.checkbox-label input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer !important;
+    accent-color: var(--blue) !important;
+    /* هيتلون بلون براندك تلقائياً في المتصفحات المودرن */
 }

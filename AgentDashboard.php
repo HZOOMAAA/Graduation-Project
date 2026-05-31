@@ -17,8 +17,8 @@ if (isset($_POST['update_status'])) {
         if (mysqli_num_rows($check) > 0) {
             mysqli_query($connect, "UPDATE applications SET status = '$new_status' WHERE application_id = $application_id");
             $msg = $new_status === 'awaiting_payment'
-                ? "Application approved ✅ — customer notified to proceed with payment."
-                : "Application rejected ❌.";
+                ? "Application approved <i class='bx bx-check' style='color: var(--green);'></i> — customer notified to proceed with payment."
+                : "Application rejected <i class='bx bx-x' style='color: var(--red);'></i>.";
             header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
             exit();
         } else {
@@ -47,7 +47,7 @@ if (isset($_POST['issue_policy'])) {
         if ($ins) {
             // Mark application as paid
             mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $application_id");
-            $msg = "Payment confirmed ✅ Policy issued: $policy_no";
+            $msg = "Payment confirmed <i class='bx bx-check' style='color: var(--green);'></i> Policy issued: $policy_no";
             header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
             exit();
         } else {

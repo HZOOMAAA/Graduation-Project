@@ -1030,9 +1030,9 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                         <!-- JSON Preview -->
                         <div id="jsonPreview" style="display:none; margin-top:12px;">
                             <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
-                                <i class='bx bx-code-alt'></i> Generated JSON (auto-filled)
+                                <!-- <i class='bx bx-code-alt'></i> Generated JSON (auto-filled) -->
                             </label>
-                            <pre id="jsonPreviewText" style="background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
+                            <pre id="jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                         </div>
 
                         <!-- Hidden field that holds the final JSON -->
@@ -1045,81 +1045,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 </form>
             </div>
 
-            <style>
-                .eligibility-rules-panel {
-                    background: var(--bg-soft-gray, #f4f7f9);
-                    border: 1px solid #e5e7eb;
-                    border-radius: 12px;
-                    padding: 20px;
-                    margin-top: 8px;
-                    animation: fadeSlideIn 0.3s ease;
-                }
-                @keyframes fadeSlideIn {
-                    from { opacity: 0; transform: translateY(-8px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                .rules-grid {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 16px;
-                }
-                @media (max-width: 600px) {
-                    .rules-grid { grid-template-columns: 1fr; }
-                }
-                .rule-field label {
-                    display: block;
-                    font-size: 13px;
-                    font-weight: 600;
-                    color: #374151;
-                    margin-bottom: 6px;
-                }
-                .rule-field input[type="number"],
-                .rule-field select {
-                    width: 100%;
-                    padding: 10px 12px;
-                    border: 1px solid #d1d5db;
-                    border-radius: 8px;
-                    font-size: 14px;
-                    background: #fff;
-                    transition: border-color 0.2s;
-                }
-                .rule-field input[type="number"]:focus,
-                .rule-field select:focus {
-                    border-color: #0052CC;
-                    outline: none;
-                    box-shadow: 0 0 0 3px rgba(0,82,204,0.1);
-                }
-                .checkbox-group {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 12px;
-                }
-                .checkbox-label {
-                    display: flex !important;
-                    align-items: center;
-                    gap: 6px;
-                    font-size: 14px !important;
-                    font-weight: 400 !important;
-                    color: #4b5563 !important;
-                    cursor: pointer;
-                    padding: 6px 12px;
-                    background: #fff;
-                    border: 1px solid #d1d5db;
-                    border-radius: 8px;
-                    transition: all 0.2s;
-                }
-                .checkbox-label:hover {
-                    border-color: #0052CC;
-                    background: #f0f5ff;
-                }
-                .checkbox-label input:checked + .checkbox-label,
-                .checkbox-label:has(input:checked) {
-                    background: #e8effa;
-                    border-color: #0052CC;
-                    color: #0052CC !important;
-                    font-weight: 600 !important;
-                }
-            </style>
+
 
             <script>
             (function() {
@@ -1495,9 +1421,9 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     <!-- JSON Preview in Edit Modal -->
                     <div id="edit-jsonPreview" style="display:none; margin-top:12px;">
                         <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
-                            <i class='bx bx-code-alt'></i> Generated JSON (auto-filled)
+                            <!-- <i class='bx bx-code-alt'></i> Generatedzzz JSON (auto-filled) -->
                         </label>
-                        <pre id="edit-jsonPreviewText" style="background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
+                        <pre id="edit-jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                     </div>
 
                     <!-- Hidden field to hold rules JSON -->
