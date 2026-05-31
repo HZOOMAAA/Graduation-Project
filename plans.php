@@ -311,9 +311,9 @@ include 'includes/nav2.php';
                             <span class="chip chip--orange"><i class="bx bxs-shield"></i> <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $coverage_type))); ?></span>
                     <?php else: ?>
                             <span class="chip chip--blue"><i class="bx bxs-car"></i> <?php echo htmlspecialchars(ucfirst($appData['brand'] ?? '—') . ' ' . ($appData['model'] ?? '')); ?></span>
-                            <span class="chip chip--purple"><i class="bx bxs-calendar"></i> <?php echo htmlspecialchars($appData['year'] ?? '—'); ?></span>
+                            <!-- <span class="chip chip--purple"><i class="bx bxs-calendar"></i> <?php echo htmlspecialchars($appData['year'] ?? '—'); ?></span>
                             <span class="chip chip--green"><i class="bx bxs-badge-check"></i> <?php echo htmlspecialchars(ucfirst($appData['condition'] ?? '—')); ?></span>
-                            <span class="chip chip--orange"><i class="bx bxs-coin-stack"></i> EGP <?php echo number_format($car_price); ?></span>
+                            <span class="chip chip--orange"><i class="bx bxs-coin-stack"></i> EGP <?php echo number_format($car_price); ?></span> -->
                     <?php endif; ?>
                 </div>
             </div>
@@ -354,7 +354,7 @@ include 'includes/nav2.php';
                                 <?php endif; ?>
 
                                 <div class="plan-card-header">
-                                    <div class="plan-company"><?php echo htmlspecialchars($plan['insurance_company']); ?></div>
+                                    <div class="plan-company"><img src="assets/img/axa.png" alt="Company Logo" class="company-logo-img"><?php echo htmlspecialchars($plan['insurance_company']); ?></div>
                                     <h2 class="plan-name"><?php echo htmlspecialchars($plan['name']); ?></h2>
                                     <div class="plan-price">
                                         <span class="price-amount">EGP <?php echo number_format($plan['base_price'], 2); ?></span>

@@ -1,0 +1,524 @@
+/* ═══════════════════════════════════════════════════════════
+   PAYMOB SIMULATION GATEWAY PAGE — Premium CSS Stylesheet
+   Designed for Coverly Insurance Systems Integration
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+    --pm-dark: #121824;
+    --pm-purple: #6f2cf3;
+    --pm-purple-dark: #581fd1;
+    --pm-light-purple: #f3edff;
+    --pm-gray-bg: #f8f9fc;
+    --pm-text-muted: #6b7280;
+    --pm-text-dark: #1f2937;
+    --pm-border: #e5e7eb;
+    --pm-success: #10b981;
+    --pm-danger: #ef4444;
+    --font-hdr: 'Montserrat', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at 10% 20%, rgba(239, 246, 255, 0.4) 0%, rgba(243, 237, 255, 0.4) 100%), #f8fafc;
+    font-family: var(--font-body);
+    color: var(--pm-text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Secure Top Banner */
+.secure-top-bar {
+    width: 100%;
+    background: #111827;
+    color: #9ca3af;
+    font-size: 12px;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-weight: 500;
+}
+
+.secure-top-bar i {
+    margin-right: 4px;
+}
+
+.text-success {
+    color: var(--pm-success);
+}
+
+.sandbox-tag {
+    background: rgba(111, 44, 243, 0.15);
+    color: #a855f7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* Outer layout frame */
+.paymob-outer {
+    max-width: 960px;
+    width: 100%;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(18, 24, 36, 0.08);
+    overflow: hidden;
+    border: 1px solid var(--pm-border);
+}
+
+/* Inner Grid container */
+.paymob-container {
+    display: grid;
+    grid-template-columns: 42% 58%;
+    min-height: 580px;
+}
+
+/* Left Column - Invoice details */
+.invoice-section {
+    background-color: var(--pm-gray-bg);
+    padding: 40px;
+    border-right: 1px solid var(--pm-border);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.app-logo {
+    font-family: var(--font-hdr);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 1px;
+    color: var(--pm-dark);
+}
+
+.paymob-badge {
+    text-align: right;
+}
+
+.paymob-badge .pow-text {
+    font-size: 9px;
+    color: var(--pm-text-muted);
+    text-transform: uppercase;
+    display: block;
+    letter-spacing: 0.5px;
+}
+
+.paymob-badge .paymob-txt {
+    font-family: var(--font-hdr);
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--pm-dark);
+}
+
+.paymob-badge .purple-txt {
+    color: var(--pm-purple);
+}
+
+.merchant-box {
+    margin-bottom: 25px;
+}
+
+.merchant-box .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--pm-text-muted);
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.merchant-box .val {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--pm-dark);
+}
+
+.divider {
+    height: 1px;
+    background: var(--pm-border);
+    margin: 20px 0;
+}
+
+.order-summary-hdr {
+    font-family: var(--font-hdr);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--pm-dark);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.invoice-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--pm-text-muted);
+    margin-bottom: 12px;
+}
+
+.invoice-row .val-dark {
+    color: var(--pm-dark);
+    font-weight: 600;
+    text-align: right;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.price-box {
+    background: var(--pm-light-purple);
+    border-radius: 14px;
+    padding: 20px;
+    margin-top: 15px;
+    border: 1px solid rgba(111, 44, 243, 0.1);
+}
+
+.price-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--pm-purple);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.price-amount {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.price-amount .currency {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--pm-purple);
+}
+
+.price-amount .number {
+    font-family: var(--font-hdr);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--pm-dark);
+}
+
+.security-standards {
+    margin-top: 30px;
+    display: flex;
+    gap: 15px;
+}
+
+.std-item {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pm-text-muted);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.std-item i {
+    color: var(--pm-success);
+}
+
+
+/* Right Column - Payment Panel */
+.payment-section {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.payment-hdr {
+    margin-bottom: 30px;
+}
+
+.payment-title {
+    font-family: var(--font-hdr);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pm-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.payment-title i {
+    color: var(--pm-purple);
+}
+
+.payment-subtitle {
+    font-size: 14px;
+    color: var(--pm-text-muted);
+    line-height: 1.4;
+}
+
+/* Form Styles */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-lbl {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--pm-text-muted);
+    letter-spacing: 0.8px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.field-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--pm-text-muted);
+    font-size: 16px;
+}
+
+.field-input {
+    width: 100%;
+    padding: 14px 16px 14px 46px;
+    border: 1px solid var(--pm-border);
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--pm-dark);
+    transition: all 0.2s;
+    background: white;
+}
+
+.field-input::placeholder {
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.field-input:focus {
+    outline: none;
+    border-color: var(--pm-purple);
+    box-shadow: 0 0 0 4px rgba(111, 44, 243, 0.08);
+}
+
+.col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.brand-preview {
+    position: absolute;
+    right: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.brand-icon {
+    font-size: 26px;
+    transition: 0.25s;
+}
+
+.brand-icon.visa {
+    color: #1a1f71;
+}
+
+.brand-icon.mc {
+    color: #eb001b;
+}
+
+/* Alert Banner */
+.alert-error {
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    color: var(--pm-danger);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.alert-error::before {
+    content: "\f057";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+/* Submit Paymob Button */
+.submit-pay-btn {
+    width: 100%;
+    background: var(--pm-purple);
+    color: white;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 15px;
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    transition: all 0.2s;
+    box-shadow: 0 4px 15px rgba(111, 44, 243, 0.2);
+}
+
+.submit-pay-btn:hover {
+    background: var(--pm-purple-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(111, 44, 243, 0.3);
+}
+
+.submit-pay-btn:active {
+    transform: translateY(0);
+}
+
+.secure-disclaimer {
+    margin-top: 25px;
+    font-size: 11px;
+    color: var(--pm-text-muted);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.secure-disclaimer i {
+    color: var(--pm-purple);
+    font-size: 13px;
+    margin-top: 1px;
+}
+
+/* ── Processing Screen Spinner Overlay ── */
+.processing-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 0 24px 24px 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+    animation: fadeIn 0.3s forwards;
+}
+
+.gateway-logo {
+    font-family: var(--font-hdr);
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 40px;
+    letter-spacing: 0.5px;
+}
+
+.gateway-logo .pm-p1 {
+    color: var(--pm-dark);
+}
+
+.gateway-logo .pm-p2 {
+    color: var(--pm-purple);
+}
+
+/* Dual Ring Spinner */
+.spinner-ring {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    margin-bottom: 30px;
+}
+.spinner-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 5px solid var(--pm-purple);
+    border-radius: 50%;
+    animation: spinner-ring-anim 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: var(--pm-purple) transparent transparent transparent;
+}
+.spinner-ring div:nth-child(1) { animation-delay: -0.45s; }
+.spinner-ring div:nth-child(2) { animation-delay: -0.3s; }
+.spinner-ring div:nth-child(3) { animation-delay: -0.15s; }
+
+@keyframes spinner-ring-anim {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.proc-title {
+    font-family: var(--font-hdr);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pm-dark);
+    margin-bottom: 10px;
+}
+
+.proc-desc {
+    font-size: 14px;
+    color: var(--pm-text-muted);
+    line-height: 1.5;
+    max-width: 320px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive adjust */
+@media(max-width: 800px) {
+    .paymob-container {
+        grid-template-columns: 1fr;
+    }
+    .invoice-section {
+        border-right: none;
+        border-bottom: 1px solid var(--pm-border);
+        padding: 30px;
+    }
+    .payment-section {
+        padding: 30px;
+    }
+    .processing-screen {
+        border-radius: 0 0 24px 24px;
+    }
+}
