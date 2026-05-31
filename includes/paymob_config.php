@@ -25,7 +25,7 @@ define('PAYMOB_HMAC_SECRET', '7E883C100E52BBDCE568A7C18D5FF731');
 // Options: 'simulation' or 'live'
 // 'simulation' -> Beautiful fake Paymob interface. Perfect for offline presentation!
 // 'live'       -> Real Paymob gateway integration via APIs and redirect.
-define('PAYMOB_MODE', 'live'); 
+define('PAYMOB_MODE', 'simulation'); 
 
 // ── Base URL of your website ───────────────────────────────────────────────
 // Required for Paymob redirect callbacks. Change if your path is different.
