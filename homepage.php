@@ -346,3 +346,5 @@
     <script src="assets/js/swiper-bundle.min.js "></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/script.js"> </script>
+    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/05/28/20/20260528202709-W1V3JGQ8.js" defer></script>
