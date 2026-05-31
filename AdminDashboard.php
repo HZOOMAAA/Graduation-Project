@@ -912,6 +912,8 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                     </div>
                                 </div>
                                 <div class="rule-field">
+                                </div>
+                                <div class="rule-field">
                                     <label>Min Year</label>
                                     <input type="number" class="rule-input" data-key="min_year" data-type="number" placeholder="e.g. 2015">
                                 </div>
@@ -1029,9 +1031,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
                         <!-- JSON Preview -->
                         <div id="jsonPreview" style="display:none; margin-top:12px;">
-                            <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
-                                <!-- <i class='bx bx-code-alt'></i> Generated JSON (auto-filled) -->
-                            </label>
                             <pre id="jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                         </div>
 
