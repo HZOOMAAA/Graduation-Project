@@ -377,8 +377,9 @@ include __DIR__ . '/includes/nav2.php';
                                                 <i class="fa-solid fa-upload"></i> Upload Docs
                                             </a>
                                         <?php elseif ($status === 'awaiting_payment'): ?>
-                                            <!-- Simple guide if awaiting payment -->
-                                            <span style="font-size: 11px; color: var(--gray); text-align: right;">Please coordinate with your agent to make the payment.</span>
+                                            <a href="payment.php?app_id=<?= $row['application_id'] ?>" class="action-btn action-btn-primary" style="background: linear-gradient(135deg, #7b1fa2 0%, #6f2cf3 100%); border: none; box-shadow: 0 4px 10px rgba(111, 44, 243, 0.2); text-decoration: none;">
+                                                <i class="fa-solid fa-credit-card"></i> Pay Now
+                                            </a>
                                         <?php elseif ($status === 'paid' && !empty($row['document_path'])): ?>
                                             <a href="/Graduation-Project/<?= htmlspecialchars($row['document_path']) ?>" target="_blank" class="action-btn action-btn-success">
                                                 <i class="fa-solid fa-file-pdf"></i> Download Policy

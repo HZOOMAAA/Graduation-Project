@@ -248,6 +248,17 @@ body {
     letter-spacing: 1px;
     color: var(--blue);
     margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center; /* سنترة اللوجو والنص مع بعض رأسياً بالملّي */
+    gap: 10px;           /* مسافة رايقة بين اللوجو والاسم */
+}
+.company-logo-img {
+    width: 28px;         /* مقاس اللوجو العرضي المناسب للـ UI */
+    height: 28px;        /* الارتفاع متناسق */
+    object-fit: contain; /* بيضمن إن الصورة م تندمجش أو تـمط وتفضل بأبعادها الأصلية */
+    border-radius: 4px;  /* كيرف خفيف ناعم على الحواف */
+    background-color: #fff; /* خلفية بيضاء احتياطية لو اللوجو ملوش خلفية */
+    padding: 2px;        /* مساحة تنفس صغيرة جوه البوكس */
 }
 
 .plan-card--excluded .plan-company { color: var(--gray); }

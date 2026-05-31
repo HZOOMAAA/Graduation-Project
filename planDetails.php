@@ -100,11 +100,11 @@ $allowedUploadStatuses = ['waiting_docs'];
 $canUpload = in_array($application['status'], $allowedUploadStatuses);
 
 $statusLabels = [
-    'waiting_docs' => ['📄 Awaiting Documents', '#1a73e8', '#e3f0ff'],
-    'under_review' => ['🔍 Under Review', '#e65100', '#fff3e0'],
-    'awaiting_payment' => ['💳 Awaiting Payment', '#7b1fa2', '#fce8ff'],
-    'paid' => ['✅ Policy Issued', '#1b5e20', '#e8f5e9'],
-    'rejected' => ['❌ Rejected', '#c62828', '#fdecea'],
+    'waiting_docs' => ['<i class="bx bxs-file-doc"></i> Awaiting Documents', '#1a73e8', '#e3f0ff'],
+    'under_review' => ['<i class="bx bxs-hourglass"></i> Under Review', '#e65100', '#fff3e0'],
+    'awaiting_payment' => ['<i class="bx bxs-credit-card"></i> Awaiting Payment', '#7b1fa2', '#fce8ff'],
+    'paid' => ['<i class="bx bxs-shield"></i> Policy Issued', '#1b5e20', '#e8f5e9'],
+    'rejected' => ['<i class="bx bxs-x-circle"></i> Rejected', '#c62828', '#fdecea'],
 ];
 [$statusText, $statusColor, $statusBg] = $statusLabels[$application['status']]
     ?? ['— ' . ucfirst(str_replace('_', ' ', $application['status'])), '#64748b', '#f4f7f9'];
