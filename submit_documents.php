@@ -38,7 +38,7 @@ if ($is_session_flow) {
         exit;
     }
 
-    if ($app['status'] !== 'waiting_docs') {
+    if (!in_array($app['status'], ['waiting_docs', 'rejected'])) {
         echo json_encode(['success' => false, 'message' => 'Documents have already been submitted for this application.']);
         exit;
     }
@@ -192,9 +192,18 @@ if ($is_session_flow) {
     mysqli_stmt_close($appStmt);
 } else {
     // 1. Update application status to under_review for existing application
-    $updStmt = mysqli_prepare($connect,
-        "UPDATE applications SET status = 'under_review' WHERE application_id = ? AND customer_id = ?"
-    );
+    if ($app['status'] === 'rejected') {
+        $updStmt = mysqli_prepare($connect,
+            "UPDATE applications 
+             SET status = 'under_review', 
+                 application_data = JSON_SET(COALESCE(application_data, '{}'), '$.was_rejected_before', true) 
+             WHERE application_id = ? AND customer_id = ?"
+        );
+    } else {
+        $updStmt = mysqli_prepare($connect,
+            "UPDATE applications SET status = 'under_review' WHERE application_id = ? AND customer_id = ?"
+        );
+    }
     mysqli_stmt_bind_param($updStmt, 'ii', $application_id, $customer_id);
     if (mysqli_stmt_execute($updStmt)) {
         $db_updated = true;

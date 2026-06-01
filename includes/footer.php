@@ -30,9 +30,9 @@
                 <div class="footer-section links">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Our Services</a></li>
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="homepage.php">Home</a></li>
+                        <li><a href="homepage.php#services">Our Services</a></li>
+                        <li><a href="about.php">About Us</a></li>
                         <li><a href="#">Privacy Policy</a></li>
                     </ul>
                 </div>

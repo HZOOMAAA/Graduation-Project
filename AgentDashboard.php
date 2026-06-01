@@ -18,12 +18,38 @@ if (isset($_POST['update_status'])) {
             mysqli_query($connect, "UPDATE applications SET status = '$new_status' WHERE application_id = $application_id");
             $msg = $new_status === 'awaiting_payment'
                 ? "Application approved <i class='bx bx-check' style='color: var(--green);'></i> — customer notified to proceed with payment."
-                : "Application rejected <i class='bx bx-x' style='color: var(--red);'></i>.";
+                : "Application rejected <i class='bx bx-x' style='color: var(--red);'></i>. Please provide a rejection message below for the customer.";
             header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
             exit();
         } else {
             $error = "You can only decide on applications that are 'Under Review'.";
         }
+    }
+}
+
+// ── Handle Rejection Message submission ──
+if (isset($_POST['submit_rejection_message'])) {
+    $application_id = (int)$_POST['application_id'];
+    $rejection_message = trim($_POST['rejection_message'] ?? '');
+
+    $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND agent_id = $agent_id AND status = 'rejected'");
+    if (mysqli_num_rows($check) > 0) {
+        $stmt = mysqli_prepare($connect, "
+            UPDATE applications 
+            SET application_data = JSON_SET(COALESCE(application_data, '{}'), '$.rejection_message', ?) 
+            WHERE application_id = ?
+        ");
+        mysqli_stmt_bind_param($stmt, 'si', $rejection_message, $application_id);
+        if (mysqli_stmt_execute($stmt)) {
+            $msg = "Rejection message saved and customer notified <i class='bx bx-check' style='color: var(--green);'></i>.";
+            header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
+            exit();
+        } else {
+            $error = "Failed to save rejection message: " . mysqli_error($connect);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        $error = "Application not found or is not in rejected status.";
     }
 }
 
@@ -295,6 +321,16 @@ $cnt = [
             </span>
         </div>
 
+        <?php 
+        $appDataDecoded = json_decode($app_details['application_data'] ?? '{}', true);
+        if (!empty($appDataDecoded['was_rejected_before'])): 
+        ?>
+            <div class="alert alert-error" style="margin-bottom: 24px;">
+                <i class="bx bxs-error-circle" style="font-size: 20px;"></i>
+                <span><strong>Attention Agent:</strong> This application was previously rejected. It has been re-submitted with new/corrected documents for your review.</span>
+            </div>
+        <?php endif; ?>
+
         <div class="card">
             <h2><i class='bx bx-user-pin'></i> Customer Information</h2>
             <div class="info-grid-layout">
@@ -312,8 +348,37 @@ $cnt = [
                 <?php $data = json_decode($app_details['application_data'], true); ?>
                 <?php if ($data): ?>
                     <div class="technical-grid-box">
-                        <?php foreach ($data as $k => $v): ?>
-                            <p><strong><?php echo ucwords(str_replace('_',' ',$k)); ?>:</strong> <span><?php echo htmlspecialchars((string)$v); ?></span></p>
+                        <?php foreach ($data as $k => $v): 
+                            $display_val = '';
+                            if (is_bool($v)) {
+                                $display_val = htmlspecialchars($v ? 'Yes' : 'No');
+                            } elseif (is_null($v)) {
+                                $display_val = 'N/A';
+                            } elseif (is_array($v)) {
+                                if (empty($v)) {
+                                    $display_val = 'None';
+                                } elseif (isset($v['day']) && isset($v['month']) && isset($v['year'])) {
+                                    $display_val = htmlspecialchars(sprintf('%02d/%02d/%04d', $v['day'], $v['month'], $v['year']));
+                                } else {
+                                    $items = [];
+                                    foreach ($v as $index => $item) {
+                                        if (is_array($item)) {
+                                            if (isset($item['day']) && isset($item['month']) && isset($item['year'])) {
+                                                $items[] = sprintf('Child %d: %02d/%02d/%04d', $index + 1, $item['day'], $item['month'], $item['year']);
+                                            } else {
+                                                $items[] = json_encode($item);
+                                            }
+                                        } else {
+                                            $items[] = (string)$item;
+                                        }
+                                    }
+                                    $display_val = implode('<br>', array_map('htmlspecialchars', $items));
+                                }
+                            } else {
+                                $display_val = htmlspecialchars((string)$v);
+                            }
+                        ?>
+                            <p><strong><?php echo ucwords(str_replace('_',' ',$k)); ?>:</strong> <span><?php echo $display_val; ?></span></p>
                         <?php endforeach; ?>
                     </div>
                 <?php else: ?>
@@ -389,8 +454,23 @@ $cnt = [
         </div>
 
         <?php elseif ($app_details['status'] === 'rejected'): ?>
-        <div class="card decision-card policy-rejected-card">
-            <p class="rejection-text-banner"><i class='bx bx-message-rounded-x'></i> Operational Notice: This contractual application instance has been definitively rejected. Lockout protocol enabled.</p>
+        <div class="card decision-card review-action-card">
+            <h2><i class='bx bx-message-rounded-x' style="color: var(--error-red);"></i> Application Rejection Feedback</h2>
+            <p class="decision-desc">Provide feedback or a message to the customer explaining why their application was rejected and what documents or information they need to provide.</p>
+            
+            <form action="AgentDashboard.php?tab=details&id=<?php echo $app_details['application_id']; ?>" method="post">
+                <input type="hidden" name="application_id" value="<?php echo $app_details['application_id']; ?>">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label for="rejection_message" style="display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-main);">Message to Customer:</label>
+                    <textarea name="rejection_message" id="rejection_message" class="form-control" style="width: 100%; min-height: 100px; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit; font-size: 14px; background: var(--white); resize: vertical;" placeholder="Type the reason why this application was rejected, or instructions for what new documents they should upload..." required><?php 
+                        $app_data = json_decode($app_details['application_data'] ?? '{}', true);
+                        echo htmlspecialchars($app_data['rejection_message'] ?? ''); 
+                    ?></textarea>
+                </div>
+                <div class="form-submit-wrapper" style="margin-top: 15px;">
+                    <button type="submit" name="submit_rejection_message" class="btn btn-delete"><i class='bx bx-send'></i> Send Message</button>
+                </div>
+            </form>
         </div>
         <?php endif; ?>
 
