@@ -411,3 +411,14 @@ header {
     margin-bottom: 6px;
     color: #d0d0d0;
 }
+
+.rejection-text {
+    display: inline-block;
+    max-width: 120px;
+    vertical-align: top; /* عشان يفضل محاذي لكلمة Reason من فوق لو الكلام نزل على سطر جديد */
+    
+    /* 📌 تريكة احترافية: لو الكلام أطول من 100px هيقصه ويحط ثلاث نقط (...) بدل ما يبهدل شكل الكارت */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

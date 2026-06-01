@@ -1329,7 +1329,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 <hr class="modal-divider">
                 <div class="message-content">
                     <strong>Message:</strong>
-                    <p id="modalMessageText"></p>
+                    <p id="modalMessageText" ></p>
                 </div>
             </div>
         </div>
