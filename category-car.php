@@ -93,7 +93,6 @@ include 'includes/nav2.php';
                         <span id="submitBtnText"><i class="fa-solid fa-arrow-right"></i> Show Results</span>
                         <span id="submitBtnLoader" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
                     </button>
-                    <a href="index.php" class="insurance-cancel-link">Cancel</a>
                 </div>
             </form>
         </div>

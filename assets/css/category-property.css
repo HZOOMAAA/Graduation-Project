@@ -3,9 +3,16 @@
     --primary-navy: #111827;    /* الأسود الفخم للعنوان الرئيسي */
     --text-main: #374151;       /* الرمادي الداكن للنصوص الجانبية */
     --action-blue: #3B82F6;     /* الأزرق الصريح للأزرار واللينكات */
+    --action-hover: #1D4ED8;    /* درجة أعمق وتفاعلية للـ Hovers */
     --bg-creamy: #F9F8F6;       /* الخلفية الكريمي الهادية المريحة للعين */
     --input-bg: #EEF2F6;        /* الخلفية الرمادية الناعمة للحقول من الصورة */
     --white: #FFFFFF;
+    --border-color: #E5E7EB;
+
+    /* تريكات النعومة البشرية لمنع الـ AI Look */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-premium: 0 10px 30px rgba(17, 24, 39, 0.03);
+    --shadow-focus: 0 0 0 4px rgba(59, 130, 246, 0.12);
 }
 
 /* ── تهيئة الشاشة وتنعيم الحركة ─────────────────────── */
@@ -30,9 +37,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
+    padding: 80px 20px; /* مساحة واسعة تليق بالـ Premium Corporate Layout */
     box-sizing: border-box;
-    margin-top: 65px;
+    margin-top: 40px; /* تناسق هندسي محكم */
 }
 
 .grid-container {
@@ -47,47 +54,49 @@ body {
 
 /* ── الفورم والهيدر (الجانب الأيسر) ─────────────────────────── */
 .form-container {
-    padding: 20px 0;
+    padding: 10px 0;
 }
 
 .header h2 {
     color: var(--primary-navy);
-    font-size: 38px; /* تكبير الخط زي الصورة */
-    font-weight: 700;
+    font-size: 2.5rem; /* تحويل لـ rem لمرونة كاملة */
+    font-weight: 800;  /* وزن عريض للفخامة وقوة الهوية */
     line-height: 1.2;
     margin-top: 0;
-    margin-bottom: 15px;
-    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
 }
 
 .header h2 i {
-    font-size: 30px;
+    font-size: 2rem;
     vertical-align: middle;
-    margin-left: 5px;
+    margin-left: 8px;
+    color: var(--action-blue);
 }
 
 .header p {
     color: var(--text-main);
-    font-size: 15px;
+    font-size: 1rem;
     font-weight: 500;
-    margin-bottom: 40px;
+    margin-bottom: 48px;
     opacity: 0.8;
 }
 
 /* عنوان القسم الداخلي (Primary member) */
 .form-container h3 {
     color: var(--primary-navy);
-    font-size: 18px;
+    font-size: 1.35rem;
     font-weight: 700;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    letter-spacing: -0.3px;
 }
 
 /* ── تنسيق الحقول النظيف والـ Minimalist من الصورة ──────────────── */
 .input-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 24px; /* فجوة متناسقة ومريحة للعين */
 }
 
 .input-group {
@@ -96,31 +105,31 @@ body {
 
 .input-group label {
     display: block;
-    color: #6B7280;
-    font-weight: 500;
+    color: var(--text-main);
+    font-weight: 600; /* جعل العناوين الجانبية صريحة وواضحة القراءة */
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .input-group input[type="number"],
 .input-group input[type="text"] {
     width: 100%;
-    padding: 14px 18px;
+    padding: 16px 18px; /* عمق داخلي مريح يمنع عشوائية الضيق في الحقول */
     border: 1px solid transparent;
     border-radius: 12px;
     background-color: var(--input-bg);
     color: var(--primary-navy);
     font-size: 15px;
     font-weight: 500;
-    transition: all 0.25s ease;
+    transition: var(--transition-smooth);
     box-sizing: border-box;
 }
 
 .input-group input:focus {
     outline: none;
-    border-color: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.4);
     background-color: var(--white);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+    box-shadow: var(--shadow-focus);
 }
 
 /* ── الـ Custom Select المطابق لشكل الحقول ────────────────────── */
@@ -134,27 +143,30 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 18px;
+    padding: 16px 18px;
     background-color: var(--input-bg);
     border: 1px solid transparent;
     border-radius: 12px;
-    color: #9CA3AF; /* لون Placeholder */
+    color: #9CA3AF;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: var(--transition-smooth);
 }
 
 .custom-select-wrapper.open .custom-select-trigger {
-    border-color: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.4);
     background-color: var(--white);
     color: var(--primary-navy);
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+    box-shadow: var(--shadow-focus);
+}
+
+.custom-select-trigger i {
+    transition: var(--transition-smooth);
 }
 
 .custom-select-wrapper.open .custom-select-trigger i {
     transform: rotate(180deg);
-    transition: transform 0.25s ease;
 }
 
 .custom-options {
@@ -162,17 +174,17 @@ body {
     top: 100%;
     left: 0;
     right: 0;
-    margin-top: 6px;
+    margin-top: 8px;
     background: var(--white);
-    border: 1px solid #E5E7EB;
+    border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08); /* تنعيم ضلال القائمة المنسدلة */
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.25s ease;
+    transform: translateY(-8px);
+    transition: var(--transition-smooth);
     z-index: 100;
-    max-height: 200px;
+    max-height: 240px;
     overflow-y: auto;
 }
 
@@ -184,44 +196,45 @@ body {
 
 .custom-option {
     display: block;
-    padding: 12px 18px;
+    padding: 14px 18px;
     color: var(--text-main);
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition: var(--transition-smooth);
 }
 
 .custom-option:hover {
-    background-color: var(--action-blue);
-    color: var(--white);
+    background-color: var(--input-bg); /* هوفر ناعم ومطفي يمنع الزحمة البصرية */
+    color: var(--primary-navy);
 }
 
 /* ── الراديو بوتونز وتنسيق الأزرار (Add / Check) ───────────────── */
 .radio-group {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .radio-main-label {
     display: block;
-    color: #6B7280;
-    font-weight: 500;
+    color: var(--text-main);
+    font-weight: 600;
     margin-bottom: 12px;
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .radio-options {
     display: flex;
-    gap: 25px;
+    gap: 32px;
 }
 
 .custom-radio {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
     font-size: 15px;
     color: var(--primary-navy);
     font-weight: 600;
+    user-select: none;
 }
 
 .custom-radio input {
@@ -230,26 +243,31 @@ body {
 
 .custom-radio::before {
     content: '';
-    width: 22px;
-    height: 22px;
-    border: 2px solid #D1D5DB;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
     background-color: var(--white);
     border-radius: 50%;
     display: inline-block;
-    transition: all 0.2s ease;
+    transition: var(--transition-smooth);
     box-sizing: border-box;
 }
 
+.custom-radio:hover::before {
+    border-color: var(--primary-navy);
+}
+
+/* التناسق اللوني مع لون الأسود الفخم للبراند */
 .custom-radio:has(input:checked)::before {
     border-color: var(--primary-navy);
     background-color: var(--primary-navy);
-    box-shadow: inset 0 0 0 4px var(--white);
+    box-shadow: inset 0 0 0 5px var(--white); /* النقطة البيضاء الداخلية المثالية */
 }
 
-/* زرار الإرسال والـ Loader من الباقة الـ Premium */
+/* زرار الإرسال الفخم والتفاعلي */
 .check-btn {
     width: 100%;
-    padding: 16px 24px;
+    padding: 16px 28px;
     background-color: var(--primary-navy);
     color: var(--white);
     border: none;
@@ -260,45 +278,46 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.25s ease;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
 }
 
 .check-btn:hover {
-    background-color: var(--primary-navy);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    background-color: var(--action-blue); /* التحول للأزرق كـ Feedback بشري رائع عند الـ Hover */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
-/* ── 📌 التثبيت الهندسي الذكي للصورة على اليمين (Fixed) ──────────────── */
-/* الحاوية اليمين الكبيرة */
+/* ── 📌 التثبيت الهندسي الذكي للصورة على اليمين (Sticky المطور) ── */
 .image-container {
-    position: relative;
-    width: 100%;
-    min-height: 100%;
+    position: -webkit-sticky;
+    /* position: sticky; */
+    top: 60px; /* مسافة ثابتة عند السكرول لضمان عدم الاهتزاز */
+    height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* الصورة الثابتة الممسوكة بالمسطرة */
 .image-container img {
-    top: 40px; /* المسافة من فوق أول ما تبدأ تعمل سكرول */
-    
-    /* إلغاء الـ fixed والـ transform القديم لمنع أي لغبطة */
-    transform: none; 
-    
-    width: 100%; /* هتاخد مساحة الـ Column بتاعها بالظبط اللي هو الـ 0.9fr */
+    width: 100%; 
     max-width: 500px;
-    height: 85vh; /* نفس الارتفاع الرايق اللي في الصورة */
-    object-fit: cover;
+    height: 100%; 
+    max-height: 90vh; 
+    object-fit: cover; /* منع التمطيط والحفاظ على الأبعاد تماماً */
     display: block;
-    border-radius: 40px; /* الكيرف الكبير المودرن */
+    border-radius: 32px; /* كيرف هندسي نظيف متناسق مع الحقول */
     z-index: 10;
     box-sizing: border-box;
+    box-shadow: 0 20px 40px rgba(17, 24, 39, 0.06);
 }
+
 /* ── الـ Modal المنبثق لـ تأكيد الـ AJAX ────────────────────── */
 .app-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(17, 24, 39, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(11, 17, 27, 0.5);
+    backdrop-filter: blur(8px); /* تأثير بلور ناعم يعزل الشاشة بفخامة الـ iOS */
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -307,37 +326,45 @@ body {
 
 .app-modal-box {
     background: var(--white);
-    border-radius: 20px;
-    padding: 40px;
-    max-width: 400px;
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 420px;
     width: 90%;
     text-align: center;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    box-shadow: 0 30px 60px rgba(17, 24, 39, 0.15);
+    animation: modalFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* ── Responsive للـ مظهر على الشاشات الصغيرة والموبايل ────────────────── */
-@media (max-width: 1150px) {
+@keyframes modalFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive التوافق الكامل الخالي من العشوائية ────────────────── */
+@media (max-width: 992px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+    .image-container {
+        position: static;
+        height: auto;
+        order: -1; /* ظهور الصورة فوق الـ Form في الماك تابلت والموبايل */
+    }
     .image-container img {
-        width: 40%;
+        width: 100%;
+        max-width: 100%;
+        height: 350px;
+        max-height: 40vh;
     }
 }
 
 @media (max-width: 768px) {
-    .grid-container {
-        grid-template-columns: 1fr;
-        gap: 30px;
+    .input-row {
+        grid-template-columns: 1fr; /* قلب حقول الـ Grid لعمود منفرد لسلامة القراءة على الموبايل */
+        gap: 0;
     }
-    .image-container {
-        position: static;
-        min-height: auto;
-        order: -1;
-    }
-    .image-container img {
-        position: static;
-        transform: none;
-        width: 100%;
-        max-width: 100%;
-        height: 300px;
-        border-radius: 24px;
+    .header h2 {
+        font-size: 2rem;
     }
 }

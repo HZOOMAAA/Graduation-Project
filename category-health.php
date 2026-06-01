@@ -101,7 +101,7 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                         <span id="submitBtnText"><i class="fa-solid fa-arrow-right"></i> Show Results</span>
                         <span id="submitBtnLoader" style="display:none;"><i class="fa-solid fa-spinner fa-spin"></i> Loading...</span>
                     </button>
-                    <a href="index.php" class="insurance-cancel-link">Cancel</a>
+                    <!-- <a href="index.php" class="insurance-cancel-link">Cancel</a> -->
                 </div>
                            
             </form>
@@ -109,7 +109,7 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
 
         <div class="insurance-image-side">
             <div class="insurance-image-sticky-wrapper">
-                <img src="/Graduation-Project/assets/img/family.jpg" alt="Family Health Insurance">
+                <img src="/Graduation-Project/assets/img/health2.jpg" alt="Family Health Insurance">
                 <div class="insurance-shape-bottom"></div>
             </div>
         </div>
