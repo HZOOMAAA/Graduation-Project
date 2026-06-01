@@ -107,7 +107,7 @@
             <div class="team-img-wrapper">
                 <div class="shape-back"></div>
                 <div class="shape-main">
-                    <img id="team-img" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop" alt="Team Member">
+                    <img id="team-img" src="assets/img/mahmoud.png" alt="Team Member">
                 </div>
                 <div class="shape-cutout"></div>
             </div>
