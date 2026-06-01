@@ -3,25 +3,25 @@ const teamMembers = [
         name: "Mahmoud Diaa",
         role: "Lead Full-Stack Developer",
         desc: "Mahmoud is responsible for leading our exceptional team of developers. He plays a crucial role in overseeing all stages of development, ensuring our digital products perform at the highest levels of technical efficiency and security.",
-        img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=600&auto=format&fit=crop"
+        img: "assets/img/mahmoud.png"
     },
     {
-        name: "Yasmine Hamed",
+        name: "Hazem Yousry",
         role: "UI/UX Designer",
-        desc: "Yasmine translates complex insurance data into seamless, user-friendly interfaces. She focuses on providing our clients with an intuitive digital experience that makes comparing policies as easy as online shopping.",
-        img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=600&auto=format&fit=crop"
+        desc: "Hazem translates complex insurance data into seamless, user-friendly interfaces. She focuses on providing our clients with an intuitive digital experience that makes comparing policies as easy as online shopping.",
+        img: "assets/img/hazem.png"
     },
     {
-        name: "Ahmed Khaled",
+        name: "Marwan Wael",
         role: "Database Engineer",
-        desc: "Ahmed architects our data systems, guaranteeing that millions of records are stored safely. He implements strict security protocols to ensure that all client data remains absolutely confidential and quickly accessible.",
-        img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=600&auto=format&fit=crop"
+        desc: "Marwan architects our data systems, guaranteeing that millions of records are stored safely. He implements strict security protocols to ensure that all client data remains absolutely confidential and quickly accessible.",
+        img: "assets/img/marwan.png"
     },
     {
-        name: "Sara Omar",
+        name: "Mohamed Ahmed",
         role: "Business Analyst",
-        desc: "Sara bridges the gap between technology and the insurance market. By studying market needs and broker challenges, she ensures that COVERLY’s features solve real-world problems effectively.",
-        img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=600&auto=format&fit=crop"
+        desc: "Mohamed bridges the gap between technology and the insurance market. By studying market needs and broker challenges, she ensures that COVERLY’s features solve real-world problems effectively.",
+        img: "assets/img/medo.png"
     },
     {
         name: "Omar Hassan",
@@ -44,7 +44,6 @@ function changeMember(direction) {
 
     // Reset animation
     container.classList.remove("fade-in");
-    void container.offsetWidth; // Trigger reflow
 
     // Calculate new index
     currentIndex = (currentIndex + direction + teamMembers.length) % teamMembers.length;
