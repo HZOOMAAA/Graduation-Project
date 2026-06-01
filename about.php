@@ -26,7 +26,7 @@
                     <h1 class="mb-4">Insurance Made <br><span class="text-highlight">Simple & Transparent.</span></h1>
                     <p class="mb-4 fs-5" style="color: var(--text-main); opacity: 0.8;">Finding the right insurance used to be confusing. We built COVERLY to help you compare policies, understand the benefits, and choose the best plan for you—all online, with zero hassle.</p>
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
-                        <a href="#services" class="btn btn-primary px-4 py-2" style="background-color: var(--action-blue); border: none; border-radius: 8px;">Explore Services</a>
+                        <a href="homepage.php#services" class="btn btn-primary px-4 py-2" style="background-color: var(--action-blue); border: none; border-radius: 8px;">Explore Services</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
