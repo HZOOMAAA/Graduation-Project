@@ -328,7 +328,7 @@ include __DIR__ . '/includes/nav2.php';
                                             $status_desc = 'Policy issued and active.';
                                             break;
                                         case 'rejected':
-                                            $status_desc = 'This application was rejected by the agent.';
+                                            $status_desc = 'This application was rejected by the agent. You can upload new documents to re-submit it.';
                                             break;
                                         default:
                                             $status_desc = 'Status pending selection.';
@@ -372,7 +372,7 @@ include __DIR__ . '/includes/nav2.php';
                                             <i class="fa-solid <?= $icon ?>"></i> <?= $status_text ?>
                                         </span>
                                         
-                                        <?php if ($status === 'waiting_docs'): ?>
+                                        <?php if ($status === 'waiting_docs' || $status === 'rejected'): ?>
                                             <a href="planDetails.php?application_id=<?= $row['application_id'] ?>" class="action-btn action-btn-primary">
                                                 <i class="fa-solid fa-upload"></i> Upload Docs
                                             </a>

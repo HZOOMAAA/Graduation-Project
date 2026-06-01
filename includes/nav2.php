@@ -10,7 +10,7 @@ if ($is_logged_in && isset($_SESSION['role']) && $_SESSION['role'] === 'customer
     require_once __DIR__ . '/connection.php';
     $notif_uid = (int)$_SESSION['user_id'];
     $nq = mysqli_query($connect,
-        "SELECT a.application_id, a.final_price, a.status, p.name AS plan_name, cat.name AS category_name
+        "SELECT a.application_id, a.final_price, a.status, a.application_data, p.name AS plan_name, cat.name AS category_name
          FROM applications a
          LEFT JOIN insurance_plans p  ON a.plan_id      = p.plan_id
          LEFT JOIN categories cat     ON a.category_id  = cat.category_id
@@ -114,9 +114,19 @@ $notif_count = count($notif_apps);
                                             <i class="fa-solid fa-arrow-right"></i> Pay Now
                                         </a>
                                     <?php else: ?>
-                                        <span class="notif-pay-btn" style="background: #c62828; cursor: default;">
+                                        <?php 
+                                        $notif_app_data = json_decode($na['application_data'] ?? '{}', true);
+                                        $rejection_msg = $notif_app_data['rejection_message'] ?? '';
+                                        if ($rejection_msg !== ''): 
+                                        ?>
+                                            <div class="notif-rejection-reason" style="font-size: 11px; color: #c62828; margin-top: 4px; margin-bottom: 6px; padding: 4px 8px; background: #fdecea; border-radius: 4px; border-left: 3px solid #c62828; line-height: 1.4;">
+                                                <strong>Reason:</strong> <?php echo htmlspecialchars($rejection_msg); ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <a href="/Graduation-Project/planDetails.php?application_id=<?php echo (int)$na['application_id']; ?>"
+                                           class="notif-pay-btn" style="background: #c62828; text-decoration: none;">
                                             <i class="fa-solid fa-xmark"></i> Rejected
-                                        </span>
+                                        </a>
                                     <?php endif; ?>
 
                                 </div>
