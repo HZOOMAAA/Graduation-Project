@@ -950,7 +950,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     <option value="Car Insurance">Car Insurance</option>
                     <option value="Medical Insurance">Medical Insurance</option>
                     <option value="Property Insurance">Property Insurance</option>
-                    <option value="Retirement">Retirement</option>
                 </select>
             </div>
                     <div class="search-input-wrapper">
@@ -969,7 +968,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             <th>Category</th>
                             <th>Company</th>
                             <th>Base Price</th>
-                            <th>Eligibility Rules</th>
+                            <!-- <th>Eligibility Rules</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -982,7 +981,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                     <td class="search-plan-category"><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($p['insurance_company']); ?></td>
                                     <td><strong>$<?php echo number_format($p['base_price'], 2); ?></strong></td>
-                                    <td>
+                                    <!-- <td>
                                         <?php
                                         $rules = json_decode($p['eligibility_rules'] ?? '{}', true);
                                         if ($rules) {
@@ -996,7 +995,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                             echo '<small style="color:#9ca3af;">None</small>';
                                         }
                                         ?>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <button class="btn btn-sm btn-edit edit-plan-btn" 
                                                 data-id="<?php echo $p['plan_id']; ?>" 
@@ -1406,7 +1405,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                 <hr class="modal-divider">
                 <div class="message-content">
                     <strong>Message:</strong>
-                    <p id="modalMessageText"></p>
+                    <p id="modalMessageText" ></p>
                 </div>
             </div>
         </div>

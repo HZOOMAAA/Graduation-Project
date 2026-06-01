@@ -1,21 +1,46 @@
+/* ── الباليت الرسمية الموحدة كربون من صفحات الـ Car ────────────────────── */
 :root {
-    --hub-blue: #4F46E5;
-    --hub-dark: #111827;
-    --hub-gray: #4B5563;
-    --hub-bg-clean: #F9FAFB;
-    --hub-input-bg: #F3F4F6;
-    --hub-border: #E5E7EB;
-    --hub-yellow: #FEF08A;
+    --primary-navy: #111827;    /* الأسود الفخم للعنوان الرئيسي الموحد */
+    --navy-dark: #1F2937;       /* درجة داكنة متناسقة للعناوين الداخلية */
+    --action-blue: #3B82F6;     /* الأزرق الصريح الموحد للأزرار والتفاعل */
+    --action-hover: #1D4ED8;    /* درجة تفاعلية أعمق للـ Hovers */
+    --bg-creamy: #F9F8F6;       /* الخلفية الكريمي الهادية الموحدة للمشروع */
+    --input-bg: #EEF2F6;        /* الخلفية الرمادية الناعمة للحقول من الصورة */
+    --white: #FFFFFF;
+    --border-color: #E5E7EB;
+    --hub-gray: #4B5563;        /* رمادي ناعم للنصوص الجانبية */
+    --hub-yellow: #FCD34D;      /* درجة أصفر دافئة ومطفية للشكل الهندسي */
+    
+    /* متغيرات النعومة البشرية لمنع الـ AI Look */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-premium: 0 10px 30px rgba(17, 24, 39, 0.03);
+    --shadow-focus: 0 0 0 4px rgba(59, 130, 246, 0.12);
+}
+
+/* ── تهيئة الشاشة وتنعيم الحركة ─────────────────────── */
+html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-creamy);
+    color: var(--hub-gray);
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 .insurance-health-section {
-    background-color: var(--hub-bg-clean);
-    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-creamy); /* توحيد الأرضية للكريمي الفخم */
     min-height: 100vh;
     display: flex;
-    align-items: flex-start; /* تبدأ محاذاة العناصر من الأعلى لتثبيت الصورة صح */
+    align-items: flex-start;
     justify-content: center;
-    padding: 60px 20px;
+    padding: 80px 20px;
+    box-sizing: border-box;
+    margin-top: 40px;
 }
 
 .insurance-main-container {
@@ -29,42 +54,48 @@
 
 /* الهيدر والعناوين */
 .insurance-form-header h1 {
-    font-size: 2.3rem;
-    color: var(--hub-dark);
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: 2.5rem;
+    color: var(--primary-navy); /* توحيد الأسود الفخم للعنوان الرئيسي */
+    font-weight: 800;
+    line-height: 1.25;
     margin-bottom: 12px;
+    letter-spacing: -1px;
+    margin-top: 0;
 }
 
 .insurance-shield-icon {
-    font-size: 1.6rem;
-    color: var(--hub-blue);
-    margin-left: 6px;
+    font-size: 2rem;
+    color: var(--action-blue); /* توحيد الأزرق الصريح */
+    margin-left: 8px;
+    vertical-align: middle;
 }
 
 .insurance-subtitle {
     color: var(--hub-gray);
-    font-size: 1.05rem;
-    margin-bottom: 40px;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 48px;
+    opacity: 0.8;
 }
 
 .insurance-section-title {
-    font-size: 1.25rem;
-    color: var(--hub-dark);
-    font-weight: 600;
-    margin-bottom: 22px;
+    font-size: 1.35rem;
+    color: var(--primary-navy);
+    font-weight: 700;
+    margin-bottom: 24px;
+    letter-spacing: -0.3px;
 }
 
-/* تنسيق الـ Inputs */
+/* ── ضبط تنسيق الحقول الموحد (رمادي مطفي من الداخل) ──────────────── */
 .insurance-input-group {
-    margin-bottom: 22px;
+    margin-bottom: 24px;
 }
 
 .insurance-input-group label {
     display: block;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--hub-gray);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-navy);
     margin-bottom: 8px;
 }
 
@@ -78,28 +109,30 @@
 .insurance-birthdate-grid input,
 .insurance-input-group input[type="text"] {
     width: 100%;
-    padding: 14px 16px;
-    background-color: var(--hub-input-bg);
+    padding: 16px 18px;
+    background-color: var(--input-bg); /* تحويل الخلفية للرمادي الناعم الموحد */
     border: 1px solid transparent;
     border-radius: 12px;
-    font-size: 1rem;
-    color: var(--hub-dark);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--primary-navy);
+    transition: var(--transition-smooth);
     box-sizing: border-box;
 }
 
 .insurance-birthdate-grid input:focus,
-.insurance-input-group input:focus {
-    background-color: #FFF;
-    border-color: var(--hub-blue);
+.insurance-input-group input[type="text"]:focus {
+    background-color: var(--white); /* يقلب أبيض ناصع عند الـ Focus بالظبط */
+    border-color: rgba(59, 130, 246, 0.4);
     outline: none;
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    box-shadow: var(--shadow-focus);
 }
 
 /* الحقول الثابتة Readonly */
 .insurance-readonly-field {
-    background-color: var(--hub-input-bg) !important;
-    color: #6B7280 !important;
+    background-color: var(--border-color) !important; /* رمادي أغمق سيكا للـ Readonly */
+    color: #9CA3AF !important;
+    border-color: transparent !important;
     cursor: not-allowed;
 }
 
@@ -107,113 +140,128 @@
 .insurance-phone-wrapper {
     display: flex;
     align-items: center;
-    background-color: var(--hub-input-bg);
+    background-color: var(--input-bg); /* تحويل للرمادي الناعم الموحد */
+    border: 1px solid transparent;
     border-radius: 12px;
-    padding: 0 16px;
+    padding: 0 18px;
+    transition: var(--transition-smooth);
+}
+
+.insurance-phone-wrapper:focus-within {
+    border-color: rgba(59, 130, 246, 0.4);
+    background-color: var(--white);
+    box-shadow: var(--shadow-focus);
 }
 
 .insurance-phone-wrapper input {
     background: transparent !important;
     border: none !important;
-    padding: 14px 10px !important;
+    padding: 16px 12px !important;
     width: 100%;
     outline: none;
-    color: #6B7280;
+    color: var(--primary-navy);
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .insurance-country-code {
     display: flex;
     align-items: center;
-    gap: 6px;
-    border-right: 1px solid #D1D5DB;
-    padding-right: 12px;
-    font-weight: 500;
-    color: var(--hub-dark);
+    gap: 8px;
+    border-right: 1px solid var(--border-color);
+    padding-right: 14px;
+    font-weight: 600;
+    color: var(--primary-navy);
 }
 
 .insurance-phone-icon-right {
-    color: #9CA3AF;
+    color: var(--hub-gray);
 }
 
 /* أزرار الإضافة الديناميكية */
 .insurance-dynamic-container {
-    margin: 25px 0;
+    margin: 32px 0;
 }
 
 .insurance-add-btn {
     background: none;
     border: none;
-    color: var(--hub-blue);
+    color: var(--action-blue); /* توحيد للأزرق الصريح */
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
     padding: 10px 0;
-    margin-bottom: 12px;
-    transition: opacity 0.2s;
+    margin-bottom: 16px;
+    transition: var(--transition-smooth);
 }
 
 .insurance-add-btn:hover {
-    opacity: 0.85;
-    text-decoration: underline;
+    color: var(--action-hover);
+    transform: translateX(4px);
 }
 
 /* كروت الفئات المضافة ديناميكياً */
 .insurance-member-card {
-    background-color: #FFF;
-    border: 1px solid var(--hub-border);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
+    background-color: var(--white); /* كروت بيضاء تطفو فوق الأرضية الكريمي */
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-    animation: slideIn 0.3s ease-out;
+    box-shadow: var(--shadow-premium);
+    animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .insurance-remove-btn {
     position: absolute;
-    top: 18px;
-    right: 18px;
+    top: 24px;
+    right: 24px;
     background: none;
     border: none;
     color: #EF4444;
     cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.insurance-remove-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
 }
 
 .insurance-divider {
     border: 0;
-    border-top: 1px solid var(--hub-border);
-    margin: 35px 0;
+    border-top: 1px solid var(--border-color);
+    margin: 40px 0;
 }
 
-/* الراديو بوتونز المودرن الدائرية */
+/* الراديو بوتونز المودرن الدائرية الموحدة من صفحة السيارات */
 .insurance-chronic-group .insurance-chronic-label {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--hub-dark);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-navy);
     line-height: 1.4;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     display: block;
 }
 
 .insurance-radio-options {
     display: flex;
-    gap: 35px;
-    margin-bottom: 40px;
+    gap: 32px;
 }
 
 .insurance-custom-radio {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     cursor: pointer;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--hub-dark);
+    font-size: 15px;
+    color: var(--primary-navy);
+    font-weight: 600;
     user-select: none;
 }
 
@@ -222,24 +270,31 @@
 }
 
 .insurance-radio-circle {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #D1D5DB;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    background-color: var(--white);
     border-radius: 50%;
     position: relative;
-    transition: all 0.2s;
+    transition: var(--transition-smooth);
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+.insurance-custom-radio:hover .insurance-radio-circle {
+    border-color: var(--action-blue);
 }
 
 .insurance-custom-radio input:checked + .insurance-radio-circle {
-    border-color: var(--primary-navy);
+    border-color: var(--primary-navy); /* بياخد الأسود الفخم كربون من الراديو التاني */
     background-color: var(--primary-navy);
 }
 
 .insurance-custom-radio input:checked + .insurance-radio-circle::after {
     content: '';
-    width: 8px;
-    height: 8px;
-    background-color: #FFF;
+    width: 6px;
+    height: 6px;
+    background-color: var(--white);
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -251,42 +306,51 @@
 .insurance-actions-footer {
     display: flex;
     align-items: center;
-    gap: 30px;
+    gap: 32px;
+    margin-top: 40px;
 }
 
 .insurance-submit-btn {
     background-color: var(--primary-navy);
-    color: #FFF;
+    color: var(--white);
     border: none;
-    border-radius: 50px;
-    padding: 14px 32px;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: 12px; /* توحيد الـ Radius ليكون هندسي زي صفحات الـ Car */
+    padding: 16px 36px;
+    font-size: 16px;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
-    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.2);
-    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.15);
+    transition: var(--transition-smooth);
 }
 
 .insurance-submit-btn:hover {
-    /* background-color: #4338CA; */
+    background-color: var(--action-blue); /* بيقلب أزرق عند الهوفر لحركة بريميوم */
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 }
 
 .insurance-cancel-link {
-    color: var(--hub-blue);
+    color: #6B7280;
     text-decoration: none;
     font-weight: 600;
+    font-size: 15px;
+    transition: var(--transition-smooth);
 }
 
-/* ================= التعديل السحري لتثبيت الصورة ================= */
+.insurance-cancel-link:hover {
+    color: var(--primary-navy);
+}
+
+/* ── 📌 التثبيت الهندسي الذكي والمحكم للصورة ── */
 .insurance-image-side {
     position: -webkit-sticky;
-    top: 40px; /* المسافة من توب الشاشة لما تثبت */
-    height: calc(100vh - 120px); /* حجز مساحة الشاشة الرأسية بالكامل منعاً للحركة */
+    /* position: sticky; */
+    top: 60px;
+    height: calc(100vh - 120px);
     display: flex;
     align-items: center;
 }
@@ -294,44 +358,69 @@
 .insurance-image-sticky-wrapper {
     position: relative;
     width: 100%;
-    border-radius: 40px;
+    border-radius: 32px;
+    box-shadow: 0 20px 40px rgba(17, 24, 39, 0.06);
 }
 
 .insurance-image-sticky-wrapper img {
     width: 100%;
-    height: auto;
-    max-height: 75vh;
+    height: 100%;
+    max-height: 90vh;
     display: block;
-    object-fit: cover;
-    border-radius: 40px;
+    object-fit: cover; /* منع تمطيط الصورة تماماً */
+    border-radius: 32px;
     z-index: 2;
     position: relative;
 }
 
 .insurance-shape-top {
     position: absolute;
-    top: -15px;
-    right: -15px;
-    width: 110px;
-    height: 110px;
+    top: -12px;
+    right: -12px;
+    width: 90px;
+    height: 90px;
     background-color: var(--hub-yellow);
-    border-radius: 30px;
+    border-radius: 24px;
     z-index: 1;
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-8px); }
+    from { opacity: 0; transform: translateY(-12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Responsive التوافق الكامل ────────────────── */
 @media (max-width: 992px) {
     .insurance-main-container {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 48px;
     }
     .insurance-image-side {
-        position: static; /* إلغاء التثبيت في الموبايل */
+        position: static;
         height: auto;
         order: -1;
+    }
+    .insurance-image-sticky-wrapper img {
+        width: 100%;
+        max-width: 100%;
+        height: 350px;
+        max-height: 40vh;
+    }
+    .insurance-form-header h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .insurance-birthdate-grid {
+        grid-template-columns: 1fr; /* قلب شبكة تاريخ الميلاد لعمود واحد في الموبايل */
+        gap: 12px;
+    }
+    .insurance-actions-footer {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .insurance-submit-btn {
+        width: 100%;
     }
 }

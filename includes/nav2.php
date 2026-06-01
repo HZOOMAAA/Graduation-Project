@@ -120,7 +120,10 @@ $notif_count = count($notif_apps);
                                         if ($rejection_msg !== ''): 
                                         ?>
                                             <div class="notif-rejection-reason" style="font-size: 11px; color: #c62828; margin-top: 4px; margin-bottom: 6px; padding: 4px 8px; background: #fdecea; border-radius: 4px; border-left: 3px solid #c62828; line-height: 1.4;">
-                                                <strong>Reason:</strong> <?php echo htmlspecialchars($rejection_msg); ?>
+                                                <strong>Reason:</strong> 
+                                                <span class="rejection-text">
+                                                    <?php echo htmlspecialchars($rejection_msg); ?>
+                                                </span>
                                             </div>
                                         <?php endif; ?>
                                         <a href="/Graduation-Project/planDetails.php?application_id=<?php echo (int)$na['application_id']; ?>"
