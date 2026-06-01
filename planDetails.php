@@ -42,6 +42,7 @@ if (isset($_SESSION['temp_application_data']) && isset($_SESSION['temp_plan_id']
         'base_price' => $plan['base_price'],
         'plan_bio' => $plan['bio'],
         'eligibility_rules' => $plan['eligibility_rules'],
+        'logo' => $plan['logo'],
         'application_data' => json_encode($appData)
     ];
 } else {
@@ -60,7 +61,8 @@ if (isset($_SESSION['temp_application_data']) && isset($_SESSION['temp_plan_id']
                 p.insurance_company,
                 p.base_price,
                 p.bio AS plan_bio,
-                p.eligibility_rules
+                p.eligibility_rules,
+                p.logo
          FROM applications a
          LEFT JOIN categories cat ON a.category_id = cat.category_id
          LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
@@ -196,8 +198,15 @@ include 'includes/nav2.php';
 
             <!-- Plan Card -->
             <div class="pd-card">
-                <div class="pd-card-header">
-                    <i class="bx bxs-shield-plus"></i>
+                <div class="pd-card-header" style="align-items: center; display: flex;">
+                    <?php if (!empty($application['logo'])): ?>
+                        <img src="/Graduation-Project/<?php echo htmlspecialchars($application['logo']); ?>" 
+                             alt="<?php echo htmlspecialchars($application['insurance_company'] ?? ''); ?> Logo" 
+                             style="max-height: 40px; max-width: 100px; object-fit: contain; border-radius: 4px; margin-right: 12px;"
+                             onerror="this.style.display='none'">
+                    <?php else: ?>
+                        <i class="bx bxs-shield-plus"></i>
+                    <?php endif; ?>
                     <div>
                         <h2>Selected Plan</h2>
                     </div>
