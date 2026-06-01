@@ -997,3 +997,14 @@ table tr:last-child td {
     accent-color: var(--blue) !important;
     /* هيتلون بلون براندك تلقائياً في المتصفحات المودرن */
 }
+
+#modalMessageText {
+    display: inline-block; /* حولناه inline-block عشان يحاذي كلمة Message لو جنبها، أو سيبه block لو عايزه ينزل تحتها */
+    max-width: 530px;      /* العرض الأقصى اللي أنت طالبه */
+    vertical-align: top;
+    margin: 0;             /* تصفير الـ margin التلقائي بتاع الـ p */
+    
+    /* 📌 الخيار الأول: لو عايز الكلام ينزل أسطر تحت بعضه لما يوصل لـ 100px (ده الأفضل للرسائل) */
+    word-wrap: break-word; 
+    white-space: normal;
+}
