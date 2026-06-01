@@ -10,11 +10,12 @@ if ($is_logged_in && isset($_SESSION['role']) && $_SESSION['role'] === 'customer
     require_once __DIR__ . '/connection.php';
     $notif_uid = (int)$_SESSION['user_id'];
     $nq = mysqli_query($connect,
-        "SELECT a.application_id, a.final_price, p.name AS plan_name, cat.name AS category_name
+        "SELECT a.application_id, a.final_price, a.status, p.name AS plan_name, cat.name AS category_name
          FROM applications a
          LEFT JOIN insurance_plans p  ON a.plan_id      = p.plan_id
          LEFT JOIN categories cat     ON a.category_id  = cat.category_id
-         WHERE a.customer_id = $notif_uid AND a.status = 'awaiting_payment'
+         WHERE a.customer_id = $notif_uid AND a.status IN ('awaiting_payment','rejected')
+
          ORDER BY a.created_at DESC LIMIT 10"
     );
     if ($nq) {
@@ -75,15 +76,19 @@ $notif_count = count($notif_apps);
                         <span class="notif-badge"><?php echo $notif_count; ?></span>
                     <?php endif; ?>
                 </button>
-                
+
                 <div class="notif-dropdown" id="notifDropdown">
                     <div class="notif-dropdown-header">
-                        <i class="fa-solid fa-credit-card"></i>
+                        <i class="fa-solid fa-bell"></i>
                         <?php if ($notif_count > 0): ?>
-                            Payment Required (<?php echo $notif_count; ?>)
+                            Notifications (<?php echo $notif_count; ?>)
                         <?php else: ?>
                             Notifications
                         <?php endif; ?>
+
+                        <a class="notif-see-all-btn" href="profile.php" aria-label="See all insurance applications" onclick="event.stopPropagation(); window.location.href='profile.php#my-applications'; return false;">
+                            See all
+                        </a>
                     </div>
                     
                     <div class="notif-list">
@@ -103,10 +108,17 @@ $notif_count = count($notif_apps);
                                         — EGP <?php echo number_format($na['final_price'], 2); ?>
                                         <?php endif; ?>
                                     </div>
-                                    <a href="/Graduation-Project/payment.php?app_id=<?php echo (int)$na['application_id']; ?>"
-                                       class="notif-pay-btn">
-                                        <i class="fa-solid fa-arrow-right"></i> Pay Now
-                                    </a>
+                                    <?php if (($na['status'] ?? '') === 'awaiting_payment'): ?>
+                                        <a href="/Graduation-Project/payment.php?app_id=<?php echo (int)$na['application_id']; ?>"
+                                           class="notif-pay-btn">
+                                            <i class="fa-solid fa-arrow-right"></i> Pay Now
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="notif-pay-btn" style="background: #c62828; cursor: default;">
+                                            <i class="fa-solid fa-xmark"></i> Rejected
+                                        </span>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                             <?php endforeach; ?>

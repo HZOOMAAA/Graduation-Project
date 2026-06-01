@@ -95,11 +95,11 @@ $applications = mysqli_query($connect, "
     SELECT a.*,
            c.name as customer_name, c.email as customer_email, c.phone as customer_phone, c.address as customer_address,
            cat.name as category_name,
-           p.name as plan_name, p.insurance_company
+           p.name as plan_name, p.insurance_company,p.base_price
     FROM applications a
     LEFT JOIN users c ON a.customer_id = c.user_id
     LEFT JOIN categories cat ON a.category_id = cat.category_id
-    LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
+    LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id 
     WHERE a.agent_id = $agent_id $status_filter
     ORDER BY a.created_at DESC
 ");
@@ -118,7 +118,7 @@ if ($active_tab === 'details' && isset($_GET['id'])) {
         FROM applications a
         LEFT JOIN users c ON a.customer_id = c.user_id
         LEFT JOIN categories cat ON a.category_id = cat.category_id
-        LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
+        LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id 
         WHERE a.application_id = $id AND a.agent_id = $agent_id
     ");
     if ($res && mysqli_num_rows($res) > 0) {
@@ -203,9 +203,9 @@ $cnt = [
         'paid'         => ['<i class="bx bx-check-circle"></i> Paid & Issued',        'Fully completed policies. Payment received and policy document issued.'],
         'rejected'     => ['<i class="bx bx-x-circle"></i> Rejected Applications','Applications that were rejected after review.'],
     ];
-    $cols_review = ['App ID','Customer','Category','Chosen Plan','Final Price','Date','Action'];
-    $cols_awaiting = ['App ID','Customer','Category','Plan','Final Price','Date','Action'];
-    $cols_paid    = ['App ID','Customer','Email','Plan','Final Price','Policy No.'];
+    $cols_review = ['App ID','Customer','Category','Chosen Plan','base Price','Date','Action'];
+    $cols_awaiting = ['App ID','Customer','Category','Plan','base Price','Date','Action'];
+    $cols_paid    = ['App ID','Customer','Email','Plan','base Price','Policy No.'];
     $cols_rejected = ['App ID','Customer','Category','Date'];
     ?>
 
@@ -258,7 +258,7 @@ $cnt = [
                                                 <span class="badge badge-plan"><?php echo htmlspecialchars($row['plan_name']); ?></span>
                                             <?php else: ?>—<?php endif; ?>
                                         </td>
-                                        <td><?php echo $row['final_price'] ? '<span class="price-tag">$' . number_format($row['final_price'], 2) . '</span>' : '—'; ?></td>
+                                        <td><?php echo $row['base_price'] ? '<span class="price-tag">$' . number_format($row['base_price'], 2) . '</span>' : '—'; ?></td>
                                     <?php endif; ?>
                                     <?php if ($active_tab === 'paid'): ?>
                                         <td>
@@ -330,7 +330,6 @@ $cnt = [
                 <div class="info-item"><i class='bx bx-shield'></i> <div><strong>Plan Name:</strong> <span class="badge badge-plan"><?php echo htmlspecialchars($app_details['plan_name']); ?></span></div></div>
                 <div class="info-item"><i class='bx bxs-bank'></i> <div><strong>Company:</strong> <span><?php echo htmlspecialchars($app_details['insurance_company']); ?></span></div></div>
                 <div class="info-item"><i class='bx bx-money'></i> <div><strong>Base Price:</strong> <span class="txt-medium">$<?php echo number_format($app_details['base_price'], 2); ?></span></div></div>
-                <div class="info-item"><i class='bx bxs-wallet'></i> <div><strong>Final Quoted Price:</strong> <span class="final-price-highlight">$<?php echo number_format($app_details['final_price'], 2); ?></span></div></div>
             </div>
             <?php if ($app_details['plan_bio']): ?>
                 <div class="plan-bio-text">

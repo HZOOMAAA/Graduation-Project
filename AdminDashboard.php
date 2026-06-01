@@ -282,7 +282,7 @@ function getCategoryDesignProps($cat_name) {
 
 // Stats for overview
 $stats = [];
-foreach (['under_review'] as $s) {
+foreach (['under_review','awaiting_payment','paid','rejected'] as $s) {
     $r = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM applications WHERE status='$s'"));
     $stats[$s] = $r['cnt'];
 }
@@ -408,7 +408,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
                     <div class="stat-card-number"><?php echo $total_apps; ?></div>
                     <div class="stat-card-meta">
-                        <span class="label">Total Requests</span>
+                        <span class="label">Total applications</span>
                         <span class="stat-trend-down">↓ 4.05%</span>
                     </div>
                 </div>
@@ -454,7 +454,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                 }
                                 $design = getCategoryDesignProps($cat_row['name']);
                                 $app_count   = intval($cat_row['cnt']);
-                                $plans_count = intval($cat_row['plans_count']);
+                                
                         ?>
                             <div class="category-progress-item">
                                 <div class="progress-item-info">
@@ -465,8 +465,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                         <div>
                                             <div class="cat-name"><?php echo htmlspecialchars($cat_row['name']); ?></div>
                                             <div class="cat-meta">
-                                                <?php echo $plans_count; ?> plan<?php echo $plans_count != 1 ? 's' : ''; ?>
-                                                &nbsp;&middot;&nbsp;
                                                 <?php echo $app_count; ?> application<?php echo $app_count != 1 ? 's' : ''; ?>
                                             </div>
                                         </div>
