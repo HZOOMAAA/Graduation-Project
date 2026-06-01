@@ -26,7 +26,7 @@ if ($is_session_flow) {
 } else {
     // ── Validate database application belongs to this customer and is in waiting_docs ──────
     $stmt = mysqli_prepare($connect,
-        "SELECT application_id, status FROM applications WHERE application_id = ? AND customer_id = ?"
+        "SELECT application_id, status, category_id FROM applications WHERE application_id = ? AND customer_id = ?"
     );
     mysqli_stmt_bind_param($stmt, 'ii', $application_id, $customer_id);
     mysqli_stmt_execute($stmt);
@@ -42,6 +42,57 @@ if ($is_session_flow) {
         echo json_encode(['success' => false, 'message' => 'Documents have already been submitted for this application.']);
         exit;
     }
+    $category_id = intval($app['category_id']);
+}
+
+// ── Fetch category name to determine type ───────────────────────────────────────
+$category_name = '';
+$catQuery = mysqli_prepare($connect, "SELECT name FROM categories WHERE category_id = ?");
+mysqli_stmt_bind_param($catQuery, 'i', $category_id);
+mysqli_stmt_execute($catQuery);
+$catRes = mysqli_stmt_get_result($catQuery);
+if ($catRow = mysqli_fetch_assoc($catRes)) {
+    $category_name = $catRow['name'];
+}
+mysqli_stmt_close($catQuery);
+
+$is_health = (stripos($category_name, 'health') !== false || stripos($category_name, 'medical') !== false || $category_id == 2);
+$is_life = (stripos($category_name, 'life') !== false || $category_id == 5);
+$is_property = (stripos($category_name, 'property') !== false || $category_id == 3);
+
+if ($is_health) {
+    $fileFields = [
+        'national_id'   => 'National ID',
+        'health_report' => 'Medical History Report',
+        'prescription_docs' => 'Prescription Documents',
+    ];
+    $requiredFields = ['national_id', 'health_report'];
+    $multiFields = ['prescription_docs'];
+} else if ($is_life) {
+    $fileFields = [
+        'national_id'     => 'National ID',
+        'medical_history' => 'Health Checkup & Medical History',
+        'income_proof'    => 'Income Proof Documents',
+    ];
+    $requiredFields = ['national_id', 'medical_history'];
+    $multiFields = ['income_proof'];
+} else if ($is_property) {
+    $fileFields = [
+        'national_id'     => 'National ID',
+        'property_deed'   => 'Property Title Deed',
+        'property_photos' => 'Property Photos',
+    ];
+    $requiredFields = ['national_id', 'property_deed'];
+    $multiFields = ['property_photos'];
+} else {
+    // Car / default
+    $fileFields = [
+        'national_id'  => 'National ID',
+        'car_license'  => 'Car License',
+        'car_photos'   => 'Car Photos',
+    ];
+    $requiredFields = ['national_id', 'car_license'];
+    $multiFields = ['car_photos'];
 }
 
 // ── Upload directory ───────────────────────────────────────────────────────────
@@ -50,23 +101,14 @@ if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
 }
 
-// ── Expected file fields ───────────────────────────────────────────────────────
-$fileFields = [
-    'national_id'  => 'National ID',
-    'car_license'  => 'Car License',
-    'car_photos'   => 'Car Photos',
-];
-
 $validFiles = [];
 $errors     = [];
 
 foreach ($fileFields as $fieldName => $docType) {
-    // car_photos may be multi-file
-    $isMulti = ($fieldName === 'car_photos');
+    $isMulti = in_array($fieldName, $multiFields);
 
     if (!isset($_FILES[$fieldName]) || empty($_FILES[$fieldName]['name'][0])) {
-        if ($fieldName !== 'car_photos') {        // car_photos is optional
-            // national_id and car_license are required
+        if (in_array($fieldName, $requiredFields)) {
             $errors[] = "$docType is required.";
         }
         continue;
@@ -118,7 +160,11 @@ if (!empty($errors)) {
 }
 
 if (empty($validFiles)) {
-    echo json_encode(['success' => false, 'message' => 'Please upload at least your National ID and Car License.']);
+    $reqLabels = [];
+    foreach ($requiredFields as $rf) {
+        $reqLabels[] = $fileFields[$rf];
+    }
+    echo json_encode(['success' => false, 'message' => 'Please upload the required documents: ' . implode(', ', $reqLabels) . '.']);
     exit;
 }
 

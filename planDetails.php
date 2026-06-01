@@ -95,6 +95,10 @@ $is_life = (isset($appData['category']) && $appData['category'] === 'life')
     || (isset($application['category_name']) && stripos($application['category_name'], 'life') !== false)
     || (isset($application['category_id']) && intval($application['category_id']) == 5);
 
+$is_property = (isset($appData['category']) && $appData['category'] === 'property')
+    || (isset($application['category_name']) && stripos($application['category_name'], 'property') !== false)
+    || (isset($application['category_id']) && intval($application['category_id']) == 3);
+
 // ── Status helpers ─────────────────────────────────────────────────────────────
 $allowedUploadStatuses = ['waiting_docs'];
 $canUpload = in_array($application['status'], $allowedUploadStatuses);
@@ -237,6 +241,11 @@ include 'includes/nav2.php';
                             <div>
                                 <h2>Applicant Details</h2>
                             </div>
+                    <?php elseif ($is_property): ?>
+                            <i class="bx bxs-home"></i>
+                            <div>
+                                <h2>Property Details</h2>
+                            </div>
                     <?php else: ?>
                             <i class="bx bxs-car"></i>
                             <div>
@@ -298,6 +307,35 @@ include 'includes/nav2.php';
                             <div class="pd-info-row">
                                 <span class="pd-info-label">Beneficiary</span>
                                 <span class="pd-info-value"><?php echo htmlspecialchars($appData['beneficiary_name'] ?? '—') . ' (' . htmlspecialchars(ucwords($appData['beneficiary_relation'] ?? '—')) . ')'; ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Category</span>
+                                <span class="pd-info-value"><?php echo htmlspecialchars($application['category_name'] ?? '—'); ?></span>
+                            </div>
+                    <?php elseif ($is_property): ?>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Property Type</span>
+                                <span class="pd-info-value"><?php echo htmlspecialchars(ucfirst($appData['property_type'] ?? '—')); ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Property Value</span>
+                                <span class="pd-info-value">EGP <?php echo number_format(floatval($appData['property_value'] ?? 0)); ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Contents Value</span>
+                                <span class="pd-info-value">EGP <?php echo number_format(floatval($appData['contents_value'] ?? 0)); ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Construction Year</span>
+                                <span class="pd-info-value"><?php echo htmlspecialchars($appData['construction_year'] ?? '—'); ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Usage</span>
+                                <span class="pd-info-value"><?php echo htmlspecialchars(ucfirst($appData['property_usage'] ?? '—')); ?></span>
+                            </div>
+                            <div class="pd-info-row">
+                                <span class="pd-info-label">Address</span>
+                                <span class="pd-info-value"><?php echo htmlspecialchars($appData['property_address'] ?? '—'); ?></span>
                             </div>
                             <div class="pd-info-row">
                                 <span class="pd-info-label">Category</span>
@@ -374,6 +412,62 @@ include 'includes/nav2.php';
                                 </div>
                             </div>
 
+                            <!-- Dynamic Second Field (Required) -->
+                            <?php if ($is_health): ?>
+                            <!-- Medical History Report -->
+                            <div class="pd-field">
+                                <label class="pd-label">
+                                    <i class="bx bxs-first-aid"></i>
+                                    Medical History Report <span class="req">*</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-health_report">
+                                    <input type="file" name="health_report" id="health_report"
+                                           accept=".jpg,.jpeg,.png,.pdf,.webp" required>
+                                    <i class="bx bx-upload pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, PDF — max 8 MB
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-health_report"></div>
+                                </div>
+                            </div>
+                            <?php elseif ($is_life): ?>
+                            <!-- Health Checkup & Medical History -->
+                            <div class="pd-field">
+                                <label class="pd-label">
+                                    <i class="bx bx-plus-medical"></i>
+                                    Health Checkup & Medical History <span class="req">*</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-medical_history">
+                                    <input type="file" name="medical_history" id="medical_history"
+                                           accept=".jpg,.jpeg,.png,.pdf,.webp" required>
+                                    <i class="bx bx-upload pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, PDF — max 8 MB
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-medical_history"></div>
+                                </div>
+                            </div>
+                            <?php elseif ($is_property): ?>
+                            <!-- Property Title Deed -->
+                            <div class="pd-field">
+                                <label class="pd-label">
+                                    <i class="bx bxs-home-heart"></i>
+                                    Property Title Deed <span class="req">*</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-property_deed">
+                                    <input type="file" name="property_deed" id="property_deed"
+                                           accept=".jpg,.jpeg,.png,.pdf,.webp" required>
+                                    <i class="bx bx-upload pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, PDF — max 8 MB
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-property_deed"></div>
+                                </div>
+                            </div>
+                            <?php else: ?>
                             <!-- Car License -->
                             <div class="pd-field">
                                 <label class="pd-label">
@@ -391,7 +485,64 @@ include 'includes/nav2.php';
                                     <div class="pd-file-preview" id="preview-car_license"></div>
                                 </div>
                             </div>
+                            <?php endif; ?>
 
+                            <!-- Dynamic Third Field (Optional - Multiple Allowed) -->
+                            <?php if ($is_health): ?>
+                            <!-- Prescription Documents (multiple) -->
+                            <div class="pd-field pd-field-full">
+                                <label class="pd-label">
+                                    <i class="bx bxs-capsule"></i>
+                                    Prescription Documents <span style="color:var(--gray); font-weight:400;">(optional — multiple allowed)</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-prescription_docs">
+                                    <input type="file" name="prescription_docs[]" id="prescription_docs"
+                                           accept=".jpg,.jpeg,.png,.webp,.gif,.pdf" multiple>
+                                    <i class="bx bx-images pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, PDF, WEBP — multiple files accepted
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-prescription_docs"></div>
+                                </div>
+                            </div>
+                            <?php elseif ($is_life): ?>
+                            <!-- Income Proof Documents (multiple) -->
+                            <div class="pd-field pd-field-full">
+                                <label class="pd-label">
+                                    <i class="bx bxs-wallet"></i>
+                                    Income Proof Documents <span style="color:var(--gray); font-weight:400;">(optional — multiple allowed)</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-income_proof">
+                                    <input type="file" name="income_proof[]" id="income_proof"
+                                           accept=".jpg,.jpeg,.png,.webp,.gif,.pdf" multiple>
+                                    <i class="bx bx-images pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, PDF, WEBP — multiple files accepted
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-income_proof"></div>
+                                </div>
+                            </div>
+                            <?php elseif ($is_property): ?>
+                            <!-- Property Photos (multiple) -->
+                            <div class="pd-field pd-field-full">
+                                <label class="pd-label">
+                                    <i class="bx bxs-camera"></i>
+                                    Property Photos <span style="color:var(--gray); font-weight:400;">(optional — multiple allowed)</span>
+                                </label>
+                                <div class="pd-file-zone" id="zone-property_photos">
+                                    <input type="file" name="property_photos[]" id="property_photos"
+                                           accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+                                    <i class="bx bx-images pd-file-zone-icon"></i>
+                                    <div class="pd-file-zone-text">
+                                        <strong>Click to upload</strong> or drag & drop<br>
+                                        JPG, PNG, WEBP — multiple files accepted
+                                    </div>
+                                    <div class="pd-file-preview" id="preview-property_photos"></div>
+                                </div>
+                            </div>
+                            <?php else: ?>
                             <!-- Car Photos (multiple) -->
                             <div class="pd-field pd-field-full">
                                 <label class="pd-label">
@@ -409,6 +560,7 @@ include 'includes/nav2.php';
                                     <div class="pd-file-preview" id="preview-car_photos"></div>
                                 </div>
                             </div>
+                            <?php endif; ?>
 
                             <!-- Notes -->
                             <div class="pd-field pd-field-full">
@@ -417,7 +569,7 @@ include 'includes/nav2.php';
                                     Additional Notes <span style="color:var(--gray); font-weight:400;">(optional)</span>
                                 </label>
                                 <textarea class="pd-textarea" name="notes"
-                                          placeholder="Any additional information you'd like the agent to know about your vehicle or situation…"></textarea>
+                                          placeholder="Any additional information you'd like the agent to know about your application or situation…"></textarea>
                             </div>
                         </div>
 
@@ -440,8 +592,11 @@ include 'includes/nav2.php';
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    // ── File preview labels ────────────────────────────────────────────────────
-    const fileInputs = ['national_id', 'car_license', 'car_photos'];
+    // ── File preview labels & Drag-and-drop setup ──────────────────────────────
+    const form = document.getElementById('pdDocsForm');
+    if (!form) return;
+
+    const fileInputs = Array.from(form.querySelectorAll('input[type="file"]')).map(el => el.id);
     fileInputs.forEach(function (id) {
         const input   = document.getElementById(id);
         const preview = document.getElementById('preview-' + id);
@@ -475,9 +630,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ── Form submission ────────────────────────────────────────────────────────
-    const form      = document.getElementById('pdDocsForm');
-    if (!form) return;
-
     const submitBtn  = document.getElementById('pdSubmitBtn');
     const submitText = document.getElementById('pdSubmitText');
     const spinner    = document.getElementById('pdSpinner');
@@ -498,14 +650,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             const formData = new FormData(form);
-            // car_photos input name workaround for multiple
-            const photosInput = document.getElementById('car_photos');
-            if (photosInput && photosInput.files.length > 0) {
-                formData.delete('car_photos[]');
-                Array.from(photosInput.files).forEach(function (file) {
-                    formData.append('car_photos[]', file);
-                });
-            }
+            
+            // Generic handling for multiple files input
+            const multiInputs = form.querySelectorAll('input[type="file"][multiple]');
+            multiInputs.forEach(input => {
+                const name = input.name;
+                if (input.files.length > 0) {
+                    formData.delete(name);
+                    Array.from(input.files).forEach(file => {
+                        formData.append(name, file);
+                    });
+                }
+            });
 
             const response = await fetch('/Graduation-Project/submit_documents.php', {
                 method: 'POST',
