@@ -19,7 +19,7 @@ if ($app_id <= 0) {
 }
 
 $stmt = mysqli_prepare($connect,
-    "SELECT a.application_id, a.final_price, a.status,
+    "SELECT a.application_id, p.base_price, a.status,
             u.name AS customer_name,
             p.name AS plan_name, p.insurance_company,
             cat.name AS category_name
@@ -50,8 +50,8 @@ $customer_name   = htmlspecialchars($app['customer_name'] ?? $_SESSION['name'] ?
 $plan_name       = htmlspecialchars($app['plan_name'] ?? 'Insurance Plan');
 $company         = htmlspecialchars($app['insurance_company'] ?? 'Coverly Partner');
 $category_name   = htmlspecialchars($app['category_name'] ?? 'Insurance');
-$amount          = number_format((float)$app['final_price'], 2);
-$amount_raw      = (float)$app['final_price'];
+$amount          = number_format((float)$app['base_price'], 2);
+$amount_raw      = (float)$app['base_price'];
 
 // Category-based prefix preview for display
 $cat_lc = strtolower($app['category_name'] ?? '');

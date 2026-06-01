@@ -16,7 +16,7 @@ define('PAYMOB_API_KEY', 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5Sm
 define('PAYMOB_INTEGRATION_ID', '5692956'); 
 
 // Get this from Settings -> Iframes
-define('PAYMOB_IFRAME_ID', '1048601'); 
+define('PAYMOB_IFRAME_ID', '1048600'); 
 
 // Get this from Settings -> HMAC Secret (optional, used for security signature checking)
 define('PAYMOB_HMAC_SECRET', '7E883C100E52BBDCE568A7C18D5FF731'); 
@@ -25,7 +25,7 @@ define('PAYMOB_HMAC_SECRET', '7E883C100E52BBDCE568A7C18D5FF731');
 // Options: 'simulation' or 'live'
 // 'simulation' -> Beautiful fake Paymob interface. Perfect for offline presentation!
 // 'live'       -> Real Paymob gateway integration via APIs and redirect.
-define('PAYMOB_MODE', 'simulation'); 
+define('PAYMOB_MODE', 'live'); 
 
 // ── Base URL of your website ───────────────────────────────────────────────
 // Required for Paymob redirect callbacks. Change if your path is different.
