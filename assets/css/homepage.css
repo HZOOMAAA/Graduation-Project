@@ -1,16 +1,35 @@
 /* CSS Variables  */
 :root {
-    --primary-navy: #1A2B48;
-    /* Authority & Trust */
-    --action-blue: #0052CC;
-    /* Professional Action */
-    --bg-soft-gray: #F4F7F9;
-    /* Clean Workspace */
-    --text-main: #2D3436;
-    /* Readability */
-    --error-red: #D63031;
-    /* Clear Alerts */
-    --white: #FFFFFF;
+    /* 1. Core Brand Colors */
+    --primary-navy: #1A2B48;        /* الـ Navy الأساسي - ثقة واحترافية */
+    --navy-dark: #111D32;           /* درجة أغمق للـ Hovers والعناوين */
+    --action-blue: #0052CC;         /* الأزرق الحيوي للأزرار والتفاعل */
+    --action-hover: #0043A8;
+    
+    /* 2. Neutral Backgrounds & Surfaces */
+    --bg-soft-gray: #F4F7F9;        /* خلفية الموقع الأساسية - رمادي نظيف ومريح */
+    --white: #FFFFFF;               /* خلفية الكروت والـ Surfaces */
+    --grey-card-hover: #EBF0F3;
+    
+    /* 3. Typography & Feedback */
+    --text-main: #2D3436;           /* لون النصوص الأساسي */
+    --text-muted: #5A6578;          /* رمادي مائل للـ Navy للنصوص الثانوية والـ Subtitles */
+    --error-red: #D63031;           /* التنبيهات */
+    --border-color: #E2E8F0;        /* حدود خفيفة جداً ونظيفة */
+
+    /* 4. Geometry & Spacing (Human Touch) */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 50px;
+    
+    /* 5. Smooth Professional Shadows */
+    --shadow-sm: 0 1px 3px rgba(26, 43, 72, 0.05);
+    --shadow-md: 0 4px 12px -1px rgba(26, 43, 72, 0.06), 0 2px 6px -2px rgba(26, 43, 72, 0.04);
+    --shadow-lg: 0 20px 40px -5px rgba(26, 43, 72, 0.05), 0 8px 16px -8px rgba(26, 43, 72, 0.03);
+
+    /* 6. Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Global Styles & Reset*/
@@ -18,7 +37,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, "Work Sans", sans-serif;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* body {
@@ -167,8 +186,11 @@ ul {
 
 .why-choose-us .section-title {
     color: #004b87;
-    font-weight: 700;
-    font-size: 2rem;
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.5px;
 }
 
 .why-choose-us .icon-circle {
@@ -199,12 +221,10 @@ ul {
 .why-choose-us .feature-text {
     font-size: 0.95rem;
     line-height: 1.6;
+    color: var(--text-muted);
 }
 
-/* end section */
 
-
-/* start section */
 
 /*Partners Slider*/
 .partners {
@@ -213,9 +233,12 @@ ul {
 }
 
 .partners h2 {
-    font-size: 32px;
-    margin-bottom: 40px;
-    color: #222;
+    color: #004b87;
+    font-size: 2.5rem;
+    margin-bottom: 60px;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.5px;
 }
 
 .slider {
@@ -497,33 +520,31 @@ ul {
 }
 
 .section-subtitle {
-    color: #004b87;
-    ;
-    /* اللون السماوي */
-    font-size: 0.85rem;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 40px;
-    margin-top: 0;
+color:#004b87;
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 60px;
     text-align: center;
+    letter-spacing: -0.5px;
 }
 
 .cards-wrapper {
     display: flex;
     gap: 30px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .purpose-card {
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 16px;
-    padding: 45px 40px;
+background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 48px 40px;
     flex: 1;
     min-width: 320px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease;
+    max-width: 540px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-smooth);
 }
 
 .purpose-card h2 {
@@ -531,19 +552,18 @@ ul {
 }
 
 .purpose-card:hover {
-    transform: translateY(-5px);
-}
+transform: translateY(-6px);
+    box-shadow: var(--shadow-md);}
 
 .icon-wrapper {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #1b637c, #0f2439);
-    border-radius: 12px;
+width: 56px;
+    height: 56px;
+    background: rgba(0, 82, 204, 0.05);
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 25px;
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.05);
+    margin-bottom: 28px;
 }
 
 .icon {
@@ -552,21 +572,17 @@ ul {
 
 
 .card-title {
-    font-family: 'Playfair Display', serif;
-    color: #004b87;
-    font-size: 1.8rem;
-    font-weight: 400;
-    margin-top: 0;
-    margin-bottom: 20px;
+color: #004b87;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
 }
 
 
 .card-text {
-    color: black;
-    line-height: 1.8;
+    color:#5A6578;
+    line-height: 1.7;
     font-size: 1rem;
-    font-weight: 300;
-    margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -640,80 +656,78 @@ ul {
 
 /* تنسيقات قسم آراء العملاء */
 .custom-testimonials-section {
-    background-color: var(--white, #FFFFFF);
-    padding: 5rem 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.custom-testimonials-container {
-    max-width: 1200px;
-    width: 100%;
-    text-align: center;
+    background-color: var(--white);
+    padding: 100px 0;
 }
 
 .custom-testimonials-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    color: var(--primary-navy, #1A2B48);
-    margin-bottom: 4rem;
-    font-weight: 700;
+    font-size: 2.5rem;
+    color: var(--primary-navy);
+    margin-bottom: 60px;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: -0.5px;
 }
 
 .custom-testimonial-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 2rem;
+    gap: 32px;
     justify-content: center;
 }
 
 .custom-testimonial-item {
+    background: var(--bg-soft-gray);
+    padding: 40px 32px;
+    border-radius: var(--radius-md);
     flex: 1;
     min-width: 300px;
-    max-width: 350px;
+    max-width: 360px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    margin-bottom: 1.5rem;
+    transition: var(--transition-smooth);
+}
+
+.custom-testimonial-item:hover {
+    transform: translateY(-4px);
+    background-color: var(--white);
+    box-shadow: var(--shadow-md);
+    box-shadow: 0 10px 30px rgba(26, 43, 72, 0.04);
 }
 
 .custom-client-photo {
-    width: 150px;
-    height: 150px;
+    width: 100px; /* تصغير الصورة شوية بيدي شكل أرقى */
+    height: 100px;
     object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
+    border-radius: var(--radius-full); /* الدائرية الكاملة لصور الأشخاص تليق أكتر */
+    margin-bottom: 20px;
+    border: 3px solid var(--white);
+    box-shadow: var(--shadow-sm);
 }
 
 .custom-client-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    color: var(--primary-navy, #1A2B48);
-    margin-bottom: 0.5rem;
-    font-weight: 500;
+    font-size: 1.25rem;
+    color: var(--primary-navy);
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
 .custom-client-quote {
-    font-family: 'Work Sans', sans-serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     line-height: 1.6;
-    color: var(--text-main, #2D3436);
-    margin-bottom: 1.5rem;
-    font-weight: 400;
-    flex-grow: 1;
+    color: var(--text-muted);
+    margin-bottom: 24px;
 }
 
 .custom-client-rating {
     margin-top: auto;
-    font-size: 1.5rem;
-    letter-spacing: 2px;
+    font-size: 1.2rem;
 }
 
 .custom-star {
-    color: #F1C40F;
-    /* لون النجوم الذهبي */
+    color: #FFC107; /* درجة ذهبي دافية ومريحة */
 }
 
 /* التجاوب مع شاشات الموبايل */

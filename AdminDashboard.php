@@ -1391,7 +1391,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules</label>
                     
                     <!-- Car Insurance Rules -->
-                    <div id="edit-rules-car" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                    <div id="edit-rules-car" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
                                 <label>Car Condition Allowed</label>
@@ -1420,7 +1420,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     </div>
 
                     <!-- Health Insurance Rules -->
-                    <div id="edit-rules-health" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                    <div id="edit-rules-health" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
                                 <label>Min Age</label>
@@ -1454,7 +1454,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     </div>
 
                     <!-- Life Insurance Rules -->
-                    <div id="edit-rules-life" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                    <div id="edit-rules-life" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
                                 <label>Min Age</label>
@@ -1485,7 +1485,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     </div>
 
                     <!-- Property Insurance Rules -->
-                    <div id="edit-rules-property" class="edit-eligibility-rules-panel" style="display:none; background:#f3f4f6; border-radius:8px; padding:16px;">
+                    <div id="edit-rules-property" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field" style="grid-column: 1 / -1;">
                                 <label>Allowed Property Types</label>

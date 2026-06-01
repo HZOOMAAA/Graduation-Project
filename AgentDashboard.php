@@ -206,7 +206,7 @@ $cnt = [
     $cols_review = ['App ID','Customer','Category','Chosen Plan','base Price','Date','Action'];
     $cols_awaiting = ['App ID','Customer','Category','Plan','base Price','Date','Action'];
     $cols_paid    = ['App ID','Customer','Email','Plan','base Price','Policy No.'];
-    $cols_rejected = ['App ID','Customer','Category','Date'];
+    $cols_rejected = ['App ID','Customer','Category','Date','Action'];
     ?>
 
     <?php if (in_array($active_tab, ['applications','awaiting','paid','rejected'])): ?>
@@ -373,31 +373,7 @@ $cnt = [
             </form>
         </div>
 
-        <?php elseif ($app_details['status'] === 'awaiting_payment'): ?>
-        <div class="card decision-card payment-action-card">
-            <h2><i class='bx bxs-credit-card-front'></i> Process Payment Confirmation & Policy Issuance</h2>
-            <p class="decision-desc">Upon verification of direct payment execution via Fawry, Bank Transfer, or physical counter cash receipt, record references to generate the system legal policy ledger.</p>
-            <form action="AgentDashboard.php" method="post">
-                <input type="hidden" name="application_id" value="<?php echo $app_details['application_id']; ?>">
-                <div class="form-inputs-row">
-                    <div class="form-group">
-                        <label>Payment Reference Code</label>
-                        <input type="text" name="payment_ref" placeholder="e.g. FAWRY-00123456" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Policy Cover Start Date</label>
-                        <input type="date" name="start_date" value="<?php echo date('Y-m-d'); ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Policy Cover Expiration Date</label>
-                        <input type="date" name="end_date" value="<?php echo date('Y-m-d', strtotime('+1 year')); ?>" required>
-                    </div>
-                </div>
-                <div class="form-submit-wrapper">
-                    <button type="submit" name="issue_policy" class="btn btn-success-filled"><i class='bx bxs-receipt'></i> Authorize Payment & Issue System Policy Ledger</button>
-                </div>
-            </form>
-        </div>
+
 
         <?php elseif ($app_details['status'] === 'paid' && $policy): ?>
         <div class="card decision-card policy-success-card">

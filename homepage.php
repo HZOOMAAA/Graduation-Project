@@ -180,7 +180,7 @@
   </div>
 
   <!-- Features -->
-  <div class="features">
+  <!-- <div class="features">
 
     <div class="card">
       <div class="card-icon-wrapper">
@@ -206,7 +206,7 @@
       <p>We work only with reliable companies.</p>
     </div>
 
-  </div>
+  </div> -->
 
 </section>
 
