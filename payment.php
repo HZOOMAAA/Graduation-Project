@@ -76,7 +76,7 @@ include 'includes/nav2.php';
             
             <div class="card-header">
                 <i class='bx bx-shield-quarter' style="font-size: 48px; color: #1A2B48; margin-bottom: 12px; display: inline-block;"></i>
-                <h1 class="card-title">Insurance Payment Portal</h1>
+                <h1 class="card-title">Payment Portal</h1>
                 <p class="card-subtitle">Secure payment encryption framework for your approved insurance policy</p>
             </div>
 
@@ -139,10 +139,7 @@ include 'includes/nav2.php';
 
             </div>
 
-            <div class="secure-banner">
-                <p><i class='bx bxs-lock-alt icon-secure' style="font-size: 16px; color: #10b981; vertical-align: middle;"></i> <b>SSL Secured & Encrypted:</b> All data packets are strictly tokenized. Card telemetry is never logged on COVERLY main servers.</p>
-            </div>
-            
+           
         </div>
     </div>
 </main>

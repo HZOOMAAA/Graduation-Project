@@ -123,6 +123,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
     initGridSearch("messageSearchInput", "messagesTable", "messageNoResultsRow");
 
+    // ── Animate category progress bars on page load ──
+    const progressBars = document.querySelectorAll('.progress-bar-fill[data-width]');
+    if (progressBars.length > 0) {
+        // Small delay so the browser paints the 0% state first, then animates
+        requestAnimationFrame(function() {
+            setTimeout(function() {
+                progressBars.forEach(function(bar, index) {
+                    setTimeout(function() {
+                        bar.style.width = bar.getAttribute('data-width') + '%';
+                    }, index * 120); // stagger each bar by 120ms
+                });
+            }, 200);
+        });
+    }
 
 //test charts
 // ── 📊 تشغيل منظومة التقارير والرسومات البيانية (ApexCharts) ──

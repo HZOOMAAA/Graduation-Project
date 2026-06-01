@@ -182,7 +182,8 @@ $applications_query = "
            cat.name as category_name,
            ag.name as agent_name,
            p.name as plan_name,
-           p.insurance_company
+           p.insurance_company,
+           p.base_price as base_price
     FROM applications a
     LEFT JOIN users c ON a.customer_id = c.user_id
     LEFT JOIN categories cat ON a.category_id = cat.category_id
@@ -193,9 +194,95 @@ $applications_query = "
 ";
 $applications = mysqli_query($connect, $applications_query);
 
+// Fetch 5 most recent applications for overview
+$recent_applications_query = "
+    SELECT a.*,
+           c.name as customer_name,
+           cat.name as category_name,
+           ag.name as agent_name
+    FROM applications a
+    LEFT JOIN users c ON a.customer_id = c.user_id
+    LEFT JOIN categories cat ON a.category_id = cat.category_id
+    LEFT JOIN users ag ON a.agent_id = ag.user_id
+    WHERE a.status IN ('under_review')
+    ORDER BY a.created_at DESC
+    LIMIT 3 
+";
+$recent_applications = mysqli_query($connect, $recent_applications_query);
+
+function getOverviewStatusStyle($status) {
+    switch ($status) {
+        case 'under_review':
+            return ['Review', 'background: #FEF3C7; color: #92400E;'];
+
+        default:
+            return [ucfirst(str_replace('_', ' ', $status)), 'background: #F1F3F4; color: #5F6368;'];
+    }
+}
+
+// Fetch category distribution stats (with plan count per category)
+$category_distribution_query = "
+    SELECT cat.category_id, cat.name,
+           COUNT(DISTINCT a.application_id) as cnt,
+           COUNT(DISTINCT p.plan_id) as plans_count
+    FROM categories cat
+    LEFT JOIN applications a ON cat.category_id = a.category_id
+    LEFT JOIN insurance_plans p ON cat.category_id = p.category_id
+    GROUP BY cat.category_id, cat.name
+    ORDER BY cnt DESC, cat.name ASC
+";
+$category_distribution = mysqli_query($connect, $category_distribution_query);
+
+// Total count of all applications (to calculate percentages)
+$total_apps_all_categories_row = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as total FROM applications"));
+$total_apps_all_categories = intval($total_apps_all_categories_row['total'] ?? 0);
+
+function getCategoryDesignProps($cat_name) {
+    $clean_name = strtolower($cat_name);
+    if (strpos($clean_name, 'car') !== false || strpos($clean_name, 'vehicle') !== false) {
+        return [
+            'icon'  => "<i class='bx bx-car'></i>",
+            'color' => 'var(--action-blue)',
+            'bg'    => '#EFF6FF'
+        ];
+    } elseif (strpos($clean_name, 'health') !== false || strpos($clean_name, 'medical') !== false) {
+        return [
+            'icon'  => "<i class='bx bx-heart'></i>",
+            'color' => '#10B981',
+            'bg'    => '#ECFDF5'
+        ];
+    } elseif (strpos($clean_name, 'property') !== false || strpos($clean_name, 'home') !== false) {
+        return [
+            'icon'  => "<i class='bx bx-home'></i>",
+            'color' => '#F59E0B',
+            'bg'    => '#FFFBEB'
+        ];
+    } elseif (strpos($clean_name, 'life') !== false) {
+        return [
+            'icon'  => "<i class='bx bx-group'></i>",
+            'color' => '#8B5CF6',
+            'bg'    => '#F5F3FF'
+        ];
+    } elseif (strpos($clean_name, 'retir') !== false || strpos($clean_name, 'pension') !== false) {
+        return [
+            'icon'  => "<i class='bx bx-briefcase'></i>",
+            'color' => '#EC4899',
+            'bg'    => '#FDF2F8'
+        ];
+    } else {
+        return [
+            'icon'  => "<i class='bx bx-shield'></i>",
+            'color' => '#6B7280',
+            'bg'    => '#F9FAFB'
+        ];
+    }
+}
+
+
+
 // Stats for overview
 $stats = [];
-foreach (['pending_selection','waiting_docs','under_review','awaiting_payment','paid','rejected'] as $s) {
+foreach (['under_review'] as $s) {
     $r = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM applications WHERE status='$s'"));
     $stats[$s] = $r['cnt'];
 }
@@ -265,10 +352,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <span class="icon"><i class='bx bx-home'></i></span> Overview
         </a>
         
-        <a href="AdminDashboard.php?tab=profile" class="<?php echo $active_tab === 'profile' ? 'active' : ''; ?>">
-            <span class="icon"><i class='bx bx-user-circle'></i></span> Admin Profile
-        </a>
-
         <a href="AdminDashboard.php?tab=applications" class="<?php echo $active_tab === 'applications' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-book-content'></i></span> Applications
         </a>
@@ -352,49 +435,61 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <div class="overview-twin-layout">
                 
                 <div class="card">
-                    <h2 class="card-title-main">Insurance Categories</h2>
-                    <p class="card-subtitle-main">Distribution of customer requests based on category</p>
+                    <div class="card-header-wrapper" style="margin-bottom: 4px;">
+                        <h2 class="card-title-main">Insurance Categories</h2>
+                        <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); background: #F3F4F6; padding: 3px 10px; border-radius: 50px;">
+                            <?php echo count($categories); ?> Total
+                        </span>
+                    </div>
+                    <p class="card-subtitle-main">Distribution of applications per category</p>
                     
                     <div class="categories-progress-list">
-                        <div>
-                            <div class="progress-item-info">
-                                <span><i class='bx bx-car'></i> Car Insurance</span>
-                                <span>60%</span>
+                        <?php
+                        if ($category_distribution && mysqli_num_rows($category_distribution) > 0) {
+                            mysqli_data_seek($category_distribution, 0);
+                            while ($cat_row = mysqli_fetch_assoc($category_distribution)):
+                                $pct = 0;
+                                if ($total_apps_all_categories > 0) {
+                                    $pct = round(($cat_row['cnt'] / $total_apps_all_categories) * 100);
+                                }
+                                $design = getCategoryDesignProps($cat_row['name']);
+                                $app_count   = intval($cat_row['cnt']);
+                                $plans_count = intval($cat_row['plans_count']);
+                        ?>
+                            <div class="category-progress-item">
+                                <div class="progress-item-info">
+                                    <div class="cat-label-group">
+                                        <span class="cat-icon-badge" style="background: <?php echo $design['bg']; ?>; color: <?php echo $design['color']; ?>;">
+                                            <?php echo $design['icon']; ?>
+                                        </span>
+                                        <div>
+                                            <div class="cat-name"><?php echo htmlspecialchars($cat_row['name']); ?></div>
+                                            <div class="cat-meta">
+                                                <?php echo $plans_count; ?> plan<?php echo $plans_count != 1 ? 's' : ''; ?>
+                                                &nbsp;&middot;&nbsp;
+                                                <?php echo $app_count; ?> application<?php echo $app_count != 1 ? 's' : ''; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cat-pct-badge" style="color: <?php echo $design['color']; ?>; background: <?php echo $design['bg']; ?>">
+                                        <?php echo $pct; ?>%
+                                    </div>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill"
+                                         data-width="<?php echo $pct; ?>"
+                                         style="width: 0%; background: <?php echo $design['color']; ?>; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                                </div>
                             </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 60%; background: var(--action-blue);"></div>
+                        <?php 
+                            endwhile;
+                        } else {
+                        ?>
+                            <div style="text-align: center; padding: 30px 0;">
+                                <i class='bx bx-category' style="font-size: 36px; color: var(--border-color);"></i>
+                                <p style="color: var(--text-muted); font-style: italic; font-size: 13px; margin-top: 8px;">No categories found in the database.</p>
                             </div>
-                        </div>
-
-                        <div>
-                            <div class="progress-item-info">
-                                <span><i class='bx bx-heart'></i> Health Insurance</span>
-                                <span>25%</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 25%; background: #10B981;"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="progress-item-info">
-                                <span><i class='bx bx-home'></i> Property Insurance</span>
-                                <span>10%</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 10%; background: #F59E0B;"></div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="progress-item-info">
-                                <span><i class='bx bx-group'></i> Life Insurance</span>
-                                <span>5%</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 5%; background: #8B5CF6;"></div>
-                            </div>
-                        </div>
+                        <?php } ?>
                     </div>
                 </div>
                 
@@ -414,46 +509,52 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <div class="customer-meta-name">Mahmoud Diaa</div>
-                                    <div class="customer-meta-id">ID: #1024</div>
-                                </td>
-                                <td class="category-column-text">Car Insurance</td>
-                                <td>
-                                    <span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;">Paid</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <small style="color: var(--text-muted); font-weight: 500;">Assigned</small>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td>
-                                    <div class="customer-meta-name">Yasmine Hamed</div>
-                                    <div class="customer-meta-id">ID: #1025</div>
-                                </td>
-                                <td class="category-column-text">Health Insurance</td>
-                                <td>
-                                    <span class="badge" style="background: #FEF3C7; color: #92400E; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;">Review</span>
-                                </td>
-                                <td style="text-align: right;">
-                                    <form action="AdminDashboard.php" method="post" class="quick-assign-form">
-                                        <input type="hidden" name="application_id" value="1025">
-                                        <select name="agent_id" class="quick-assign-select" required>
-                                            <option value="">Assign...</option>
-                                            <?php
-                                            if ($agents) {
-                                                mysqli_data_seek($agents, 0);
-                                                while ($ag = mysqli_fetch_assoc($agents)):
-                                            ?>
-                                                <option value="<?php echo $ag['user_id']; ?>"><?php echo htmlspecialchars($ag['name']); ?></option>
-                                            <?php endwhile; } ?>
-                                        </select>
-                                        <button type="submit" name="assign_agent" class="btn btn-primary quick-assign-submit">Go</button>
-                                    </form>
-                                </td>
-                            </tr>
+                            <?php if ($recent_applications && mysqli_num_rows($recent_applications) > 0): ?>
+                                <?php while ($row = mysqli_fetch_assoc($recent_applications)): 
+                                    [$statusLabel, $statusStyle] = getOverviewStatusStyle($row['status']);
+                                ?>
+                                    <tr>
+                                        <td>
+                                            <div class="customer-meta-name"><?php echo htmlspecialchars($row['customer_name'] ?? 'Unknown'); ?></div>
+                                            <div class="customer-meta-id">ID: #<?php echo $row['application_id']; ?></div>
+                                        </td>
+                                        <td class="category-column-text"><?php echo htmlspecialchars($row['category_name'] ?? 'N/A'); ?></td>
+                                        <td>
+                                            <span class="badge" style="<?php echo $statusStyle; ?> font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;">
+                                                <?php echo htmlspecialchars($statusLabel); ?>
+                                            </span>
+                                        </td>
+                                        <td style="text-align: right;">
+                                            <?php if ($row['status'] === 'under_review' && !$row['agent_id']): ?>
+                                                <form action="AdminDashboard.php" method="post" class="quick-assign-form">
+                                                    <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
+                                                    <select name="agent_id" class="quick-assign-select" required>
+                                                        <option value="">Assign...</option>
+                                                        <?php
+                                                        if ($agents) {
+                                                            mysqli_data_seek($agents, 0);
+                                                            while ($ag = mysqli_fetch_assoc($agents)):
+                                                        ?>
+                                                            <option value="<?php echo $ag['user_id']; ?>"><?php echo htmlspecialchars($ag['name']); ?></option>
+                                                        <?php endwhile; } ?>
+                                                    </select>
+                                                    <button type="submit" name="assign_agent" class="btn btn-primary quick-assign-submit">Go</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <small style="color: var(--text-muted); font-weight: 500;">
+                                                    <?php echo $row['agent_name'] ? 'Assigned to ' . htmlspecialchars($row['agent_name']) : 'Unassigned'; ?>
+                                                </small>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="4" class="no-data" style="text-align: center; padding: 24px; color: var(--text-muted);">
+                                        No recent applications found.
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -704,7 +805,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                             <th>Customer</th>
                             <th>Category</th>
                             <th>Chosen Plan</th>
-                            <th>Final Price</th>
+                            <th>Price</th>
                             <th>Status</th>
                             <th>Agent</th>
                             <th>Date</th>
@@ -727,7 +828,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <?php echo $row['final_price'] ? '<strong>$' . number_format($row['final_price'], 2) . '</strong>' : '<span style="color:#9ca3af;">—</span>'; ?>
+                                        <?php echo $row['base_price'] ? '<strong>$' . number_format($row['base_price'], 2) . '</strong>' : '<span style="color:#9ca3af;">—</span>'; ?>
                                     </td>
                                     <td>
                                         <span class="badge" style="<?php
