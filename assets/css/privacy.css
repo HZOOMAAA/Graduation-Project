@@ -1,0 +1,166 @@
+/* --- COVERLY Brand Variables --- */
+:root {
+    --primary-navy: #1A2B48;
+    /* Authority & Trust */
+    --action-blue: #0052CC;
+    /* Professional Action */
+    --bg-soft-gray: #F4F7F9;
+    /* Clean Workspace */
+    --text-main: #2D3436;
+    /* Readability */
+    --error-red: #D63031;
+    /* Clear Alerts */
+    --white: #FFFFFF;
+}
+
+/* --- Global Styles & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, "Work Sans", sans-serif;
+}
+
+body {
+    background-color: var(--bg-soft-gray);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Container --- */
+.container {
+    max-width: 1200px;
+    margin: 60px auto;
+    /* Increased top/bottom margin for a more open feel */
+    padding: 0 20px;
+    width: 100%;
+}
+
+/* --- Zigzag Layout Styles --- */
+.zigzag-container {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    /* Increased space between sections since cards are removed */
+}
+
+.zigzag-row {
+    /* Removed background-color, border-radius, and box-shadow to eliminate cards */
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    /* Spacing between text and image */
+}
+
+/* Reverse layout for even rows */
+.zigzag-row:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.zigzag-text {
+    flex: 1;
+    /* Takes half the space */
+}
+
+.zigzag-image {
+    flex: 1;
+    /* Takes the other half */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.zigzag-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 12px 24px rgba(26, 43, 72, 0.08);
+    /* Kept a subtle shadow on the image itself to make it pop against the background */
+    object-fit: cover;
+}
+
+/* --- Typography & Elements --- */
+.section-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: var(--primary-navy);
+    /* Changed border-bottom to an action-blue accent for a modern feel without the card */
+    border-bottom: 3px solid var(--action-blue);
+    display: inline-block;
+    padding-bottom: 8px;
+    font-size: 1.75rem;
+}
+
+p {
+    line-height: 1.8;
+    font-size: 1.05rem;
+    color: var(--text-main);
+    margin-bottom: 15px;
+}
+
+ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    color: var(--text-main);
+}
+
+li {
+    margin-bottom: 8px;
+}
+
+strong {
+    font-weight: 600;
+}
+
+.alert-custom {
+    /* Adjusted alert styling to look good directly on the soft-gray background */
+    background-color: var(--white);
+    border-left: 4px solid var(--action-blue);
+    color: var(--primary-navy);
+    padding: 15px 20px;
+    border-radius: 4px;
+    margin: 25px 0 0 0;
+    font-size: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 992px) {
+    .layout-wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar-column {
+        display: none;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .zigzag-container {
+        gap: 60px;
+    }
+
+    .zigzag-row,
+    .zigzag-row:nth-child(even) {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .zigzag-image {
+        order: -1;
+        /* Image appears above text on mobile */
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        display: block;
+        border-bottom: 2px solid var(--action-blue);
+    }
+}
