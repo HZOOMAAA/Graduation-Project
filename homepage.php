@@ -216,27 +216,27 @@
 
         <div class="custom-testimonial-grid">
             <div class="custom-testimonial-item">
-                <img src="assets/img/axa.png" alt="Jamie Folsom" class="custom-client-photo">
-                <h3 class="custom-client-name">Jamie Folsom</h3>
-                <p class="custom-client-quote">We’re absolutely thrilled with the house we purchased through your website! It’s even more beautiful in person than it was in the photos. Thank you for helping us find our dream home!”</p>
+                <img src="assets/img/person1.jfif" alt="Jamie Folsom" class="custom-client-photo">
+                <h3 class="custom-client-name">Sara Marwan</h3>
+                <p class="custom-client-quote">Getting my insurance sorted through COVERLY was a breeze! The platform is clear, fast, and I feel so much more secure now with my new plan. Thank you for making this process so effortless!</p>
                 <div class="custom-client-rating">
                     <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
                 </div>
             </div>
 
             <div class="custom-testimonial-item">
-                <img src="assets/img/axa.png" alt="Carrly Hopper" class="custom-client-photo">
-                <h3 class="custom-client-name">Carrly Hopper</h3>
-                <p class="custom-client-quote">The house we found on your website is perfect for our family. It's spacious, well-maintained, and located in a fantastic neighborhood. We're so excited to start making memories in our new home!”</p>
+                <img src="assets/img/person2.jfif" alt="Carrly Hopper" class="custom-client-photo">
+                <h3 class="custom-client-name">Ahmed Hassan</h3>
+                <p class="custom-client-quote"> I couldn't be happier with the policy I got. The whole process was smooth and transparent. It's great to finally find a reliable platform that genuinely cares about getting you the best coverage!</p>
                 <div class="custom-client-rating">
                     <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
                 </div>
             </div>
 
             <div class="custom-testimonial-item">
-                <img src="assets/img/axa.png" alt="Healie Davied" class="custom-client-photo">
-                <h3 class="custom-client-name">Healie Davied</h3>
-                <p class="custom-client-quote">The house I bought through your website is absolutely stunning. It’s perfect. The team takes great care to ensure listings meet the highest standards. Thank you for your professionalism!”</p>
+                <img src="assets/img/person3.jfif" alt="Healie Davied" class="custom-client-photo">
+                <h3 class="custom-client-name">Othmane Ahmed</h3>
+                <p class="custom-client-quote"> The coverage I got through COVERLY is exactly what I was looking for. It’s perfect. The platform takes great care to ensure all insurance plans meet the highest standards of reliability. Thank you for your professionalism!</p>
                 <div class="custom-client-rating">
                     <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
                 </div>
@@ -330,7 +330,7 @@
                 
                 <div class="location-item ps-4 py-2" style="border-left: 4px solid var(--action-blue);">
                     <p class="mb-0 text-muted fs-5" style="line-height: 1.8;">
-                        Offers luxury villas, apartments, townhouses, and compounds to suit all needs across Madinaty, New Cairo, and Sheikh Zayed.
+                        Visit us at our main office: Capital Business Park, Sheikh Zayed, Giza.
                     </p>
                 </div>
             </div>
