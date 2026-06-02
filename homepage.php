@@ -220,7 +220,7 @@
                 <h3 class="custom-client-name">Sara Marwan</h3>
                 <p class="custom-client-quote">Getting my insurance sorted through COVERLY was a breeze! The platform is clear, fast, and I feel so much more secure now with my new plan. Thank you for making this process so effortless!</p>
                 <div class="custom-client-rating">
-                    <span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
+                    <span class="custom-star ">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span><span class="custom-star">★</span>
                 </div>
             </div>
 
