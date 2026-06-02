@@ -34,10 +34,23 @@ if (isset($_GET['delete'])) {
     if ($delete) {
         $success = "Agent deleted successfully!";
         // Redirect to avoid re-deletion on refresh
-        header("Location: AdminDashboard.php?success=" . urlencode($success));
+        header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
         exit();
     } else {
         $error = "Failed to delete agent! " . mysqli_error($connect);
+    }
+}
+
+// Handle Delete Plan
+if (isset($_GET['delete_plan'])) {
+    $id = (int)$_GET['delete_plan'];
+    $delete = mysqli_query($connect, "DELETE FROM insurance_plans WHERE plan_id = $id");
+    if ($delete) {
+        $success = "Insurance plan deleted successfully!";
+        header("Location: AdminDashboard.php?tab=plans&success=" . urlencode($success));
+        exit();
+    } else {
+        $error = "Failed to delete insurance plan! " . mysqli_error($connect);
     }
 }
 
@@ -61,7 +74,7 @@ if (isset($_POST['edit_agent'])) {
         
         if ($update) {
             $success = "Agent updated successfully!";
-            header("Location: AdminDashboard.php?success=" . urlencode($success));
+            header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
             exit();
         } else {
             $error = "Failed to update agent! " . mysqli_error($connect);
@@ -92,13 +105,40 @@ if (isset($_POST['add_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format (e.g. [\"Rule 1\", \"Rule 2\"])";
     } else {
-        $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, eligibility_rules) VALUES ('$name', $category_id, '$company', '$details', $price, $eligibility)");
-        if ($insert) {
-            $success = "Insurance plan added successfully!";
-            header("Location: AdminDashboard.php?tab=add_plan&success=" . urlencode($success));
-            exit();
+        // Handle logo upload
+        $logo_path = '';
+        $logo_upload_error = '';
+        if (!empty($_FILES['logo']['name'])) {
+            $upload_dir = __DIR__ . '/assets/img/plans/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+            $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+            if (!in_array($ext, $allowed_exts)) {
+                $logo_upload_error = "Logo must be JPG, PNG, WEBP, or SVG.";
+            } elseif ($_FILES['logo']['size'] > 2 * 1024 * 1024) {
+                $logo_upload_error = "Logo file size must not exceed 2MB.";
+            } else {
+                $logo_filename = 'plan_' . time() . '_' . uniqid() . '.' . $ext;
+                if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_dir . $logo_filename)) {
+                    $logo_path = 'assets/img/plans/' . $logo_filename;
+                } else {
+                    $logo_upload_error = "Failed to upload logo.";
+                }
+            }
+        }
+
+        if ($logo_upload_error !== '') {
+            $error = $logo_upload_error;
         } else {
-            $error = "Failed to add insurance plan! " . mysqli_error($connect);
+            $logo_escaped = mysqli_real_escape_string($connect, $logo_path);
+            $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, eligibility_rules, logo) VALUES ('$name', $category_id, '$company', '$details', $price, $eligibility, '$logo_escaped')");
+            if ($insert) {
+                $success = "Insurance plan added successfully!";
+                header("Location: AdminDashboard.php?tab=add_plan&success=" . urlencode($success));
+                exit();
+            } else {
+                $error = "Failed to add insurance plan! " . mysqli_error($connect);
+            }
         }
     }
 }
@@ -127,16 +167,48 @@ if (isset($_POST['edit_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format.";
     } else {
-        $update = mysqli_query($connect, "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility WHERE plan_id = $id");
-        if ($update) {
-            $success = "Insurance plan updated successfully!";
-            header("Location: AdminDashboard.php?tab=plans&success=" . urlencode($success));
-            exit();
+        // Handle logo upload for edit
+        $logo_sql_part = '';
+        $logo_upload_error = '';
+        if (!empty($_FILES['logo']['name'])) {
+            $upload_dir = __DIR__ . '/assets/img/plans/';
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+            $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
+            $allowed_exts = ['jpg', 'jpeg', 'png', 'webp', 'svg'];
+            if (!in_array($ext, $allowed_exts)) {
+                $logo_upload_error = "Logo must be JPG, PNG, WEBP, or SVG.";
+            } elseif ($_FILES['logo']['size'] > 2 * 1024 * 1024) {
+                $logo_upload_error = "Logo file size must not exceed 2MB.";
+            } else {
+                $logo_filename = 'plan_' . time() . '_' . uniqid() . '.' . $ext;
+                if (move_uploaded_file($_FILES['logo']['tmp_name'], $upload_dir . $logo_filename)) {
+                    $new_logo_path = mysqli_real_escape_string($connect, 'assets/img/plans/' . $logo_filename);
+                    $logo_sql_part = ", logo = '$new_logo_path'";
+                } else {
+                    $logo_upload_error = "Failed to upload logo.";
+                }
+            }
+        }
+
+        if ($logo_upload_error !== '') {
+            $error = $logo_upload_error;
         } else {
-            $error = "Failed to update insurance plan! " . mysqli_error($connect);
+            // Build update query safely. Logo part is appended only when a new logo is uploaded.
+            $update = mysqli_query(
+                $connect,
+                "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
+            );
+            if ($update) {
+                $success = "Insurance plan updated successfully!";
+                header("Location: AdminDashboard.php?tab=plans&success=" . urlencode($success));
+                exit();
+            } else {
+                $error = "Failed to update insurance plan! " . mysqli_error($connect);
+            }
         }
     }
 }
+
 
 // Handle Assign Agent — only allowed when status = waiting_docs
 if (isset($_POST['assign_agent'])) {
@@ -189,7 +261,7 @@ $applications_query = "
     LEFT JOIN categories cat ON a.category_id = cat.category_id
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
-    WHERE a.status IN ('under_review')
+    WHERE a.status IN ('under_review') AND (a.agent_id IS NULL OR a.agent_id = 0)
     ORDER BY a.created_at DESC
 ";
 $applications = mysqli_query($connect, $applications_query);
@@ -310,22 +382,12 @@ mysqli_query($connect, "CREATE TABLE IF NOT EXISTS contact_messages (
 )");
 $all_messages = mysqli_query($connect, "SELECT * FROM contact_messages ORDER BY created_at DESC");
 
-// Edit agent fetch
-$edit_agent = null;
-if (isset($_GET['edit'])) {
-    $id = (int)$_GET['edit'];
-    $result = mysqli_query($connect, "SELECT * FROM users WHERE user_id = $id AND role = 'agent'");
-    if (mysqli_num_rows($result) > 0) {
-        $edit_agent = mysqli_fetch_assoc($result);
-    }
-}
-
 if (isset($_GET['success'])) {
     $success = $_GET['success'];
 }
 
-// Determine active tab: if editing, force "add" tab; otherwise use ?tab= param (default: manage)
-$active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab'] : 'overview');
+// Determine active tab: use ?tab= param (default: overview)
+$active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -656,34 +718,26 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
 
         <?php elseif ($active_tab === 'add'): ?>
-            <div class="page-title"><?php echo $edit_agent ? 'Edit Agent' : 'Add New Agent'; ?></div>
-            <div class="page-subtitle"><?php echo $edit_agent ? 'Update the agent\'s information below.' : 'Fill in the form below to create a new agent account.'; ?></div>
+            <div class="page-title">Add New Agent</div>
+            <div class="page-subtitle">Fill in the form below to create a new agent account.</div>
 
             <div class="card">
-                <h2><?php echo $edit_agent ? ' Edit Agent' : ' New Agent'; ?></h2>
+                <h2>New Agent</h2>
                 <form action="AdminDashboard.php" method="post">
-                    <?php if ($edit_agent): ?>
-                        <input type="hidden" name="user_id" value="<?php echo $edit_agent['user_id']; ?>">
-                    <?php endif; ?>
                     <div class="form-group">
                         <label>Full Name</label>
-                        <input type="text" name="name" value="<?php echo $edit_agent ? htmlspecialchars($edit_agent['name']) : ''; ?>" placeholder="Enter agent's full name" required>
+                        <input type="text" name="name" placeholder="Enter agent's full name" required>
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" name="email" value="<?php echo $edit_agent ? htmlspecialchars($edit_agent['email']) : ''; ?>" placeholder="Enter agent's email" required>
+                        <input type="email" name="email" placeholder="Enter agent's email" required>
                     </div>
                     <div class="form-group">
-                        <label>Password<?php echo $edit_agent ? ' <small style="color:#9ca3af;">(Leave blank to keep current)</small>' : ''; ?></label>
-                        <input type="password" name="password" placeholder="<?php echo $edit_agent ? 'Leave blank to keep current password' : 'Enter a strong password'; ?>" <?php echo $edit_agent ? '' : 'required'; ?>>
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Enter a strong password" required>
                     </div>
                     <div class="form-actions">
-                        <?php if ($edit_agent): ?>
-                            <button type="submit" name="edit_agent" class="btn btn-primary">Update Agent</button>
-                            <a href="AdminDashboard.php?tab=add" class="btn btn-cancel">Cancel</a>
-                        <?php else: ?>
-                            <button type="submit" name="add_agent" class="btn btn-primary">Add Agent</button>
-                        <?php endif; ?>
+                        <button type="submit" name="add_agent" class="btn btn-primary">Add Agent</button>
                     </div>
                 </form>
             </div>
@@ -721,8 +775,14 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                     <td><?php echo htmlspecialchars($row['email']); ?></td>
                                     <td><span class="badge" style="background:#EBF5FF; color:#1E4ED8;">Agent</span></td>
                                     <td>
-                                        <a href="AdminDashboard.php?edit=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-edit"><i class='bx bx-edit'></i></a>
-                                        <a href="AdminDashboard.php?delete=<?php echo $row['user_id']; ?>" class="btn btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this agent?');"><i class='bx bx-trash'></i></a>
+                                        <button class="btn btn-sm btn-edit edit-agent-btn" 
+                                                data-id="<?php echo $row['user_id']; ?>" 
+                                                data-agent="<?php echo htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <i class='bx bx-edit'></i>
+                                        </button>
+                                        <a href="AdminDashboard.php?delete=<?php echo $row['user_id']; ?>" 
+                                           class="btn btn-sm btn-delete delete-confirm-btn" 
+                                           data-message="Are you sure you want to delete this agent account?"><i class='bx bx-trash'></i></a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -890,7 +950,6 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                     <option value="Car Insurance">Car Insurance</option>
                     <option value="Medical Insurance">Medical Insurance</option>
                     <option value="Property Insurance">Property Insurance</option>
-                    <option value="Retirement">Retirement</option>
                 </select>
             </div>
                     <div class="search-input-wrapper">
@@ -909,7 +968,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                             <th>Category</th>
                             <th>Company</th>
                             <th>Base Price</th>
-                            <th>Eligibility Rules</th>
+                            <!-- <th>Eligibility Rules</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -922,7 +981,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                     <td class="search-plan-category"><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($p['insurance_company']); ?></td>
                                     <td><strong>$<?php echo number_format($p['base_price'], 2); ?></strong></td>
-                                    <td>
+                                    <!-- <td>
                                         <?php
                                         $rules = json_decode($p['eligibility_rules'] ?? '{}', true);
                                         if ($rules) {
@@ -936,13 +995,19 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                                             echo '<small style="color:#9ca3af;">None</small>';
                                         }
                                         ?>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <button class="btn btn-sm btn-edit edit-plan-btn" 
                                                 data-id="<?php echo $p['plan_id']; ?>" 
                                                 data-plan="<?php echo htmlspecialchars(json_encode($p), ENT_QUOTES, 'UTF-8'); ?>">
                                             <i class='bx bx-edit'></i> Edit
                                         </button>
+                                        <a href="AdminDashboard.php?delete_plan=<?php echo $p['plan_id']; ?>" 
+                                           class="btn btn-sm btn-delete delete-confirm-btn" 
+                                           style="margin-left: 6px; display: inline-flex; align-items: center;"
+                                           data-message="Are you sure you want to delete this insurance plan?">
+                                            <i class='bx bx-trash'></i> Delete
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -964,7 +1029,18 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 
             <div class="card">
                 <h2><i class='bx bx-add-to-queue'></i> Add New Plan</h2>
-                <form action="AdminDashboard.php" method="post" id="addPlanForm">
+                <form action="AdminDashboard.php" method="post" id="addPlanForm" enctype="multipart/form-data">
+
+                <div class="form-group">
+    <label>Company Logo <small style="color:#9ca3af;">(JPG, PNG, WEBP, SVG — max 2MB)</small></label>
+    <div class="logo-upload-zone" id="addLogoZone">
+        <input type="file" name="logo" id="addLogoInput" accept=".jpg,.jpeg,.png,.webp,.svg" style="display:none;">
+        <div class="logo-upload-preview" id="addLogoPreview">
+            <i class='bx bx-image-add' style="font-size:32px; color:#9ca3af;"></i>
+            <p style="margin:8px 0 0; font-size:13px; color:#9ca3af;">Click to upload logo</p>
+        </div>
+    </div>
+</div>
                     <div class="form-group">
                         <label>Plan Name</label>
                         <input type="text" name="name" placeholder="Enter plan name" required>
@@ -1329,7 +1405,7 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
                 <hr class="modal-divider">
                 <div class="message-content">
                     <strong>Message:</strong>
-                    <p id="modalMessageText"></p>
+                    <p id="modalMessageText" ></p>
                 </div>
             </div>
         </div>
@@ -1344,6 +1420,57 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
 
+<!-- Custom Confirmation Modal -->
+<div id="customConfirmModal" class="custom-modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center; padding: 30px 24px;">
+        <div style="font-size: 48px; color: #EF4444; margin-bottom: 16px;">
+            <i class='bx bx-error-circle'></i>
+        </div>
+        <h3 id="confirmModalTitle" style="font-size: 18px; font-weight: 700; color: var(--primary-navy); margin-bottom: 8px;">Are you sure?</h3>
+        <p id="confirmModalMessage" style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;">Do you really want to delete this item? This action cannot be undone.</p>
+        <div style="display: flex; gap: 12px; justify-content: center;">
+            <button id="confirmModalCancelBtn" class="btn btn-cancel" style="flex: 1; padding: 10px;">Cancel</button>
+            <button id="confirmModalConfirmBtn" class="btn" style="flex: 1; padding: 10px; background-color: #EF4444; color: white;">Delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Agent Modal -->
+<div id="editAgentModal" class="custom-modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <div class="modal-title-wrapper">
+                <i class='bx bx-user' style="font-size: 20px; color: #3B82F6; vertical-align: middle;"></i>
+                <h3 style="display: inline-block; margin-left: 5px; font-size: 18px; font-weight: 700;">Edit Agent Account</h3>
+            </div>
+            <span class="close-btn" id="closeEditAgentModalBtn">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form action="AdminDashboard.php" method="post" id="editAgentForm">
+                <input type="hidden" name="user_id" id="edit-agent-id">
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" id="edit-agent-name" placeholder="Enter agent's full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" id="edit-agent-email" placeholder="Enter agent's email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password <small style="color:#9ca3af;">(Leave blank to keep current)</small></label>
+                    <input type="password" name="password" id="edit-agent-password" placeholder="Leave blank to keep current password">
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" name="edit_agent" class="btn btn-primary" style="flex: 1;">Update Agent</button>
+                    <button type="button" class="btn btn-cancel" id="cancelEditAgentBtn" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Edit Plan Modal -->
 <div id="editPlanModal" class="custom-modal">
     <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
@@ -1355,8 +1482,19 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             <span class="close-btn" id="closeEditPlanModalBtn">&times;</span>
         </div>
         <div class="modal-body">
-            <form action="AdminDashboard.php" method="post" id="editPlanForm">
+            <form action="AdminDashboard.php" method="post" id="editPlanForm" enctype="multipart/form-data">
                 <input type="hidden" name="plan_id" id="edit-plan-id">
+
+                <div class="form-group">
+                    <label>Company Logo <small style="color:#9ca3af;">(JPG, PNG, WEBP, SVG — max 2MB)</small></label>
+                    <div class="logo-upload-zone" id="editLogoZone">
+                        <input type="file" name="logo" id="editLogoInput" accept=".jpg,.jpeg,.png,.webp,.svg" style="display:none;">
+                        <div class="logo-upload-preview" id="editLogoPreview">
+                            <i class='bx bx-image-add' style="font-size:32px; color:#9ca3af;"></i>
+                            <p style="margin:8px 0 0; font-size:13px; color:#9ca3af;">Click to upload logo</p>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="form-group">
                     <label>Plan Name</label>
@@ -1689,6 +1827,22 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
             // Rebuild JSON to establish correct preview state
             buildJson();
 
+            // Pre-populate logo preview
+            const editLogoPreview = document.getElementById('editLogoPreview');
+            const editLogoInput = document.getElementById('editLogoInput');
+            if (editLogoInput) {
+                editLogoInput.value = '';
+            }
+            if (editLogoPreview) {
+                if (plan.logo) {
+                    editLogoPreview.innerHTML = '<img src="/Graduation-Project/' + plan.logo + '" style="max-height:80px; max-width:160px; object-fit:contain; border-radius:6px;">'
+                        + '<p style="margin:6px 0 0; font-size:12px; color:#6b7280;">Current Logo</p>';
+                } else {
+                    editLogoPreview.innerHTML = '<i class=\'bx bx-image-add\' style="font-size:32px; color:#9ca3af;"></i>'
+                        + '<p style="margin:8px 0 0; font-size:13px; color:#9ca3af;">Click to upload logo</p>';
+                }
+            }
+
             // Open Modal
             editModal.classList.add('show');
         });
@@ -1704,6 +1858,144 @@ $active_tab = isset($_GET['edit']) ? 'add' : (isset($_GET['tab']) ? $_GET['tab']
         if (e.target === editModal) closeModal();
     });
 })();
+
+
+
+(function addLogo(){
+    const zone = document.getElementById('addLogoZone');
+    const input = document.getElementById('addLogoInput');
+    const preview = document.getElementById('addLogoPreview');
+    if (!zone) return;
+    zone.addEventListener('click', () => input.click());
+    input.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                preview.innerHTML = '<img src="' + e.target.result + '" style="max-height:80px; max-width:160px; object-fit:contain; border-radius:6px;">'
+                    + '<p style="margin:6px 0 0; font-size:12px; color:#6b7280;">' + this.files[0].name + '</p>';
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.classList.remove('dragover');
+        input.files = e.dataTransfer.files;
+        input.dispatchEvent(new Event('change'));
+    });
+})();
+
+// Edit modal logo upload preview
+const editZone = document.getElementById('editLogoZone');
+const editInput = document.getElementById('editLogoInput');
+const editPreview = document.getElementById('editLogoPreview');
+if (editZone) {
+    editZone.addEventListener('click', () => editInput.click());
+    editInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = e => {
+                editPreview.innerHTML = '<img src="' + e.target.result + '" style="max-height:60px; max-width:140px; object-fit:contain; border-radius:6px;">'
+                    + '<p style="margin:4px 0 0; font-size:12px; color:#6b7280;">' + this.files[0].name + '</p>';
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    editZone.addEventListener('dragover', e => { e.preventDefault(); editZone.classList.add('dragover'); });
+    editZone.addEventListener('dragleave', () => editZone.classList.remove('dragover'));
+    editZone.addEventListener('drop', e => {
+        e.preventDefault(); editZone.classList.remove('dragover');
+        editInput.files = e.dataTransfer.files;
+        editInput.dispatchEvent(new Event('change'));
+    });
+}
+
+// Edit Agent Modal logic
+(function() {
+    const editAgentModal = document.getElementById('editAgentModal');
+    const closeBtn = document.getElementById('closeEditAgentModalBtn');
+    const cancelBtn = document.getElementById('cancelEditAgentBtn');
+    if (!editAgentModal) return;
+
+    // Attach click handlers to all Edit Agent buttons
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.edit-agent-btn');
+        if (btn) {
+            e.preventDefault();
+            const agentData = JSON.parse(btn.getAttribute('data-agent'));
+            
+            document.getElementById('edit-agent-id').value = agentData.user_id;
+            document.getElementById('edit-agent-name').value = agentData.name;
+            document.getElementById('edit-agent-email').value = agentData.email;
+            document.getElementById('edit-agent-password').value = ''; // reset password input
+
+            editAgentModal.classList.add('show');
+        }
+    });
+
+    // Close Modal helpers
+    function closeModal() {
+        editAgentModal.classList.remove('show');
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', function(e) {
+        if (e.target === editAgentModal) closeModal();
+    });
+})();
+
+// Custom Confirmation Modal logic
+(function() {
+    const confirmModal = document.getElementById('customConfirmModal');
+    const cancelBtn = document.getElementById('confirmModalCancelBtn');
+    const confirmBtn = document.getElementById('confirmModalConfirmBtn');
+    const messageEl = document.getElementById('confirmModalMessage');
+    const titleEl = document.getElementById('confirmModalTitle');
+    if (!confirmModal) return;
+
+    let targetUrl = '';
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.delete-confirm-btn');
+        if (btn) {
+            e.preventDefault();
+            targetUrl = btn.getAttribute('href');
+            
+            const customMessage = btn.getAttribute('data-message');
+            const customTitle = btn.getAttribute('data-title');
+            
+            if (messageEl && customMessage) {
+                messageEl.textContent = customMessage;
+            }
+            if (titleEl && customTitle) {
+                titleEl.textContent = customTitle;
+            } else if (titleEl) {
+                titleEl.textContent = 'Confirm Deletion';
+            }
+
+            confirmModal.classList.add('show');
+        }
+    });
+
+    function closeModal() {
+        confirmModal.classList.remove('show');
+    }
+
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            if (targetUrl) {
+                window.location.href = targetUrl;
+            }
+        });
+    }
+
+    window.addEventListener('click', function(e) {
+        if (e.target === confirmModal) closeModal();
+    });
+})();
+
 </script>
 
 </body>
