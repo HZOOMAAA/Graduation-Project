@@ -26,7 +26,10 @@ if (isset($_POST['register'])) {
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters long!";
     }
-
+    elseif (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
+    // الشرط الجديد: للتأكد من وجود حروف وأرقام معاً
+    $error = "Password must contain both letters and numbers!";
+}
     // 3. Database Operations (Only if no validation errors occurred)
     if (empty($error)) {
         // Check if email exists
@@ -113,5 +116,7 @@ if (isset($_POST['register'])) {
         </form>
         <p>Already have an account? <a href="login.php">Login here</a></p>
     </div>
+        <script src="../assets/js/login.js"></script>
+
 </body>
 </html>

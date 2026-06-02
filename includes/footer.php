@@ -18,7 +18,7 @@
             <div class="footer-content">
                 
                 <div class="footer-section about">
-                    <img src="images/DONE.jfif" alt="COVERLY" class="footer-logo">
+                    <h2>COVERLY</h2>
                     <p>Providing high-end technical solutions to elevate business efficiency. Trust and innovation are our core values in every project we deliver.</p>
                     <div class="socials">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>

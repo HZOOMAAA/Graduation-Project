@@ -40,7 +40,7 @@ $notif_count = count($notif_apps);
    <header>
     <div class="container">
         <!-- اللوجو على الشمال -->
-        <a href="#" class="logo">COVERLY</a>
+        <a href="homepage.php" class="logo">COVERLY</a>
         
         <!-- الجزء اليمين (بيضم الـ 2 ناف مع بعض) -->
         <div class="header-right">
