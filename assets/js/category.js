@@ -112,4 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 6. تشغيل الـ API
     fetchBrands();
+    if (brandInput && brandInput.value) {
+        fetchModels(brandInput.value);
+    }
 });

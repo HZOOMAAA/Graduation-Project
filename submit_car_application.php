@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/connection.php';
-require_once 'includes/auth_check.php'; // ensures user is logged in
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 header('Content-Type: application/json');
 
@@ -42,7 +45,7 @@ $applicationData = json_encode([
 ]);
 
 // ── Resolve IDs ───────────────────────────────────────────────────────────────
-$customer_id = $_SESSION['user_id'];
+$customer_id = $_SESSION['user_id'] ?? null;
 
 // Get car category ID (look it up by name so it works for any DB seed)
 $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE name LIKE '%car%' LIMIT 1");
@@ -63,6 +66,17 @@ $_SESSION['temp_application_data'] = [
     'submitted_at' => date('Y-m-d H:i:s'),
 ];
 $_SESSION['temp_category_id'] = $category_id;
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['redirect_after_login'] = '/Graduation-Project/category-car.php';
+    echo json_encode([
+        'success' => false,
+        'login_required' => true,
+        'redirect_url' => '/Graduation-Project/auth/login.php'
+    ]);
+    exit;
+}
 
 echo json_encode([
     'success' => true,

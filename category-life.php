@@ -10,6 +10,15 @@ include 'includes/nav2.php';
 // سحب بيانات الجلسة تلقائياً للمتأمن عليه
 $user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
 $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
+
+$draft = $_SESSION['temp_application_data'] ?? null;
+$draft_bd = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['birth_day'] : '';
+$draft_bm = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['birth_month'] : '';
+$draft_by = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['birth_year'] : '';
+$draft_coverage = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['coverage_amount'] : '';
+$draft_term = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['policy_term'] : '';
+$draft_beneficiary = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['beneficiary_name'] : '';
+$draft_relation = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['beneficiary_relation'] : '';
 ?>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,9 +53,9 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                 <div class="input-group">
                     <label>Birthdate*</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;">
-                        <input type="number" name="birth_day" placeholder="DD" min="1" max="31" required>
-                        <input type="number" name="birth_month" placeholder="MM" min="1" max="12" required>
-                        <input type="number" name="birth_year" placeholder="YYYY" min="1920" max="2026" required>
+                        <input type="number" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" required>
+                        <input type="number" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" required>
+                        <input type="number" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" required>
                     </div>
                 </div>
 
@@ -60,14 +69,20 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                     <div class="input-group">
                         <label for="coverage_amount">Insurance Coverage Amount (EGP)</label>
                         <input type="number" id="coverage_amount" name="coverage_amount" placeholder="e.g. 1000000"
-                            required>
+                            value="<?php echo htmlspecialchars($draft_coverage); ?>" required>
                     </div>
 
                     <div class="input-group">
                         <label>Policy Duration</label>
                         <div class="custom-select-wrapper" id="policy-term-wrapper">
                             <div class="custom-select-trigger">
-                                <span>Select Term</span>
+                                <span><?php 
+                                    if ($draft_term === '10_years') echo '10 Years';
+                                    elseif ($draft_term === '15_years') echo '15 Years';
+                                    elseif ($draft_term === '20_years') echo '20 Years';
+                                    elseif ($draft_term === 'whole_life') echo 'Whole Life';
+                                    else echo 'Select Term';
+                                ?></span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="custom-options">
@@ -77,7 +92,7 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                                 <span class="custom-option" data-value="whole_life">Whole Life </span>
                             </div>
                         </div>
-                        <input type="hidden" name="policy_term" id="policy-term-input" required>
+                        <input type="hidden" name="policy_term" id="policy-term-input" value="<?php echo htmlspecialchars($draft_term); ?>" required>
                     </div>
                 </div>
 
@@ -85,14 +100,19 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                     <div class="input-group">
                         <label for="beneficiary_name">Primary Beneficiary Name</label>
                         <input type="text" id="beneficiary_name" name="beneficiary_name"
-                            placeholder="Who receives the payout?" required>
+                            placeholder="Who receives the payout?" value="<?php echo htmlspecialchars($draft_beneficiary); ?>" required>
                     </div>
 
                     <div class="input-group">
                         <label>Relationship to You</label>
                         <div class="custom-select-wrapper" id="relation-wrapper">
                             <div class="custom-select-trigger">
-                                <span>Select Relation</span>
+                                <span><?php
+                                    if ($draft_relation === 'spouse') echo 'Spouse';
+                                    elseif ($draft_relation === 'child') echo 'Child';
+                                    elseif ($draft_relation === 'parent') echo 'Parent';
+                                    else echo 'Select Relation';
+                                ?></span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="custom-options">
@@ -101,7 +121,7 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                                 <span class="custom-option" data-value="parent">Parent</span>
                             </div>
                         </div>
-                        <input type="hidden" name="beneficiary_relation" id="relation-input" required>
+                        <input type="hidden" name="beneficiary_relation" id="relation-input" value="<?php echo htmlspecialchars($draft_relation); ?>" required>
                     </div>
                 </div>
 

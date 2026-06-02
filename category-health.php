@@ -5,7 +5,16 @@ include 'includes/nav2.php';
 
 // سحب بيانات الجلسة تلقائياً للمستخدم المسجل
 $user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
-$user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
+$phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
+
+$draft = $_SESSION['temp_application_data'] ?? null;
+$draft_bd = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['birth_day'] : '';
+$draft_bm = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['birth_month'] : '';
+$draft_by = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['birth_year'] : '';
+$draft_chronic = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['family_chronic'] : 'no';
+$draft_has_spouse = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['has_spouse'] : false;
+$draft_spouse = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['spouse'] : null;
+$draft_children = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['children'] : [];
 ?>  
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,9 +49,9 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                 <div class="insurance-input-group">
                     <label>Birthdate*</label>
                     <div class="insurance-birthdate-grid">
-                        <input type="number" name="birth_day" placeholder="DD" min="1" max="31" required>
-                        <input type="number" name="birth_month" placeholder="MM" min="1" max="12" required>
-                        <input type="number" name="birth_year" placeholder="YYYY" min="1920" max="2026" required>
+                        <input type="number" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" required>
+                        <input type="number" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" required>
+                        <input type="number" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" required>
                     </div>
                 </div>
 
@@ -59,23 +68,58 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                             <span>+20</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <input type="tel" name="client_phone" value="<?php echo htmlspecialchars($user_phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
+                        <input type="tel" name="client_phone" value="<?php echo htmlspecialchars ($phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
                         <i class="fa-solid fa-phone insurance-phone-icon-right"></i>
                     </div>
                 </div>
 
                 <div class="insurance-dynamic-container">
-                    <button type="button" class="insurance-add-btn" id="addSpouseBtn" onclick="addSpouseField()">
+                    <button type="button" class="insurance-add-btn" id="addSpouseBtn" onclick="addSpouseField()" <?php echo $draft_has_spouse ? 'style="display:none;"' : ''; ?>>
                         <i class="fa-solid fa-circle-plus"></i> Add a spouse
                     </button>
                     
-                    <div id="spouse-dynamic-area"></div>
+                    <div id="spouse-dynamic-area">
+                        <?php if ($draft_has_spouse && $draft_spouse): ?>
+                            <div class="insurance-member-card" id="spouse-card-node">
+                                <button type="button" class="insurance-remove-btn" onclick="removeSpouseField()">
+                                    <i class="fa-solid fa-trash-can"></i> Remove
+                                </button>
+                                <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Spouse Birthdate</h4>
+                                <div class="insurance-birthdate-grid">
+                                    <input type="number" name="spouse_day" value="<?php echo htmlspecialchars($draft_spouse['day']); ?>" placeholder="DD" min="1" max="31" required>
+                                    <input type="number" name="spouse_month" value="<?php echo htmlspecialchars($draft_spouse['month']); ?>" placeholder="MM" min="1" max="12" required>
+                                    <input type="number" name="spouse_year" value="<?php echo htmlspecialchars($draft_spouse['year']); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
 
                     <button type="button" class="insurance-add-btn" id="addChildBtn" onclick="addChildField()">
                         <i class="fa-solid fa-circle-plus"></i> Add a child
                     </button>
 
-                    <div id="children-dynamic-area"></div>
+                    <div id="children-dynamic-area">
+                        <?php if (!empty($draft_children)): ?>
+                            <?php foreach ($draft_children as $idx => $child): $childNum = $idx + 1; ?>
+                                <div class="insurance-member-card" id="child-card-<?php echo $childNum; ?>">
+                                    <button type="button" class="insurance-remove-btn" onclick="removeChildField(<?php echo $childNum; ?>)">
+                                        <i class="fa-solid fa-trash-can"></i> Remove
+                                    </button>
+                                    <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Child <?php echo $childNum; ?> Birthdate</h4>
+                                    <div class="insurance-birthdate-grid">
+                                        <input type="number" name="child_day[]" value="<?php echo htmlspecialchars($child['day']); ?>" placeholder="DD" min="1" max="31" required>
+                                        <input type="number" name="child_month[]" value="<?php echo htmlspecialchars($child['month']); ?>" placeholder="MM" min="1" max="12" required>
+                                        <input type="number" name="child_year[]" value="<?php echo htmlspecialchars($child['year']); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    childCounter = <?php echo count($draft_children); ?>;
+                                });
+                            </script>
+                        <?php endif; ?>
+                    </div>
                 </div>
 
                 <hr class="insurance-divider">
@@ -84,12 +128,12 @@ $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
                     <label class="insurance-chronic-label">Does any of your family members need monthly treatment or suffer from a chronic disease?*</label>
                     <div class="insurance-radio-options">
                         <label class="insurance-custom-radio">
-                            <input type="radio" name="family_chronic" value="yes" required>
+                            <input type="radio" name="family_chronic" value="yes" <?php echo $draft_chronic === 'yes' ? 'checked' : ''; ?> required>
                             <span class="insurance-radio-circle"></span>
                             <span class="insurance-radio-text">Yes</span>
                         </label>
                         <label class="insurance-custom-radio">
-                            <input type="radio" name="family_chronic" value="no" checked>
+                            <input type="radio" name="family_chronic" value="no" <?php echo $draft_chronic === 'no' ? 'checked' : ''; ?> required>
                             <span class="insurance-radio-circle"></span>
                             <span class="insurance-radio-text">No</span>
                         </label>

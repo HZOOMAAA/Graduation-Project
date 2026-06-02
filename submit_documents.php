@@ -17,6 +17,15 @@ $is_session_flow = ($application_id === 0);
 if ($is_session_flow) {
     // Session-based flow
     $appData = $_SESSION['temp_application_data'] ?? null;
+    if ($appData) {
+        if (empty($appData['client_name']) && isset($_SESSION['name'])) {
+            $appData['client_name'] = $_SESSION['name'];
+        }
+        if (empty($appData['client_phone']) && isset($_SESSION['phone'])) {
+            $appData['client_phone'] = $_SESSION['phone'];
+        }
+        $_SESSION['temp_application_data'] = $appData;
+    }
     $temp_plan_id = $_SESSION['temp_plan_id'] ?? 0;
     $category_id = $_SESSION['temp_category_id'] ?? 1;
     if (!$appData || $temp_plan_id <= 0) {

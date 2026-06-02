@@ -9,6 +9,14 @@ $appData = null;
 
 if (isset($_SESSION['temp_application_data'])) {
     $appData = $_SESSION['temp_application_data'];
+    if (empty($appData['client_name']) && isset($_SESSION['name'])) {
+        $appData['client_name'] = $_SESSION['name'];
+        $_SESSION['temp_application_data']['client_name'] = $_SESSION['name'];
+    }
+    if (empty($appData['client_phone']) && isset($_SESSION['phone'])) {
+        $appData['client_phone'] = $_SESSION['phone'];
+        $_SESSION['temp_application_data']['client_phone'] = $_SESSION['phone'];
+    }
     $category_id = $_SESSION['temp_category_id'] ?? 1;
 
     // Fetch category name

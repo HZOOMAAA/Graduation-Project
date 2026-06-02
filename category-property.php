@@ -10,6 +10,15 @@ include 'includes/nav2.php';
 // سحب بيانات الجلسة تلقائياً للمتأمن عليه
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
 $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
+
+$draft = $_SESSION['temp_application_data'] ?? null;
+$draft_type = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['property_type'] : '';
+$draft_year = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['construction_year'] : '';
+$draft_prop_val = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['property_value'] : '';
+$draft_cont_val = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['contents_value'] : '';
+$draft_coverage = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['coverage_type'] : '';
+$draft_address = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['property_address'] : '';
+$draft_usage = ($draft && isset($draft['category']) && $draft['category'] === 'property') ? $draft['property_usage'] : 'owned';
 ?>  
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,7 +52,13 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                         <label>Property Type</label>
                         <div class="custom-select-wrapper" id="property-type-wrapper">
                             <div class="custom-select-trigger">
-                                <span>Select Type</span>
+                                <span><?php 
+                                    if ($draft_type === 'apartment') echo 'Apartment';
+                                    elseif ($draft_type === 'villa') echo 'Villa';
+                                    elseif ($draft_type === 'office') echo 'Commercial Office';
+                                    elseif ($draft_type === 'warehouse') echo 'Warehouse/Factory';
+                                    else echo 'Select Type';
+                                ?></span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="custom-options">
@@ -53,14 +68,18 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                                 <span class="custom-option" data-value="warehouse">Warehouse/Factory</span>
                             </div>
                         </div>
-                        <input type="hidden" name="property_type" id="property-type-input" required>
+                        <input type="hidden" name="property_type" id="property-type-input" value="<?php echo htmlspecialchars($draft_type); ?>" required>
                     </div>
 
                     <div class="input-group">
                         <label>Construction Year</label>
                         <div class="custom-select-wrapper" id="construction-year-wrapper">
                             <div class="custom-select-trigger">
-                                <span>Select Year</span>
+                                <span><?php 
+                                    if ($draft_year === 'before_2020') echo 'Before 2020';
+                                    elseif ($draft_year) echo htmlspecialchars($draft_year);
+                                    else echo 'Select Year';
+                                ?></span>
                                 <i class="fas fa-chevron-down"></i>
                             </div>
                             <div class="custom-options">
@@ -72,18 +91,18 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                                 <span class="custom-option" data-value="before_2020">Before 2020</span>
                             </div>
                         </div>
-                        <input type="hidden" name="construction_year" id="construction-year-input" required>
+                        <input type="hidden" name="construction_year" id="construction-year-input" value="<?php echo htmlspecialchars($draft_year); ?>" required>
                     </div>
                 </div>
 
                 <div class="input-row">
                     <div class="input-group">
                         <label for="property_value">Estimated Building Value (EGP)</label>
-                        <input type="number" id="property_value" name="property_value" placeholder="e.g. 2000000" required>
+                        <input type="number" id="property_value" name="property_value" placeholder="e.g. 2000000" value="<?php echo htmlspecialchars($draft_prop_val); ?>" required>
                     </div>
                     <div class="input-group">
                         <label for="contents_value">Contents & Furniture Value (EGP)</label>
-                        <input type="number" id="contents_value" name="contents_value" placeholder="e.g. 500000" required>
+                        <input type="number" id="contents_value" name="contents_value" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($draft_cont_val); ?>" required>
                     </div>
                 </div>
 
@@ -91,7 +110,12 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                     <label>Required Coverage Type</label>
                     <div class="custom-select-wrapper" id="coverage-wrapper">
                         <div class="custom-select-trigger">
-                            <span>Select Coverage Plan</span>
+                            <span><?php 
+                                if ($draft_coverage === 'fire_natural') echo 'Fire & Natural Disasters Only';
+                                elseif ($draft_coverage === 'theft_burglary') echo 'Theft & Burglary Only';
+                                elseif ($draft_coverage === 'comprehensive') echo 'Comprehensive - All Risks';
+                                else echo 'Select Coverage Plan';
+                            ?></span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
                         <div class="custom-options">
@@ -100,23 +124,23 @@ $user_phone = isset($_SESSION['user_phone']) ? $_SESSION['user_phone'] : '';
                             <span class="custom-option" data-value="comprehensive">Comprehensive - All Risks</span>
                         </div>
                     </div>
-                    <input type="hidden" name="coverage_type" id="coverage-input" required>
+                    <input type="hidden" name="coverage_type" id="coverage-input" value="<?php echo htmlspecialchars($draft_coverage); ?>" required>
                 </div>
 
                 <div class="input-group">
                     <label for="property_address">Full Property Address</label>
-                    <input type="text" id="property_address" name="property_address" placeholder="City, District, Street No." required style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--hub-input-bg); font-size: 15px;">
+                    <input type="text" id="property_address" name="property_address" placeholder="City, District, Street No." value="<?php echo htmlspecialchars($draft_address); ?>" required style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--hub-input-bg); font-size: 15px;">
                 </div>
 
                 <div class="radio-group">
                     <label class="radio-main-label">Property Usage Status:</label>
                     <div class="radio-options">
                         <label class="custom-radio">
-                            <input type="radio" name="property_usage" value="owned" checked required>
+                            <input type="radio" name="property_usage" value="owned" <?php echo $draft_usage === 'owned' ? 'checked' : ''; ?> required>
                             <span class="radio-text">Owned</span>
                         </label>
                         <label class="custom-radio">
-                            <input type="radio" name="property_usage" value="rented">
+                            <input type="radio" name="property_usage" value="rented" <?php echo $draft_usage === 'rented' ? 'checked' : ''; ?>>
                             <span class="radio-text">Rented</span>
                         </label>
                     </div>

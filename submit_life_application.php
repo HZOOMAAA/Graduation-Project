@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/connection.php';
-require_once 'includes/auth_check.php'; // ensures user is logged in
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 header('Content-Type: application/json');
 
@@ -36,7 +39,6 @@ $errors = [];
 if ($birth_day < 1 || $birth_day > 31)     $errors[] = 'Valid birth day is required.';
 if ($birth_month < 1 || $birth_month > 12) $errors[] = 'Valid birth month is required.';
 if ($birth_year < 1920 || $birth_year > date('Y')) $errors[] = 'Valid birth year is required.';
-if (empty($client_name))                   $errors[] = 'Client name is required.';
 if ($age < 18)                             $errors[] = 'Applicant must be at least 18 years old to apply for life insurance.';
 if ($coverage_amount <= 0)                 $errors[] = 'Insurance coverage amount must be positive.';
 if (empty($policy_term))                   $errors[] = 'Policy term is required.';
@@ -77,6 +79,17 @@ if (!$catResult || mysqli_num_rows($catResult) === 0) {
 // ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id']      = $category_id;
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['redirect_after_login'] = '/Graduation-Project/category-life.php';
+    echo json_encode([
+        'success' => false,
+        'login_required' => true,
+        'redirect_url' => '/Graduation-Project/auth/login.php'
+    ]);
+    exit;
+}
 
 echo json_encode([
     'success' => true,

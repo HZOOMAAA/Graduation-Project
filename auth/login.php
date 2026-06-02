@@ -24,6 +24,8 @@ if (isset($_POST['login'])) {
                 $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['role'] = $row['role'];
                 $_SESSION['name'] = $row['name'];
+                $_SESSION['phone'] = $row['phone'];
+                
                 
                 // 5. Redirect based on role (Fixed paths)
                 if ($row['role'] == 'admin') {
@@ -31,7 +33,13 @@ if (isset($_POST['login'])) {
                 } elseif ($row['role'] == 'agent') {
                     header('location: ../AgentDashboard.php');
                 } else {
-                    header('location: ../homepage.php');
+                    if (isset($_SESSION['redirect_after_login'])) {
+                        $redirect = $_SESSION['redirect_after_login'];
+                        unset($_SESSION['redirect_after_login']);
+                        header('location: ' . $redirect);
+                    } else {
+                        header('location: ../homepage.php');
+                    }
                 }
                 exit();
             } else {

@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/connection.php';
-require_once 'includes/auth_check.php'; // ensures user is logged in
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // ── Validate method ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -64,8 +67,6 @@ if ($birth_month < 1 || $birth_month > 12)
     $errors[] = 'Valid birth month is required.';
 if ($birth_year < 1920 || $birth_year > date('Y'))
     $errors[] = 'Valid birth year is required.';
-if (empty($client_name))
-    $errors[] = 'Client name is required.';
 if ($age < 18)
     $errors[] = 'Primary member must be at least 18 years old.';
 
@@ -103,6 +104,13 @@ $category_id = $catRow ? intval($catRow['category_id']) : 2;
 // ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id'] = $category_id;
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['redirect_after_login'] = '/Graduation-Project/category-health.php';
+    header('Location: /Graduation-Project/auth/login.php');
+    exit;
+}
 
 // ── Redirect to plans page ────────────────────────────────────────────────────
 header('Location: /Graduation-Project/plans.php');

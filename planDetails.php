@@ -10,6 +10,14 @@ $application_id = 0;
 
 if (isset($_SESSION['temp_application_data']) && isset($_SESSION['temp_plan_id'])) {
     $appData = $_SESSION['temp_application_data'];
+    if (empty($appData['client_name']) && isset($_SESSION['name'])) {
+        $appData['client_name'] = $_SESSION['name'];
+        $_SESSION['temp_application_data']['client_name'] = $_SESSION['name'];
+    }
+    if (empty($appData['client_phone']) && isset($_SESSION['phone'])) {
+        $appData['client_phone'] = $_SESSION['phone'];
+        $_SESSION['temp_application_data']['client_phone'] = $_SESSION['phone'];
+    }
     $temp_plan_id = intval($_SESSION['temp_plan_id']);
 
     // Fetch the chosen plan's details

@@ -1,6 +1,9 @@
 <?php
 require_once 'includes/connection.php';
-require_once 'includes/auth_check.php'; // ensures user is logged in
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 header('Content-Type: application/json');
 
@@ -64,6 +67,17 @@ if (!$catResult || mysqli_num_rows($catResult) === 0) {
 // ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id']      = $category_id;
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['redirect_after_login'] = '/Graduation-Project/category-property.php';
+    echo json_encode([
+        'success' => false,
+        'login_required' => true,
+        'redirect_url' => '/Graduation-Project/auth/login.php'
+    ]);
+    exit;
+}
 
 echo json_encode([
     'success' => true,

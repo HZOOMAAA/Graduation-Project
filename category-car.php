@@ -1,6 +1,13 @@
 <?php
 require_once 'includes/connection.php';
 include 'includes/nav2.php';
+
+$draft = $_SESSION['temp_application_data'] ?? null;
+$draft_brand = ($draft && isset($draft['category']) && $draft['category'] === 'car') ? $draft['brand'] : '';
+$draft_model = ($draft && isset($draft['category']) && $draft['category'] === 'car') ? $draft['model'] : '';
+$draft_year = ($draft && isset($draft['category']) && $draft['category'] === 'car') ? $draft['year'] : '';
+$draft_price = ($draft && isset($draft['category']) && $draft['category'] === 'car') ? $draft['price'] : '';
+$draft_condition = ($draft && isset($draft['category']) && $draft['category'] === 'car') ? $draft['condition'] : '';
 ?>  
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
@@ -32,31 +39,31 @@ include 'includes/nav2.php';
     <label>Car Brand</label>
     <div class="custom-select-wrapper" id="brand-wrapper">
         <div class="custom-select-trigger">
-            <span>Select Brand</span>
+            <span><?php echo $draft_brand ? htmlspecialchars(ucwords($draft_brand)) : 'Select Brand'; ?></span>
             <i class="fas fa-chevron-down"></i>
         </div>
         <div class="custom-options" id="brand-options"></div>
     </div>
-    <input type="hidden" name="brand" id="brand-input" required>
+    <input type="hidden" name="brand" id="brand-input" value="<?php echo htmlspecialchars($draft_brand); ?>" required>
 </div>
 
 <div class="input-group">
     <label>Car Model</label>
     <div class="custom-select-wrapper" id="model-wrapper">
         <div class="custom-select-trigger">
-            <span>Select Model First</span>
+            <span><?php echo $draft_model ? htmlspecialchars(ucwords($draft_model)) : 'Select Model First'; ?></span>
             <i class="fas fa-chevron-down"></i>
         </div>
         <div class="custom-options" id="model-options"></div>
     </div>
-    <input type="hidden" name="model" id="model-input" required>
+    <input type="hidden" name="model" id="model-input" value="<?php echo htmlspecialchars($draft_model); ?>" required>
 </div>
 
                     <div class="input-group">
                         <label>Manufacture Year</label>
                             <div class="custom-select-wrapper">
                                 <div class="custom-select-trigger">
-                                    <span>Select Year</span>
+                                    <span><?php echo $draft_year ? htmlspecialchars($draft_year) : 'Select Year'; ?></span>
                                     <i class="fas fa-chevron-down"></i>
                                 </div>
                                 <div class="custom-options">
@@ -66,23 +73,23 @@ include 'includes/nav2.php';
                                     <span class="custom-option" data-value="2021">2021</span>
                                 </div>
                             </div>
-                                <input type="hidden" name="year" id="year-input" required>                     
+                                <input type="hidden" name="year" id="year-input" value="<?php echo htmlspecialchars($draft_year); ?>" required>                     
                              </div>
 
                 <div class="input-group">
                     <label for="price">Estimated Price (EGP)</label>
-                    <input type="number" id="price" name="price" placeholder="e.g. 500000" required>
+                    <input type="number" id="price" name="price" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($draft_price); ?>" required>
                 </div>
 
                 <div class="radio-group">
                     <label class="radio-main-label">Car Condition:</label>
                     <div class="radio-options">
                         <label class="custom-radio">
-                            <input type="radio" name="condition" value="new" required>
+                            <input type="radio" name="condition" value="new" <?php echo $draft_condition === 'new' ? 'checked' : ''; ?> required>
                             <span class="radio-text">New</span>
                         </label>
                         <label class="custom-radio">
-                            <input type="radio" name="condition" value="used">
+                            <input type="radio" name="condition" value="used" <?php echo $draft_condition === 'used' ? 'checked' : ''; ?>>
                             <span class="radio-text">Used</span>
                         </label>
                     </div>

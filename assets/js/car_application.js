@@ -52,12 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (result.success) {
                 // ── Redirect to plan-selection page ──────────────────────────
                 window.location.href = '/Graduation-Project/plans.php';
-            } else {
-                showModal('error', 'Submission Failed', result.message || 'Something went wrong. Please try again.');
-            }
-        } catch (err) {
-            showModal('error', 'Network Error', 'Could not connect to server. Please check your connection.');
-        } finally {
+            } else if (result.login_required) {
+                // ── Redirect to login page ───────────────────────────────────
+                window.location.href = result.redirect_url;
+            } 
+        }
+         finally {
             document.getElementById('submitBtnText').style.display   = 'inline';
             document.getElementById('submitBtnLoader').style.display = 'none';
             document.getElementById('submitBtn').disabled = false;

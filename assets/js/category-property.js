@@ -82,6 +82,9 @@ document.getElementById('propertyInsuranceForm').addEventListener('submit', func
         if(data.success) {
             // Redirect directly to plans page without popup message
             window.location.href = '/Graduation-Project/plans.php';
+        } else if (data.login_required) {
+            // Redirect to login page
+            window.location.href = data.redirect_url;
         } else {
             showAppModal('error', 'Error Occurred', data.message || 'Failed to analyze property data.');
         }
