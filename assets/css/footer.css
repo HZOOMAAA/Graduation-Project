@@ -1,220 +1,240 @@
-        :root {
-            --primary-navy: #1A2B48;
-            --action-blue: #0052CC;
-            --bg-soft-gray: #F4F7F9;
-            --text-main: #2D3436;
-            --white: #FFFFFF;
-        }
+:root {
+    --primary-navy: #0b1c3a;    /* نفس كحلي اللاندنج والـ Login */
+    --action-blue: #0284c7;     /* لون الأكشن الجديد العصري */
+    --bg-soft-gray: #F4F7F9;
+    --text-muted: #94a3b8;      /* رمادي فضي ناعم للنصوص الفرعية */
+    --white: #FFFFFF;
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        body {
-            font-family: "Work Sans", sans-serif;
-            background-color: var(--bg-soft-gray);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+body {
+    font-family: "Work Sans", sans-serif;
+    background-color: var(--bg-soft-gray);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        .main-placeholder {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+ul {
+    list-style: none;
+}
 
-        .main-placeholder h1 {
-            color: var(--primary-navy);
-            opacity: 0.1;
-            font-size: 3rem;
-        }
+.container {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        ul {
-            list-style: none;
-        }
+@media (min-width: 768px) { .container { width: 750px; } }
+@media (min-width: 992px) { .container { width: 970px; } }
+@media (min-width: 1200px) { .container { width: 1170px; } }
 
-        .container {
-            padding-left: 15px;
-            padding-right: 15px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+/* =========================================
+   تطوير تصميم الـ Footer بالكامل
+   ========================================= */
+footer {
+    background-color: var(--primary-navy);
+    color: var(--white);
+    padding: 90px 0 30px;
+    position: relative;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-        @media (min-width: 768px) {
-            .container {
-                width: 750px;
-            }
-        }
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 50px;
+}
 
-        @media (min-width: 992px) {
-            .container {
-                width: 970px;
-            }
-        }
+.footer-section {
+    flex: 1;
+    min-width: 260px;
+    
+}
 
-        @media (min-width: 1200px) {
-            .container {
-                width: 1170px;
-            }
-        }
+.footer-logo {
+    height: 100px;
+    width: auto;
+    filter: brightness(1) contrast(1.05); /* يضمن وضوح الشعار */
+}
 
-        footer {
-            background-color: var(--primary-navy);
-            color: var(--white);
-            padding: 80px 0 30px;
-        }
+.footer-section p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-muted); /* لون ناعم مريح للعين */
+    margin-bottom: 25px;
+}
 
-        .footer-content {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 40px;
-        }
+.footer-section h2 {
+    font-size: 25px;
+    font-weight: 900;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+}
 
-        .footer-section {
-            flex: 1;
-            min-width: 250px;
-        }
+.footer-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 12px;
+    letter-spacing: 0.5px;
+}
 
-        .footer-logo {
-            height: 45px;
-            margin-bottom: 25px;
-        }
+.footer-section h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 35px;
+    height: 3px;
+    background-color: var(--action-blue);
+    border-radius: 2px;
+}
 
-        .footer-section p {
-            font-size: 14px;
-            line-height: 1.8;
-            color: #bdc3c7;
-            margin-bottom: 25px;
-        }
+.footer-section ul li {
+    margin-bottom: 14px;
+}
 
-        .footer-section h3 {
-            font-size: 20px;
-            margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 10px;
-        }
+.footer-section ul li a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
 
-        .footer-section h3::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--action-blue);
-        }
+/* تأثير تحريك الروابط عند الوقوف عليها بنعومة */
+.footer-section ul li a:hover {
+    color: var(--white);
+    transform: translateX(5px);
+}
 
-        .footer-section ul li {
-            margin-bottom: 12px;
-        }
+/* أزرار التواصل الاجتماعي */
+.socials a {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.05);
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 12px; /* حواف ناعمة متناسقة مع حقول الدخول */
+    margin-right: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
 
-        .footer-section ul li a {
-            color: #bdc3c7;
-            text-decoration: none;
-            font-size: 14px;
-            transition: 0.3s;
-        }
+.socials a:hover {
+    background-color: var(--white);
+    color: var(--primary-navy);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+}
 
-        .footer-section ul li a:hover {
-            color: var(--white);
-            padding-left: 8px;
-        }
+/* تطوير نموذج المراسلة (Contact Form) */
+.contact-form-footer {
+    flex: 1.3;
+}
 
-        .socials a {
-            color: var(--white);
-            background: rgba(255, 255, 255, 0.1);
-            width: 38px;
-            height: 38px;
-            display: inline-block;
-            text-align: center;
-            line-height: 38px;
-            border-radius: 50%;
-            margin-right: 10px;
-            transition: 0.3s;
-        }
+.contact-form-footer form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-        .socials a:hover {
-            background-color: var(--action-blue);
-            transform: translateY(-5px);
-        }
+.contact-form-footer input,
+.contact-form-footer textarea {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 14px 16px;
+    border-radius: 12px; /* تطابق تام مع ديزاين اللوجين */
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s ease;
+}
 
-        .contact-form-footer {
-            flex: 1.5;
-        }
+.contact-form-footer input::placeholder,
+.contact-form-footer textarea::placeholder {
+    color: #64748b;
+}
 
-        .contact-form-footer form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+.contact-form-footer input:focus,
+.contact-form-footer textarea:focus {
+    border-color: var(--action-blue);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
 
-        .contact-form-footer input,
-        .contact-form-footer textarea {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px;
-            border-radius: 8px;
-            color: var(--white);
-            font-family: inherit;
-            outline: none;
-            transition: 0.3s;
-        }
+/* زر إرسال الرسالة */
+.footer-submit-btn {
+    background-color: var(--white);
+    color: var(--primary-navy);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-        .contact-form-footer input:focus,
-        .contact-form-footer textarea:focus {
-            border-color: var(--action-blue);
-            background: rgba(255, 255, 255, 0.1);
-        }
+.footer-submit-btn:hover {
+    background-color: var(--action-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3);
+}
 
-        .footer-submit-btn {
-            background-color: var(--action-blue);
-            color: var(--white);
-            border: none;
-            padding: 12px 25px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
-            align-self: flex-start;
-        }
+/* الجزء السفلي للحقوق */
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 60px;
+    padding-top: 30px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
 
-        .footer-submit-btn:hover {
-            background-color: var(--white);
-            color: var(--primary-navy);
-            transform: translateY(-2px);
-        }
+.text-white {
+    color: #e2e8f0 !important;
+}
 
-        .footer-bottom {
-            text-align: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 60px;
-            padding-top: 30px;
-            font-size: 13px;
-            color: #b3c9cb;
-        }
+/* تظبيط شاشات الموبايل */
+@media (max-width: 768px) {
+    footer {
+        padding: 60px 0 30px;
+    }
+    
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 35px;
+    }
 
-        .text-white {
-            color: #F4F7F9;
-        }
+    .footer-section h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
 
-        @media (max-width: 768px) {
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
+    .footer-section ul li a:hover {
+        transform: translateX(0) translateY(-2px);
+    }
 
-            .footer-section h3::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .footer-submit-btn {
-                align-self: center;
-                width: 100%;
-            }
-        }
+    .footer-submit-btn {
+        align-self: center;
+        width: 100%;
+    }
+}
