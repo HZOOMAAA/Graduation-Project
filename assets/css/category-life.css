@@ -8,6 +8,8 @@
     --input-bg: #EEF2F6;        /* الخلفية الرمادية الناعمة للحقول */
     --white: #FFFFFF;
     --border-color: #E5E7EB;
+    --titles-color: #004b87;
+
     
     /* متغيرات النعومة والفخامة البشرية */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -58,7 +60,7 @@ body {
 }
 
 .header h2 {
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-size: 2.5rem;
     font-weight: 800; /* وزن أثقل ليعطي هيبة للموقع */
     line-height: 1.2;
@@ -83,7 +85,7 @@ body {
 }
 
 .form-container h3 {
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-size: 1.35rem;
     font-weight: 700;
     margin-top: 0;
@@ -265,7 +267,7 @@ body {
 .check-btn {
     width: 100%;
     padding: 16px 28px;
-    background-color: var(--primary-navy);
+    background-color: var(--titles-color);
     color: var(--white);
     border: none;
     border-radius: 12px;

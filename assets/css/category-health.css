@@ -9,7 +9,9 @@
     --white: #FFFFFF;
     --border-color: #E5E7EB;
     --hub-gray: #4B5563;        /* رمادي ناعم للنصوص الجانبية */
-    --hub-yellow: #FCD34D;      /* درجة أصفر دافئة ومطفية للشكل الهندسي */
+    --hub-yellow: #FCD34D;  
+        --titles-color: #004b87;
+    /* درجة أصفر دافئة ومطفية للشكل الهندسي */
     
     /* متغيرات النعومة البشرية لمنع الـ AI Look */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -55,7 +57,7 @@ body {
 /* الهيدر والعناوين */
 .insurance-form-header h1 {
     font-size: 2.5rem;
-    color: var(--primary-navy); /* توحيد الأسود الفخم للعنوان الرئيسي */
+    color: var(--titles-color); /* توحيد الأسود الفخم للعنوان الرئيسي */
     font-weight: 800;
     line-height: 1.25;
     margin-bottom: 12px;
@@ -65,7 +67,7 @@ body {
 
 .insurance-shield-icon {
     font-size: 2rem;
-    color: var(--action-blue); /* توحيد الأزرق الصريح */
+    color: var(--titles-color); /* توحيد الأزرق الصريح */
     margin-left: 8px;
     vertical-align: middle;
 }
@@ -80,7 +82,7 @@ body {
 
 .insurance-section-title {
     font-size: 1.35rem;
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-weight: 700;
     margin-bottom: 24px;
     letter-spacing: -0.3px;
@@ -186,7 +188,7 @@ body {
 .insurance-add-btn {
     background: none;
     border: none;
-    color: var(--action-blue); /* توحيد للأزرق الصريح */
+    color: var(--titles-color); /* توحيد للأزرق الصريح */
     font-size: 1rem;
     font-weight: 700;
     display: flex;
@@ -199,7 +201,6 @@ body {
 }
 
 .insurance-add-btn:hover {
-    color: var(--action-hover);
     transform: translateX(4px);
 }
 
@@ -243,7 +244,7 @@ body {
 .insurance-chronic-group .insurance-chronic-label {
     font-size: 1.15rem;
     font-weight: 700;
-    color: var(--primary-navy);
+    color: var(--titles-color);
     line-height: 1.4;
     margin-bottom: 20px;
     display: block;
@@ -260,7 +261,7 @@ body {
     gap: 12px;
     cursor: pointer;
     font-size: 15px;
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-weight: 600;
     user-select: none;
 }
@@ -286,8 +287,8 @@ body {
 }
 
 .insurance-custom-radio input:checked + .insurance-radio-circle {
-    border-color: var(--primary-navy); /* بياخد الأسود الفخم كربون من الراديو التاني */
-    background-color: var(--primary-navy);
+    border-color: var(--titles-color); /* بياخد الأسود الفخم كربون من الراديو التاني */
+    background-color: var(--titles-color);
 }
 
 .insurance-custom-radio input:checked + .insurance-radio-circle::after {
@@ -311,7 +312,7 @@ body {
 }
 
 .insurance-submit-btn {
-    background-color: var(--primary-navy);
+    background-color: var(--titles-color);
     color: var(--white);
     border: none;
     border-radius: 12px; /* توحيد الـ Radius ليكون هندسي زي صفحات الـ Car */

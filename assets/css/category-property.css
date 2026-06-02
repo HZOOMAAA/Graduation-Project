@@ -8,6 +8,8 @@
     --input-bg: #EEF2F6;        /* الخلفية الرمادية الناعمة للحقول من الصورة */
     --white: #FFFFFF;
     --border-color: #E5E7EB;
+        --titles-color: #004b87;
+
 
     /* تريكات النعومة البشرية لمنع الـ AI Look */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -58,7 +60,7 @@ body {
 }
 
 .header h2 {
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-size: 2.5rem; /* تحويل لـ rem لمرونة كاملة */
     font-weight: 800;  /* وزن عريض للفخامة وقوة الهوية */
     line-height: 1.2;
@@ -232,7 +234,7 @@ body {
     gap: 12px;
     cursor: pointer;
     font-size: 15px;
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-weight: 600;
     user-select: none;
 }
@@ -254,13 +256,13 @@ body {
 }
 
 .custom-radio:hover::before {
-    border-color: var(--primary-navy);
+    border-color: var(--titles-color);
 }
 
 /* التناسق اللوني مع لون الأسود الفخم للبراند */
 .custom-radio:has(input:checked)::before {
-    border-color: var(--primary-navy);
-    background-color: var(--primary-navy);
+    border-color: var(--titles-color);
+    background-color: var(--titles-color);
     box-shadow: inset 0 0 0 5px var(--white); /* النقطة البيضاء الداخلية المثالية */
 }
 
@@ -268,7 +270,7 @@ body {
 .check-btn {
     width: 100%;
     padding: 16px 28px;
-    background-color: var(--primary-navy);
+    background-color: var(--titles-color);
     color: var(--white);
     border: none;
     border-radius: 12px;

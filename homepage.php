@@ -179,34 +179,7 @@
     </div>
   </div>
 
-  <!-- Features -->
-  <!-- <div class="features">
 
-    <div class="card">
-      <div class="card-icon-wrapper">
-            <i class='bx bx-shield-quarter'></i>
-        </div>
-      <h3>Wide Coverage</h3>
-      <p>Insurance plans that fit all your needs.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-icon-wrapper">
-            <i class='bx bxs-zap' ></i>
-        </div>
-      <h3> Fast Claims</h3>
-      <p>Quick and easy claim processing anytime.</p>
-    </div>
-
-    <div class="card">
-      <div class="card-icon-wrapper">
-            <i class='bx bx-user-check'></i>
-        </div>
-      <h3> Trusted Partners</h3>
-      <p>We work only with reliable companies.</p>
-    </div>
-
-  </div> -->
 
 </section>
 
@@ -324,7 +297,7 @@
         <div class="row align-items-center justify-content-between">
             
             <div class="col-md-5 mb-5 mb-md-0">
-                <h2 class="mb-4 fw-bold" style="color: var(--primary-navy);">
+                <h2 class="mb-4 fw-bold" style="color:#004b87;">
                     Our Locations
                 </h2>
                 

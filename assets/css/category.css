@@ -8,6 +8,8 @@
     --input-bg: #EEF2F6;        /* Background الرمادي الناعم للحقول */
     --white: #FFFFFF;
     --border-color: #E5E7EB;
+    --titles-color: #004b87;
+
     
     /* المتغيرات الجديدة للنعومة والفخامة */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -58,7 +60,7 @@ body {
 }
 
 .header h1 {
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-size: 2.5rem; /* تحويل لـ rem لمرونة أعلى */
     font-weight: 800; /* جعل الوزن أثقل للفخامة */
     line-height: 1.2;
@@ -71,7 +73,7 @@ body {
     font-size: 2rem;
     vertical-align: middle;
     margin-left: 8px;
-    color: var(--primary-navy);
+    color: var(--titles-color);
 }
 
 .header p {
@@ -190,7 +192,7 @@ body {
 
 .custom-option:hover {
     background-color: var(--input-bg); /* تغيير الـ Hover لرمادي ناعم مريح للعين بدل الأزرق العنيف */
-    color: var(--primary-navy);
+    color: var(--titles-color);
 }
 
 /* ── الراديو بوتونز المودرن الدائرية من الصورة ────────────────────── */
@@ -217,7 +219,7 @@ body {
     gap: 12px;
     cursor: pointer;
     font-size: 15px;
-    color: var(--primary-navy);
+    color: var(--titles-color);
     font-weight: 600;
     user-select: none;
 }
@@ -259,7 +261,7 @@ body {
 .insurance-submit-btn {
     flex: 1;
     padding: 16px 28px;
-    background-color: var(--primary-navy);
+    background-color: var(--titles-color);
     color: var(--white);
     border: none;
     border-radius: 12px;

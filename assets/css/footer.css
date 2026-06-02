@@ -4,6 +4,8 @@
     --bg-soft-gray: #F4F7F9;
     --text-muted: #94a3b8;      /* رمادي فضي ناعم للنصوص الفرعية */
     --white: #FFFFFF;
+        --titles-color: #004b87;
+
 }
 
 * {
