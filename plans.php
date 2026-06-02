@@ -354,7 +354,17 @@ include 'includes/nav2.php';
                                 <?php endif; ?>
 
                                 <div class="plan-card-header">
-                                    <div class="plan-company"><img src="assets/img/axa.png" alt="Company Logo" class="company-logo-img"><?php echo htmlspecialchars($plan['insurance_company']); ?></div>
+     <div class="plan-company">
+    <?php if (!empty($plan['logo'])): ?>
+        <img src="/Graduation-Project/<?php echo htmlspecialchars($plan['logo']); ?>" 
+             alt="<?php echo htmlspecialchars($plan['insurance_company']); ?> Logo" 
+             class="company-logo-img"
+             onerror="this.style.display='none'">
+    <?php else: ?>
+        <i class='bx bxs-shield' style="font-size:20px; color:#9ca3af; margin-right:6px;"></i>
+    <?php endif; ?>
+    <?php echo htmlspecialchars($plan['insurance_company']); ?>
+</div>
                                     <h2 class="plan-name"><?php echo htmlspecialchars($plan['name']); ?></h2>
                                     <div class="plan-price">
                                         <span class="price-amount">EGP <?php echo number_format($plan['base_price'], 2); ?></span>
@@ -439,7 +449,17 @@ include 'includes/nav2.php';
                         <?php foreach ($excluded_plans as $plan): ?>
                                 <div class="plan-card plan-card--excluded">
                                     <div class="plan-card-header">
-                                        <div class="plan-company"><?php echo htmlspecialchars($plan['insurance_company']); ?></div>
+                                        <div class="plan-company">
+                                            <?php if (!empty($plan['logo'])): ?>
+                                                <img src="/Graduation-Project/<?php echo htmlspecialchars($plan['logo']); ?>" 
+                                                     alt="<?php echo htmlspecialchars($plan['insurance_company']); ?> Logo" 
+                                                     class="company-logo-img"
+                                                     onerror="this.style.display='none'">
+                                            <?php else: ?>
+                                                <i class='bx bxs-shield' style="font-size:20px; color:#9ca3af; margin-right:6px;"></i>
+                                            <?php endif; ?>
+                                            <?php echo htmlspecialchars($plan['insurance_company']); ?>
+                                        </div>
                                         <h2 class="plan-name"><?php echo htmlspecialchars($plan['name']); ?></h2>
                                         <div class="plan-price plan-price--muted">
                                             <span class="price-amount">EGP <?php echo number_format($plan['base_price'], 2); ?></span>
