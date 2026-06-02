@@ -69,7 +69,7 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                             <span>+20</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <input type="tel" name="client_phone" value="<?php echo htmlspecialchars($user_phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
+                        <input type="tel" name="client_phone" value="<?php echo htmlspecialchars($phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
                         <i class="fa-solid fa-phone insurance-phone-icon-right"></i>
                     </div>
                 </div>
