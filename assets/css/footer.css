@@ -41,7 +41,7 @@ ul {
    تطوير تصميم الـ Footer بالكامل
    ========================================= */
 footer {
-    background-color: var(--titles-color);
+    background-color: var(--primary-navy);
     color: var(--white);
     padding: 90px 0 30px;
     position: relative;
