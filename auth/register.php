@@ -87,27 +87,27 @@ if (isset($_POST['register'])) {
             <label for="fullname">Full Name</label>
             <div class="input-group">
                 <i class='bx bx-user'></i>
-            <input type="text" id="fullname" name="fullname" required>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
             </div>
             <label for="email">Email</label>
             <div class="input-group">
                 <i class='bx bx-envelope'></i>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" placeholder="name@email.com" required>
             </div>
             <label for="password">Password</label>
             <div class="input-group">
                 <i class='bx bx-lock-alt'></i>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="••••••••" required>
             </div>
             <label for="phone">Phone</label>
             <div class="input-group">
                 <i class='bx bx-phone'></i>
-            <input type="text" id="phone" name="phone" required>
+            <input type="text" id="phone" name="phone" placeholder="Enter your phone" required>
             </div>
             <label for="address">Address</label>
             <div class="input-group">
                 <i class='bx bx-map'></i>
-            <input type="text" id="address" name="address" required>
+            <input type="text" id="address" name="address" placeholder="Enter your address" required>
             </div>
             <button type="submit" name="register">Register</button>
         </form>
