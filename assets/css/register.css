@@ -8,7 +8,7 @@
 }
 
 body {
-    background-color: var(--bg-soft-gray);
+    background: linear-gradient(135deg, #d8eefe 0%, #ffffff 50%, #e0f2fe 100%);
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -25,7 +25,7 @@ body {
     max-width: 400px;
 }
 h1 {
-    background: linear-gradient(90deg, #1A2B48, #0052CC, #1A2B48);
+    background: linear-gradient(90deg, #1A2B48);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -194,4 +194,6 @@ p a:hover {
 @keyframes fadeOut {
     to { opacity: 0; transform: translateY(-20px); }
 }
+
+
 

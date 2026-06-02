@@ -76,6 +76,8 @@ if (isset($_POST['register'])) {
         <?php endif; ?>
 
         
+
+        
     <div class="auth-container">
         <h1>Register</h1>
 
