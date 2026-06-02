@@ -8,6 +8,7 @@
     --action-blue: #0052CC;
     /* الأزرق الحيوي للأزرار والتفاعل */
     --action-hover: #0043A8;
+    --titles-color: #004b87;
 
     /* 2. Neutral Backgrounds & Surfaces */
     --bg-soft-gray: #F4F7F9;
@@ -395,7 +396,7 @@ ul {
     text-align: center;
     font-size: 2.4rem;
     font-weight: 800;
-    color: #1a1a2e;
+    color: #004b87;
     margin-bottom: 50px;
     letter-spacing: -0.5px;
 }
@@ -672,7 +673,7 @@ ul {
 
 .custom-testimonials-title {
     font-size: 2.5rem;
-    color: var(--primary-navy);
+    color: #004b87;
     margin-bottom: 60px;
     font-weight: 800;
     text-align: center;

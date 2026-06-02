@@ -92,7 +92,9 @@ if (isset($_POST['update_profile'])) {
 
                 if (mysqli_stmt_execute($update_stmt)) {
                     $success = "Your profile has been updated successfully!";
-                    $_SESSION['name'] = $name; // Update session name
+                    $_SESSION['name'] = $name; 
+                    $_SESSION['phone'] = $phone;
+                    
                 } else {
                     $error = "Failed to update profile details: " . mysqli_error($connect);
                 }

@@ -4,6 +4,8 @@
     --bg-soft-gray: #F4F7F9;
     --text-muted: #94a3b8;      /* رمادي فضي ناعم للنصوص الفرعية */
     --white: #FFFFFF;
+        --titles-color: #004b87;
+
 }
 
 * {
@@ -39,7 +41,7 @@ ul {
    تطوير تصميم الـ Footer بالكامل
    ========================================= */
 footer {
-    background-color: var(--primary-navy);
+    background-color: var(--titles-color);
     color: var(--white);
     padding: 90px 0 30px;
     position: relative;
