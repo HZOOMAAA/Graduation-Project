@@ -189,7 +189,7 @@ $applications_query = "
     LEFT JOIN categories cat ON a.category_id = cat.category_id
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     LEFT JOIN insurance_plans p ON a.plan_id = p.plan_id
-    WHERE a.status IN ('under_review')
+    WHERE a.status IN ('under_review') AND (a.agent_id IS NULL OR a.agent_id = 0)
     ORDER BY a.created_at DESC
 ";
 $applications = mysqli_query($connect, $applications_query);
