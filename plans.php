@@ -283,6 +283,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['plan_id']) && !$alrea
 
 include 'includes/nav2.php';
 ?>
+<link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
 <link rel="stylesheet" href="/Graduation-Project/assets/css/plans.css">
 
 <section class="plans-section">
@@ -319,9 +321,9 @@ include 'includes/nav2.php';
                             <span class="chip chip--orange"><i class="bx bxs-shield"></i> <?php echo htmlspecialchars(ucfirst(str_replace('_', ' ', $coverage_type))); ?></span>
                     <?php else: ?>
                             <span class="chip chip--blue"><i class="bx bxs-car"></i> <?php echo htmlspecialchars(ucfirst($appData['brand'] ?? '—') . ' ' . ($appData['model'] ?? '')); ?></span>
-                            <!-- <span class="chip chip--purple"><i class="bx bxs-calendar"></i> <?php echo htmlspecialchars($appData['year'] ?? '—'); ?></span>
+                            <span class="chip chip--purple"><i class="bx bxs-calendar"></i> <?php echo htmlspecialchars($appData['year'] ?? '—'); ?></span>
                             <span class="chip chip--green"><i class="bx bxs-badge-check"></i> <?php echo htmlspecialchars(ucfirst($appData['condition'] ?? '—')); ?></span>
-                            <span class="chip chip--orange"><i class="bx bxs-coin-stack"></i> EGP <?php echo number_format($car_price); ?></span> -->
+                            <span class="chip chip--orange"><i class="bx bxs-coin-stack"></i> EGP <?php echo number_format($car_price); ?></span>
                     <?php endif; ?>
                 </div>
             </div>

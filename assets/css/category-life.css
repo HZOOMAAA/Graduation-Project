@@ -9,6 +9,7 @@
     --white: #FFFFFF;
     --border-color: #E5E7EB;
     --titles-color: #004b87;
+     --blue:          #0052CC;
 
     
     /* متغيرات النعومة والفخامة البشرية */
@@ -266,7 +267,7 @@ body {
 
 .check-btn {
     padding: 16px 28px;
-    background-color: var(--titles-color);
+    background: linear-gradient(135deg, var(--blue) 0%, #1A2B48 100%);
     color: var(--white);
     border: none;
     border-radius: 12px;

@@ -11,6 +11,8 @@
     --hub-gray: #4B5563;        /* رمادي ناعم للنصوص الجانبية */
     --hub-yellow: #FCD34D;  
         --titles-color: #004b87;
+             --blue:          #0052CC;
+
     /* درجة أصفر دافئة ومطفية للشكل الهندسي */
     
     /* متغيرات النعومة البشرية لمنع الـ AI Look */
@@ -312,7 +314,7 @@ body {
 }
 
 .insurance-submit-btn {
-    background-color: var(--titles-color);
+    background: linear-gradient(135deg, var(--blue) 0%, #1A2B48 100%);
     color: var(--white);
     border: none;
     border-radius: 12px; /* توحيد الـ Radius ليكون هندسي زي صفحات الـ Car */
