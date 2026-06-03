@@ -19,6 +19,8 @@
     --success-bg: #D1FAE5;
     --error-red: #EF4444;
     --error-bg: #FEE2E2;
+         --blue:          #0052CC;
+
 }
 
 /* ── تهيئة الشاشة العامة ─────────────────────────────────────── */
@@ -649,7 +651,7 @@ table tr:last-child td {
 }
 
 .btn-primary {
-    background-color: var(--action-blue);
+    background: linear-gradient(135deg, var(--blue) 0%, #1A2B48 100%);
     color: var(--white);
 }
 

@@ -278,7 +278,7 @@ $recent_applications_query = "
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     WHERE a.status IN ('under_review')
     ORDER BY a.created_at DESC
-    LIMIT 3 
+    LIMIT 5 
 ";
 $recent_applications = mysqli_query($connect, $recent_applications_query);
 
@@ -451,7 +451,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         <?php endif; ?>
 
         <?php if ($active_tab === 'overview'): ?>
-            <div class="page-title">Dashboard Overview</div>
+            <div class="page-title"><i class='bx bx-home'></i> Dashboard Overview</div>
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
             <!-- test marwan wael -->
 
@@ -622,33 +622,20 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
 
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 30px; align-items: start;">
-                
-                <div class="card" style="border-left: 4px solid var(--error-red);">
-                    <h2 class="card-title-main" style="color: var(--primary-navy);"><i class='bx bx-bell-off' style="color: var(--error-red); vertical-align: middle; margin-right: 5px;"></i> Action Required</h2>
-                    <p class="card-subtitle-main">Critical items that require immediate administrator supervision.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-                        
-                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFF5F5; border-radius: 8px;">
-                            <i class='bx bx-error-alt' style="font-size: 20px; color: var(--error-red);"></i>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #9B1C1C;">3 Unassigned Claims</div>
-                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Accident reports waiting for agent verification.</div>
-                            </div>
-                        </div>
+            
 
-                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFFBEB; border-radius: 8px;">
-                            <i class='bx bx-time-five' style="font-size: 20px; color: #D97706;"></i>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #92400E;">5 Policies Expiring</div>
-                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Customer renewals notice needs to be sent this week.</div>
-                            </div>
-                        </div>
+            <div class="overview-twin-layout" style="margin-bottom: 30px;">
 
-                    </div>
-                </div>
 
+                <div class="card">
+        <div class="card-header-wrapper">
+            <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
+            <span class="stat-trend-up">↑ 12.5% YoY</span>
+        </div>
+        <p class="card-subtitle-main">Monthly overview of total premium collection to monitor financial health.</p>
+        
+        <div id="revenueChart" style="min-height: 250px;"></div>
+    </div>
                 <div class="card">
                     <div class="card-header-wrapper">
                         <h2 class="card-title-main"><i class='bx bx-credit-card-front' style="color: var(--action-blue); vertical-align: middle; margin-right: 5px;"></i> Recent Transactions</h2>
@@ -690,35 +677,12 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
 
-            <div class="overview-twin-layout" style="margin-bottom: 30px;">
-    
-    <div class="card">
-        <div class="card-header-wrapper">
-            <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
-            <span class="stat-trend-up">↑ 12.5% YoY</span>
-        </div>
-        <p class="card-subtitle-main">Monthly overview of total premium collection to monitor financial health.</p>
-        
-        <div id="revenueChart" style="min-height: 250px;"></div>
-    </div>
-
-    <div class="card">
-        <div class="card-header-wrapper">
-            <h2 class="card-title-main"><i class='bx bx-pie-chart-alt-2' style="color: #10B981;"></i> Risk Retention (Loss Ratio)</h2>
-            <span style="font-size: 11px; font-weight: 600; color: #1E4ED8; background: #EBF5FF; padding: 2px 8px; border-radius: 4px;">Critical KPI</span>
-        </div>
-        <p class="card-subtitle-main">Comparing total collected premiums against paid insurance claims.</p>
-        
-        <div id="lossRatioChart" style="min-height: 250px; display: flex; align-items: center; justify-content: center;"></div>
-    </div>
-
-</div>
             
             <!-- end test marwan wael -->
 
 
         <?php elseif ($active_tab === 'add'): ?>
-            <div class="page-title">Add New Agent</div>
+            <div class="page-title"><i class='bx bx-user-plus'></i> Add New Agent</div>
             <div class="page-subtitle">Fill in the form below to create a new agent account.</div>
 
             <div class="card">
@@ -743,7 +707,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'manage'): ?>
-            <div class="page-title"><i class='bx bx-group'></i>Manage Agents</div>
+            <div class="page-title"><i class='bx bx-group'></i> Manage Agents</div>
             <div class="page-subtitle">View, edit or remove agent accounts from the system.</div>
                         <div class="card">
     
@@ -800,7 +764,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'customers'): ?>
-            <div class="page-title"><i class='bx bx-user'></i>Customers</div>
+            <div class="page-title"><i class='bx bx-user'></i> Customers</div>
             <div class="page-subtitle">View registered customers in the system.</div>
 
             <div class="card">
@@ -851,7 +815,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'applications'): ?>
-            <div class="page-title">New Customer Applications</div>
+            <div class="page-title"><i class='bx bx-list-ul'></i> New Customer Applications</div>
             <div class="page-subtitle">Assign an agent once the customer has selected a plan and uploaded the required documents.</div>
 
             <div class="table-responsive-container">
@@ -936,7 +900,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'plans'): ?>
-            <div class="page-title"><i class='bx bx-shield'></i>Insurance Plans</div>
+            <div class="page-title"><i class='bx bx-shield'></i> Insurance Plans</div>
             <div class="page-subtitle">All available plans with their eligibility rules. Customers see these during instant quotation.</div>
 
             <div class="card">
@@ -1332,7 +1296,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </script>
 
         <?php elseif ($active_tab === 'messages'): ?>
-            <div class="page-title"><i class='bx bx-envelope'></i>Messeges</div>
+            <div class="page-title"><i class='bx bx-envelope'></i> Messeges</div>
             <div class="page-subtitle">All messages received from customers.</div>
 
            <div class="card">
