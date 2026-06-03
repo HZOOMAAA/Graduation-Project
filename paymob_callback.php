@@ -101,6 +101,7 @@ $transaction_status = 'failed';
 // ── 2. Process Successful Transaction ────────────────────────────────────────
 if ($success_raw === 'true') {
     $transaction_status = 'success';
+    $amount = (float)($app['final_price'] ?: $app['base_price']);
 
     if ($app['status'] === 'awaiting_payment') {
         // Generate unique policy number for this category
@@ -111,19 +112,52 @@ if ($success_raw === 'true') {
         $end_date   = date('Y-m-d', strtotime('+1 year'));
         $doc_path   = 'uploads/policies/policy_' . $app_id . '.pdf';
 
-        // Prevent duplicate policy creation on page refresh
-        $check_pol = mysqli_query($connect, "SELECT policy_number FROM policies WHERE application_id = $app_id LIMIT 1");
-        if ($check_pol && mysqli_num_rows($check_pol) == 0) {
+        // Check if policy already exists (e.g. created at checkout initiation)
+        $check_pol = mysqli_query($connect, "SELECT policy_id, policy_number FROM policies WHERE application_id = $app_id LIMIT 1");
+        if ($check_pol && mysqli_num_rows($check_pol) > 0) {
+            // Policy already exists (e.g. pending policy). Update it to active.
+            $pol_row = mysqli_fetch_assoc($check_pol);
+            $policy_id = $pol_row['policy_id'];
+            $policy_number = $pol_row['policy_number']; // use the existing one
 
+            // Update policy status to active
+            $db_ok = mysqli_query($connect, "UPDATE policies SET status = 'active', payment_ref = '$payment_ref' WHERE policy_id = $policy_id");
+
+            if ($db_ok) {
+                // Update payment record to completed
+                $pay_q = mysqli_query($connect, "SELECT payment_id FROM payments WHERE policy_id = $policy_id LIMIT 1");
+                if ($pay_q && mysqli_num_rows($pay_q) > 0) {
+                    mysqli_query($connect, "UPDATE payments SET status = 'completed', transaction_ref = '$txn_id', method = 'credit_card' WHERE policy_id = $policy_id");
+                } else {
+                    mysqli_query($connect, "INSERT INTO payments (policy_id, amount, method, status, transaction_ref) VALUES ($policy_id, $amount, 'credit_card', 'completed', '$txn_id')");
+                }
+
+                // ✅ Mark application as paid
+                mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $app_id");
+                $app['status'] = 'paid';
+
+                // ✅ Clear session payment data now that it's processed
+                unset($_SESSION['app_id'], $_SESSION['provider']);
+            } else {
+                $transaction_status = 'db_error';
+                $db_err_msg = mysqli_error($connect);
+            }
+
+        } else {
+            // Create a brand new policy and payment record
             $ins = mysqli_prepare($connect,
                 "INSERT INTO policies (application_id, policy_number, start_date, end_date, document_path, payment_ref, status)
                  VALUES (?, ?, ?, ?, ?, ?, 'active')"
             );
             mysqli_stmt_bind_param($ins, 'isssss', $app_id, $policy_number, $start_date, $end_date, $doc_path, $payment_ref);
             $db_ok = mysqli_stmt_execute($ins);
+            $policy_id = mysqli_insert_id($connect);
             mysqli_stmt_close($ins);
 
             if ($db_ok) {
+                // Insert payment record
+                mysqli_query($connect, "INSERT INTO payments (policy_id, amount, method, status, transaction_ref) VALUES ($policy_id, $amount, 'credit_card', 'completed', '$txn_id')");
+
                 // ✅ Mark application as paid
                 mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $app_id");
                 $app['status'] = 'paid';

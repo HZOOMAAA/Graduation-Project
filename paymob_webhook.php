@@ -178,6 +178,22 @@ try {
             ':policy_id' => $payment['policy_id']
         ]);
 
+        // Get the application_id from policies and update the application status to 'paid'
+        $getAppStmt = $pdo->prepare("SELECT application_id FROM policies WHERE policy_id = :policy_id LIMIT 1");
+        $getAppStmt->execute([':policy_id' => $payment['policy_id']]);
+        $policyRow = $getAppStmt->fetch();
+        if ($policyRow) {
+            $application_id = $policyRow['application_id'];
+            $updateAppStmt = $pdo->prepare("
+                UPDATE applications 
+                SET status = 'paid' 
+                WHERE application_id = :application_id
+            ");
+            $updateAppStmt->execute([
+                ':application_id' => $application_id
+            ]);
+        }
+
         log_paymob_webhook("Webhook successfully updated DB state.", [
             "payment_id"     => $payment['payment_id'],
             "policy_id"      => $payment['policy_id'],
