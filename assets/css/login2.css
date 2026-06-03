@@ -5,6 +5,8 @@
     --text-main: #2D3436;       /* Readability */
     --error-red: #D63031;       /* Clear Alerts */
     --white: #FFFFFF;
+                 --blue:          #0052CC;
+
 }
 
 body {
@@ -81,7 +83,7 @@ input:focus {
 }
 
 button {
-    background-color: var(--primary-navy);
+    background: linear-gradient(135deg, var(--blue) 0%, #1A2B48 100%);
     color: white;
     padding: 14px;
     border: none;
