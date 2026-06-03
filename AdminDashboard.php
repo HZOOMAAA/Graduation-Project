@@ -16,6 +16,10 @@ if (isset($_POST['add_agent'])) {
     $check_email = mysqli_query($connect, "SELECT * FROM users WHERE email = '$email'");
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+        $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);     
         $insert = mysqli_query($connect, "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$hashed_password', '$role')");
@@ -65,19 +69,31 @@ if (isset($_POST['edit_agent'])) {
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
     } else {
+        $password_valid = true;
         if (!empty($_POST['password'])) {
-            $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email', password = '$hashed_password' WHERE user_id = $id AND role = 'agent'");
+            $password = $_POST['password'];
+            if (strlen($password) < 8) {
+                $error = "Password must be at least 8 characters long!";
+                $password_valid = false;
+            } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+                $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
+                $password_valid = false;
+            } else {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email', password = '$hashed_password' WHERE user_id = $id AND role = 'agent'");
+            }
         } else {
             $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email' WHERE user_id = $id AND role = 'agent'");
         }
         
-        if ($update) {
-            $success = "Agent updated successfully!";
-            header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
-            exit();
-        } else {
-            $error = "Failed to update agent! " . mysqli_error($connect);
+        if ($password_valid) {
+            if ($update) {
+                $success = "Agent updated successfully!";
+                header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
+                exit();
+            } else {
+                $error = "Failed to update agent! " . mysqli_error($connect);
+            }
         }
     }
 }

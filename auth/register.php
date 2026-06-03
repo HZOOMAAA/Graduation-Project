@@ -23,13 +23,11 @@ if (isset($_POST['register'])) {
         $error = "Phone number must be exactly 11 digits long!";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) { // Check if email is actually an email
         $error = "Please enter a valid email address!";
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters long!";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+        $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
     }
-    elseif (!preg_match('/[A-Za-z]/', $password) || !preg_match('/[0-9]/', $password)) {
-    // الشرط الجديد: للتأكد من وجود حروف وأرقام معاً
-    $error = "Password must contain both letters and numbers!";
-}
     // 3. Database Operations (Only if no validation errors occurred)
     if (empty($error)) {
         // Check if email exists
