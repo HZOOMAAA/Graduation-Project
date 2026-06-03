@@ -387,6 +387,87 @@ $all_plans = mysqli_query($connect, "
     ORDER BY cat.name, p.base_price ASC
 ");
 
+// Helper to display time elapsed nicely
+if (!function_exists('get_time_elapsed')) {
+    function get_time_elapsed($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'Just Now';
+    }
+}
+
+// Fetch recent transactions from database
+$recent_transactions_query = "
+    SELECT p.*, pol.policy_number 
+    FROM payments p
+    LEFT JOIN policies pol ON p.policy_id = pol.policy_id
+    ORDER BY p.payment_date DESC
+    LIMIT 10
+";
+$recent_transactions = mysqli_query($connect, $recent_transactions_query);
+
+// Fetch daily revenue for last 7 days
+$days = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date_str = date('Y-m-d', strtotime("-$i days"));
+    $label_str = date('D (d M)', strtotime("-$i days")); // e.g. "Mon (01 Jun)"
+    $days[$date_str] = [
+        'label' => $label_str,
+        'revenue' => 0.0
+    ];
+}
+
+$start_date = date('Y-m-d 00:00:00', strtotime("-6 days"));
+$revenue_query = "
+    SELECT DATE(payment_date) as payment_day, SUM(amount) as daily_revenue 
+    FROM payments 
+    WHERE status = 'completed' AND payment_date >= '$start_date'
+    GROUP BY DATE(payment_date)
+";
+$revenue_res = mysqli_query($connect, $revenue_query);
+if ($revenue_res) {
+    while ($row = mysqli_fetch_assoc($revenue_res)) {
+        $day = $row['payment_day'];
+        if (isset($days[$day])) {
+            $days[$day]['revenue'] = (float)$row['daily_revenue'];
+        }
+    }
+}
+
+// Extract labels and data arrays
+$chart_labels = [];
+$chart_data = [];
+foreach ($days as $date => $info) {
+    $chart_labels[] = $info['label'];
+    $chart_data[] = $info['revenue'];
+}
+
+$chart_labels_json = json_encode($chart_labels);
+$chart_data_json = json_encode($chart_data);
+
 // Fetch all contact messages for viewer
 mysqli_query($connect, "CREATE TABLE IF NOT EXISTS contact_messages (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -648,7 +729,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
             <span class="stat-trend-up">↑ 12.5% YoY</span>
         </div>
-        <p class="card-subtitle-main">Monthly overview of total premium collection to monitor financial health.</p>
+        <p class="card-subtitle-main">Daily overview of total premium collection over the last 7 days to monitor financial health.</p>
         
         <div id="revenueChart" style="min-height: 250px;"></div>
     </div>
@@ -671,20 +752,48 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><strong style="color: var(--primary-navy);">#POL-9942</strong></td>
-                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 8,500.00</td>
-                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bx-credit-card'></i> Credit Card</span></td>
-                                    <td style="color: var(--text-muted); font-size: 12px;">Just Now</td>
-                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong style="color: var(--primary-navy);">#POL-1082</strong></td>
-                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 3,500.00</td>
-                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bxl-paypal'></i> PayPal</span></td>
-                                    <td style="color: var(--text-muted); font-size: 12px;">20 mins ago</td>
-                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
-                                </tr>
+                                <?php if ($recent_transactions && mysqli_num_rows($recent_transactions) > 0): ?>
+                                    <?php while ($txn = mysqli_fetch_assoc($recent_transactions)): 
+                                        $method_label = 'Credit Card';
+                                        $method_icon = 'bx bx-credit-card';
+                                        switch (strtolower($txn['method'] ?? '')) {
+                                            case 'paypal':
+                                                $method_label = 'PayPal';
+                                                $method_icon = 'bx bxl-paypal';
+                                                break;
+                                            case 'bank_transfer':
+                                                $method_label = 'Bank Transfer';
+                                                $method_icon = 'bx bx-transfer';
+                                                break;
+                                            case 'cash':
+                                                $method_label = 'Cash';
+                                                $method_icon = 'bx bx-money';
+                                                break;
+                                        }
+
+                                        $status_label = 'Success';
+                                        $status_style = 'background: #D1FAE5; color: #065F46;';
+                                        if ($txn['status'] === 'pending') {
+                                            $status_label = 'Pending';
+                                            $status_style = 'background: #FEF3C7; color: #92400E;';
+                                        } elseif ($txn['status'] === 'failed') {
+                                            $status_label = 'Failed';
+                                            $status_style = 'background: #FEE2E2; color: #991B1B;';
+                                        }
+                                    ?>
+                                        <tr>
+                                            <td><strong style="color: var(--primary-navy);">#<?= htmlspecialchars($txn['policy_number'] ?: 'N/A') ?></strong></td>
+                                            <td style="font-weight: 600; color: var(--primary-navy);">EGP <?= number_format($txn['amount'], 2) ?></td>
+                                            <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='<?= $method_icon ?>'></i> <?= $method_label ?></span></td>
+                                            <td style="color: var(--text-muted); font-size: 12px;"><?= get_time_elapsed($txn['payment_date']) ?></td>
+                                            <td style="text-align: right;"><span class="badge" style="<?= $status_style ?> font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;"><?= $status_label ?></span></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No transactions found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -1398,6 +1507,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    window.AdminDashboardRevenueData = <?= $chart_data_json ?>;
+    window.AdminDashboardRevenueLabels = <?= $chart_labels_json ?>;
+</script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
 
 <!-- Custom Confirmation Modal -->

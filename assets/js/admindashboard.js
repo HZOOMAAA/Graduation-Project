@@ -142,10 +142,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // ── 📊 تشغيل منظومة التقارير والرسومات البيانية (ApexCharts) ──
 
 // 1) إعدادات الرسم البياني للأرباح الشهرية (Line/Area Chart)
+// 1) إعدادات الرسم البياني للأرباح الشهرية (Line/Area Chart)
+const revenueData = window.AdminDashboardRevenueData || [31000, 40000, 28000, 51000, 42000, 65000, 58000];
+const revenueLabels = window.AdminDashboardRevenueLabels || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 const revenueChartOptions = {
     series: [{
         name: 'Total Premium (Revenue)',
-        data: [31000, 40000, 28000, 51000, 42000, 65000, 58000, 72000, 60000, 85000, 78000, 95000] // الداتا الوهمية للشهور
+        data: revenueData
     }],
     chart: {
         type: 'area',
@@ -170,7 +174,7 @@ const revenueChartOptions = {
         strokeDashArray: 4
     },
     xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        categories: revenueLabels,
         labels: { style: { colors: '#64748B', fontSize: '12px' } }
     },
     yaxis: {
