@@ -282,6 +282,14 @@ $applications_query = "
 ";
 $applications = mysqli_query($connect, $applications_query);
 
+$unassigned_count_query = mysqli_query($connect, "
+    SELECT COUNT(*) as cnt 
+    FROM applications 
+    WHERE status = 'under_review' AND (agent_id IS NULL OR agent_id = 0)
+");
+$unassigned_count_row = mysqli_fetch_assoc($unassigned_count_query);
+$unassigned_count = (int)($unassigned_count_row['cnt'] ?? 0);
+
 // Fetch 5 most recent applications for overview
 $recent_applications_query = "
     SELECT a.*,
@@ -513,6 +521,9 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         
         <a href="AdminDashboard.php?tab=applications" class="<?php echo $active_tab === 'applications' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-book-content'></i></span> Applications
+            <?php if ($unassigned_count > 0): ?>
+                <span class="sidebar-badge" style="background: #e65100;"><?php echo $unassigned_count; ?></span>
+            <?php endif; ?>
         </a>
         <a href="AdminDashboard.php?tab=plans" class="<?php echo $active_tab === 'plans' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-shield'></i></span> Insurance Plans

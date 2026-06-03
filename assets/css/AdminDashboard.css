@@ -121,6 +121,17 @@ body {
     flex-shrink: 0;
 }
 
+/* الـ Badge العدادات بالـ Sidebar */
+.sidebar-badge {
+    margin-left: auto !important; 
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 20px; 
+    padding: 2px 9px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
 .sidebar-footer {
     padding: 16px 24px;
     border-top: 1px solid #374151;
