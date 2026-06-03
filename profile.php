@@ -12,11 +12,18 @@ $success = '';
 
 // Handle Profile Update
 if (isset($_POST['update_profile'])) {
-    $name = trim(mysqli_real_escape_string($connect, $_POST['name']));
-    $email = trim(mysqli_real_escape_string($connect, $_POST['email']));
-    $phone = trim(mysqli_real_escape_string($connect, $_POST['phone']));
-    $address = trim(mysqli_real_escape_string($connect, $_POST['address']));
-    $password = $_POST['password'];
+    // Get current user info to fall back to if some fields are not submitted (e.g. avatar-only form)
+    $curr_stmt = mysqli_prepare($connect, "SELECT name, email, phone, address, photo FROM users WHERE user_id = ?");
+    mysqli_stmt_bind_param($curr_stmt, "i", $user_id);
+    mysqli_stmt_execute($curr_stmt);
+    $curr_user = mysqli_fetch_assoc(mysqli_stmt_get_result($curr_stmt));
+    mysqli_stmt_close($curr_stmt);
+
+    $name = (isset($_POST['name']) && $_POST['name'] !== '') ? trim(mysqli_real_escape_string($connect, $_POST['name'])) : ($curr_user['name'] ?? '');
+    $email = (isset($_POST['email']) && $_POST['email'] !== '') ? trim(mysqli_real_escape_string($connect, $_POST['email'])) : ($curr_user['email'] ?? '');
+    $phone = isset($_POST['phone']) ? trim(mysqli_real_escape_string($connect, $_POST['phone'])) : ($curr_user['phone'] ?? '');
+    $address = isset($_POST['address']) ? trim(mysqli_real_escape_string($connect, $_POST['address'])) : ($curr_user['address'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     // Basic Validations
     if (empty($name) || empty($email)) {
@@ -33,11 +40,6 @@ if (isset($_POST['update_profile'])) {
         if (mysqli_num_rows($email_res) > 0) {
             $error = "This email is already registered to another account.";
         } else {
-            // Get current photo path to keep if no new photo uploaded
-            $curr_stmt = mysqli_prepare($connect, "SELECT photo FROM users WHERE user_id = ?");
-            mysqli_stmt_bind_param($curr_stmt, "i", $user_id);
-            mysqli_stmt_execute($curr_stmt);
-            $curr_user = mysqli_fetch_assoc(mysqli_stmt_get_result($curr_stmt));
             $photo_path = $curr_user['photo'] ?? null;
 
             // Handle Profile Photo Upload
@@ -94,7 +96,6 @@ if (isset($_POST['update_profile'])) {
                     $success = "Your profile has been updated successfully!";
                     $_SESSION['name'] = $name; // Update session name
                     $_SESSION['phone'] = $phone;
-            
                 } else {
                     $error = "Failed to update profile details: " . mysqli_error($connect);
                 }
@@ -139,286 +140,271 @@ include __DIR__ . '/includes/nav2.php';
 <!-- Profile Custom Stylesheet -->
 <link rel="stylesheet" href="assets/css/profile.css">
 
-<section class="profile-section">
-    <div class="profile-container">
+<section class="premium-profile-section">
+    <div class="premium-container">
         
-        <div class="profile-grid">
+        <!-- Header Profile Card -->
+        <div class="premium-header-card">
+            <div class="header-cover-bg"></div>
             
-            <!-- Sidebar: Avatar and Tabs -->
-            <div class="profile-sidebar">
-                <form id="avatarForm" action="profile.php" method="POST" enctype="multipart/form-data">
-                    <div class="avatar-wrapper">
-                        <?php if (!empty($user['photo']) && file_exists(__DIR__ . '/' . $user['photo'])): ?>
-                            <img src="<?= htmlspecialchars($user['photo']) ?>" class="profile-avatar-img" id="avatarPreview" alt="Profile Photo">
-                        <?php else: ?>
-                            <i class="fa-regular fa-circle-user default-avatar-icon" id="avatarIcon"></i>
-                            <img src="" class="profile-avatar-img" id="avatarPreview" alt="Profile Photo" style="display: none;">
-                        <?php endif; ?>
-                        
-                        <label for="photo-upload" class="avatar-upload-trigger">
-                            <i class="fa-solid fa-camera"></i> Change
-                        </label>
-                        <input type="file" name="photo" id="photo-upload" class="file-upload-input" accept="image/*" onchange="previewImage(this)">
-                    </div>
+            <div class="header-main-content">
+                <form id="avatarForm" action="profile.php" method="POST" enctype="multipart/form-data" class="premium-avatar-wrapper">
+                    <?php if (!empty($user['photo']) && file_exists(__DIR__ . '/' . $user['photo'])): ?>
+                        <img src="<?= htmlspecialchars($user['photo']) ?>" id="avatarPreview" alt="Profile Photo">
+                    <?php else: ?>
+                        <div class="premium-avatar-placeholder" id="avatarIcon">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <img src="" id="avatarPreview" alt="Profile Photo" style="display: none;">
+                    <?php endif; ?>
                     
-                    <h2 class="user-title"><?= htmlspecialchars($user['name'] ?? 'User Profile') ?></h2>
-                    <p class="user-email-subtitle"><?= htmlspecialchars($user['email'] ?? '') ?></p>
-                    
-                    <!-- Form Submission Trigger (hidden normally, handled via JS or on profile save) -->
+                    <label for="photo-upload" class="avatar-upload-btn">
+                        <i class="fa-solid fa-camera"></i>
+                    </label>
+                    <input type="file" name="photo" id="photo-upload" accept="image/*" onchange="previewImage(this)">
                     <input type="hidden" name="update_profile" value="1">
                 </form>
                 
-                <div class="profile-menu">
-                    <button class="profile-menu-btn active" onclick="switchTab('view-profile', this)">
-                        <i class="fa-solid fa-user"></i> View Profile
-                    </button>
-                    <button class="profile-menu-btn" onclick="switchTab('edit-profile', this)">
-                        <i class="fa-solid fa-user-gear"></i> Update Profile
-                    </button>
-                    <button class="profile-menu-btn" onclick="switchTab('my-applications', this)">
-                        <i class="fa-solid fa-file-invoice"></i> My Applications
-                    </button>
-                    <div class="logout-btn-sidebar">
-                        <a href="auth/logout.php" class="profile-menu-btn logout-btn-link" style="text-decoration: none;">
-                            <i class="fa-solid fa-right-from-bracket"></i> Logout
-                        </a>
+                <div class="premium-user-info">
+                    <div class="user-title-row">
+                        <h1><?= htmlspecialchars($user['name'] ?? 'User Profile') ?></h1>
+                        <span class="premium-badge"><i class="fa-solid fa-shield-halved"></i> <?= date('F Y', strtotime($user['created_at'] ?? 'now')) ?></span>
+                
+                    </div>
+                    <p class="user-email-row"><i class="fa-solid fa-envelope"></i> <?= htmlspecialchars($user['email'] ?? '') ?></p>
+                </div>
+                
+                <div class="premium-header-actions">
+                    <a href="auth/logout.php" class="premium-btn-outline">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Premium Tabs -->
+            <div class="premium-tabs">
+                <button class="premium-tab-btn active" onclick="switchTab('view-profile', this)">
+                    <i class="fa-solid fa-id-card"></i> Overview
+                </button>
+                <button class="premium-tab-btn" onclick="switchTab('edit-profile', this)">
+                    <i class="fa-solid fa-user-gear"></i> Settings
+                </button>
+                <button class="premium-tab-btn" onclick="switchTab('my-applications', this)">
+                    <i class="fa-solid fa-file-signature"></i> Applications
+                    <?php if ($applications_res && mysqli_num_rows($applications_res) > 0): ?>
+                        <span class="tab-badge"><?= mysqli_num_rows($applications_res) ?></span>
+                    <?php endif; ?>
+                </button>
+            </div>
+        </div>
+<!--  -->
+        
+        <!-- Content Area -->
+        <div class="premium-content-area">
+            
+            <!-- Display Alerts -->
+            <?php if (!empty($error)): ?>
+                <div class="premium-alert error">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    <span><?= htmlspecialchars($error) ?></span>
+                </div>
+            <?php endif; ?>
+            
+            <?php if (!empty($success)): ?>
+                <div class="premium-alert success">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span><?= htmlspecialchars($success) ?></span>
+                </div>
+            <?php endif; ?>
+            
+            <!-- Tab: Overview -->
+            <div id="view-profile" class="premium-tab-content active">
+                <div class="premium-section-header">
+                    <h2>Personal Information</h2>
+                    <p>Manage your personal data and contact details.</p>
+                </div>
+                
+                <div class="info-cards-grid">
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fa-regular fa-user"></i></div>
+                        <div class="info-data">
+                            <label>Full Name</label>
+                            <p><?= htmlspecialchars($user['name'] ?? 'N/A') ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fa-regular fa-envelope"></i></div>
+                        <div class="info-data">
+                            <label>Email Address</label>
+                            <p><?= htmlspecialchars($user['email'] ?? 'N/A') ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                        <div class="info-data">
+                            <label>Phone Number</label>
+                            <p><?= htmlspecialchars(!empty($user['phone']) ? $user['phone'] : 'Not Provided') ?></p>
+                        </div>
+                    </div>
+                    
+            
+                    
+                    <div class="info-card full-width">
+                        <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                        <div class="info-data">
+                            <label>Residential Address</label>
+                            <p><?= htmlspecialchars(!empty($user['address']) ? $user['address'] : 'Not Provided') ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Main Details Panel -->
-            <div class="profile-panel">
-                
-                <!-- Display Alerts -->
-                <?php if (!empty($error)): ?>
-                    <div class="profile-alert profile-alert-error">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                        <span><?= htmlspecialchars($error) ?></span>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (!empty($success)): ?>
-                    <div class="profile-alert profile-alert-success">
-                        <i class="fa-solid fa-circle-check"></i>
-                        <span><?= htmlspecialchars($success) ?></span>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Tab: View Profile -->
-                <div id="view-profile" class="tab-content active">
-                    <div class="panel-header">
-                        <h1 class="panel-title">My Profile Details</h1>
-                        <p class="panel-subtitle">Here is a summary of your account information on Coverly.</p>
-                    </div>
-                    
-                    <div class="profile-details-display">
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fa-regular fa-user"></i> Full Name</span>
-                            <span class="detail-value"><?= htmlspecialchars($user['name'] ?? 'N/A') ?></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fa-regular fa-envelope"></i> Email Address</span>
-                            <span class="detail-value"><?= htmlspecialchars($user['email'] ?? 'N/A') ?></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-phone"></i> Phone Number</span>
-                            <span class="detail-value"><?= htmlspecialchars(!empty($user['phone']) ? $user['phone'] : 'Not Provided') ?></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-location-dot"></i> Residential Address</span>
-                            <span class="detail-value"><?= htmlspecialchars(!empty($user['address']) ? $user['address'] : 'Not Provided') ?></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label"><i class="fa-solid fa-user-shield"></i> Account Role</span>
-                            <span class="detail-value" style="text-transform: capitalize;"><?= htmlspecialchars($user['role'] ?? 'Customer') ?></span>
-                        </div>
-                    </div>
+            <!-- Tab: Settings -->
+            <div id="edit-profile" class="premium-tab-content">
+                <div class="premium-section-header">
+                    <h2>Account Settings</h2>
+                    <p>Update your profile details and security settings.</p>
                 </div>
                 
-                <!-- Tab: Edit Profile -->
-                <div id="edit-profile" class="tab-content">
-                    <div class="panel-header">
-                        <h1 class="panel-title">Personal Settings</h1>
-                        <p class="panel-subtitle">Update your personal information, contact numbers, and login credentials.</p>
-                    </div>
-                    
+                <div class="premium-form-card">
                     <form action="profile.php" method="POST" enctype="multipart/form-data">
-                        <!-- Keep photo upload synced with main form submit as fallback -->
-                        <input type="file" name="photo" id="photo-upload-sync" class="file-upload-input" accept="image/*">
+                        <input type="file" name="photo" id="photo-upload-sync" style="display:none;" accept="image/*">
                         
-                        <div class="form-grid">
-                            
-                            <!-- Full Name -->
+                        <div class="premium-form-grid">
                             <div class="form-group">
-                                <label class="form-label" for="name">Full Name *</label>
-                                <div class="input-container">
+                                <label>Full Name</label>
+                                <div class="input-with-icon">
                                     <i class="fa-regular fa-user"></i>
-                                    <input type="text" name="name" id="name" class="form-input" value="<?= htmlspecialchars($user['name'] ?? '') ?>" required>
+                                    <input type="text" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" required>
                                 </div>
                             </div>
                             
-                            <!-- Email -->
                             <div class="form-group">
-                                <label class="form-label" for="email">Email Address *</label>
-                                <div class="input-container">
+                                <label>Email Address</label>
+                                <div class="input-with-icon">
                                     <i class="fa-regular fa-envelope"></i>
-                                    <input type="email" name="email" id="email" class="form-input" value="<?= htmlspecialchars($user['email'] ?? '') ?>" required>
+                                    <input type="email" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>" required>
                                 </div>
                             </div>
                             
-                            <!-- Phone -->
                             <div class="form-group">
-                                <label class="form-label" for="phone">Phone Number</label>
-                                <div class="input-container">
+                                <label>Phone Number</label>
+                                <div class="input-with-icon">
                                     <i class="fa-solid fa-phone"></i>
-                                    <input type="text" name="phone" id="phone" class="form-input" placeholder="e.g. +20123456789" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+                                    <input type="text" name="phone" placeholder="+20..." value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
                                 </div>
                             </div>
                             
-                            <!-- Address -->
-                            <div class="form-group form-group-full">
-                                <label class="form-label" for="address">Residential Address</label>
-                                <textarea name="address" id="address" class="form-textarea" placeholder="Enter your home address..."><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
-                            </div>
-                            
-                            <!-- Password Change -->
-                            <div class="form-group form-group-full">
-                                <label class="form-label" for="password">Change Password (leave blank to keep current)</label>
-                                <div class="input-container">
+                            <div class="form-group">
+                                <label>New Password <span class="optional">(Optional)</span></label>
+                                <div class="input-with-icon">
                                     <i class="fa-solid fa-lock"></i>
-                                    <input type="password" name="password" id="password" class="form-input" placeholder="Enter new password">
+                                    <input type="password" name="password" placeholder="Leave blank to keep current">
                                 </div>
                             </div>
                             
+                            <div class="form-group full-width">
+                                <label>Residential Address</label>
+                                <div class="input-with-icon align-top">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <textarea name="address" placeholder="Enter your full address..."><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div style="margin-top: 30px;">
-                            <button type="submit" name="update_profile" class="submit-btn">
-                                <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+                        <div class="form-actions">
+                            <button type="submit" name="update_profile" class="premium-btn-primary">
+                                <i class="fa-solid fa-floppy-disk"></i> Save Changes
                             </button>
                         </div>
                     </form>
                 </div>
+            </div>
+            
+            <!-- Tab: Applications -->
+            <div id="my-applications" class="premium-tab-content">
+                <div class="premium-section-header">
+                    <h2>Insurance Applications</h2>
+                    <p>Track the status of your requests and policies.</p>
+                </div>
                 
-                <!-- Tab: My Applications -->
-                <div id="my-applications" class="tab-content">
-                    <div class="panel-header">
-                        <h1 class="panel-title">My Insurance Applications</h1>
-                        <p class="panel-subtitle">Monitor the state of your application files and download your issued policies.</p>
-                    </div>
-                    
-                    <div class="apps-list">
-                        <?php if ($applications_res && mysqli_num_rows($applications_res) > 0): ?>
-                            <?php while ($row = mysqli_fetch_assoc($applications_res)): ?>
-                                <?php 
-                                    // Status styling configuration
-                                    $status = $row['status'];
-                                    $status_text = ucfirst(str_replace('_', ' ', $status));
-                                    $status_desc = '';
-                                    
-                                    switch ($status) {
-                                        case 'under_review':
-                                            $status_desc = 'An agent is currently reviewing your documents.';
-                                            break;
-                                        case 'waiting_docs':
-                                            $status_desc = 'Additional documents are required to process this request.';
-                                            break;
-                                        case 'awaiting_payment':
-                                            $status_desc = 'Application approved! Please proceed with your payment.';
-                                            break;
-                                        case 'paid':
-                                            $status_desc = 'Policy issued and active.';
-                                            break;
-                                        case 'rejected':
-                                            $status_desc = 'This application was rejected by the agent. You can upload new documents to re-submit it.';
-                                            break;
-                                        default:
-                                            $status_desc = 'Status pending selection.';
-                                    }
-                                ?>
-                                <div class="app-card">
-                                    <div class="app-details">
-                                        <div class="app-header-row">
-                                            <span class="app-id-badge">ID: #<?= $row['application_id'] ?></span>
-                                            <span class="app-date">Submitted on: <?= date('M d, Y', strtotime($row['created_at'])) ?></span>
-                                        </div>
-                                        <h3 class="app-plan-title"><?= htmlspecialchars($row['plan_name'] ?? 'Custom Plan') ?></h3>
-                                        <div class="app-meta">
-                                            <div class="app-meta-item">
-                                                <i class="fa-solid fa-layer-group"></i> <?= htmlspecialchars($row['category_name'] ?? 'General') ?>
-                                            </div>
-                                            <div class="app-meta-item">
-                                                <i class="fa-solid fa-building"></i> <?= htmlspecialchars($row['insurance_company'] ?? 'Coverly Partner') ?>
-                                            </div>
-                                            <?php if ($row['final_price'] > 0): ?>
-                                                <div class="app-meta-item">
-                                                    <i class="fa-solid fa-coins"></i> EGP <?= number_format($row['final_price'], 2) ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                        <p style="font-size: 13px; color: var(--gray); margin: 8px 0 0 0;">
-                                            <i class="fa-solid fa-info-circle" style="color: var(--accent); margin-right: 4px;"></i> <?= $status_desc ?>
-                                        </p>
+                <?php if ($applications_res && mysqli_num_rows($applications_res) > 0): ?>
+                    <div class="app-cards-grid">
+                        <?php while ($row = mysqli_fetch_assoc($applications_res)): ?>
+                            <?php 
+                                $status = $row['status'];
+                                $status_text = str_replace('_', ' ', $status);
+                                $status_color = 'gray';
+                                $status_icon = 'fa-circle-notch';
+                                
+                                switch ($status) {
+                                    case 'under_review': $status_color = 'orange'; $status_icon = 'fa-magnifying-glass'; break;
+                                    case 'waiting_docs': $status_color = 'yellow'; $status_icon = 'fa-file-circle-exclamation'; break;
+                                    case 'awaiting_payment': $status_color = 'blue'; $status_icon = 'fa-credit-card'; break;
+                                    case 'paid': $status_color = 'green'; $status_icon = 'fa-circle-check'; break;
+                                    case 'rejected': $status_color = 'red'; $status_icon = 'fa-circle-xmark'; break;
+                                }
+                            ?>
+                            <div class="premium-app-card">
+                                <div class="app-card-header">
+                                    <span class="app-id">#<?= $row['application_id'] ?></span>
+                                    <span class="app-status badge-<?= $status_color ?>">
+                                        <i class="fa-solid <?= $status_icon ?>"></i> <?= $status_text ?>
+                                    </span>
+                                </div>
+                                
+                                <h3 class="app-plan-name"><?= htmlspecialchars($row['plan_name'] ?? 'Custom Plan') ?></h3>
+                                
+                                <div class="app-details-flex">
+                                    <div class="detail-col">
+                                        <span class="d-label">Company</span>
+                                        <span class="d-value"><i class="fa-regular fa-building"></i> <?= htmlspecialchars($row['insurance_company'] ?? 'Partner') ?></span>
                                     </div>
+                                    <div class="detail-col">
+                                        <span class="d-label">Submitted</span>
+                                        <span class="d-value"><i class="fa-regular fa-calendar"></i> <?= date('M d, Y', strtotime($row['created_at'])) ?></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="app-card-footer">
+                                    <?php if ($row['final_price'] > 0): ?>
+                                        <div class="price-tag">EGP <?= number_format($row['final_price'], 2) ?></div>
+                                    <?php else: ?>
+                                        <div></div>
+                                    <?php endif; ?>
                                     
-                                    <div class="app-actions">
-                                        <span class="status-badge status-<?= $status ?>">
-                                            <?php
-                                            // Icon for badge
-                                            $icon = 'fa-clock';
-                                            if ($status === 'paid') $icon = 'fa-circle-check';
-                                            if ($status === 'rejected') $icon = 'fa-circle-xmark';
-                                            if ($status === 'waiting_docs') $icon = 'fa-file-arrow-up';
-                                            if ($status === 'awaiting_payment') $icon = 'fa-credit-card';
-                                            ?>
-                                            <i class="fa-solid <?= $icon ?>"></i> <?= $status_text ?>
-                                        </span>
-                                        
+                                    <div class="action-buttons">
                                         <?php if ($status === 'waiting_docs' || $status === 'rejected'): ?>
-                                            <a href="planDetails.php?application_id=<?= $row['application_id'] ?>" class="action-btn action-btn-primary">
-                                                <i class="fa-solid fa-upload"></i> Upload Docs
-                                            </a>
-                                        <?php elseif ($status === 'awaiting_payment'): ?>
-                                            <a href="payment.php?app_id=<?= $row['application_id'] ?>" class="action-btn action-btn-primary" style="background: linear-gradient(135deg, #7b1fa2 0%, #6f2cf3 100%); border: none; box-shadow: 0 4px 10px rgba(111, 44, 243, 0.2); text-decoration: none;">
-                                                <i class="fa-solid fa-credit-card"></i> Pay Now
-                                            </a>
+                                            <a href="planDetails.php?application_id=<?= $row['application_id'] ?>" class="btn-sm btn-yellow"><i class="fa-solid fa-upload"></i> Upload</a>
                                         <?php elseif ($status === 'paid' && !empty($row['document_path'])): ?>
-                                            <a href="/Graduation-Project/<?= htmlspecialchars($row['document_path']) ?>" target="_blank" class="action-btn action-btn-success">
-                                                <i class="fa-solid fa-file-pdf"></i> Download Policy
-                                            </a>
+                                            <a href="/Graduation-Project/<?= htmlspecialchars($row['document_path']) ?>" target="_blank" class="btn-sm btn-green"><i class="fa-solid fa-download"></i> Policy</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <div class="app-card no-data-card">
-                                <i class="fa-regular fa-folder-open"></i>
-                                <h3>No applications found</h3>
-                                <p>You have not submitted any insurance applications yet. Explore categories to apply.</p>
                             </div>
-                        <?php endif; ?>
+                        <?php endwhile; ?>
                     </div>
-                </div>
-                
+                <?php else: ?>
+                    <div class="premium-empty-state">
+                        <div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div>
+                        <h3>No Applications Yet</h3>
+                        <p>You haven't submitted any insurance applications.</p>
+                        <a href="index.php" class="premium-btn-primary mt-3">Explore Plans</a>
+                    </div>
+                <?php endif; ?>
             </div>
             
         </div>
-        
     </div>
 </section>
 
-<!-- Tab Management and Image Preview JavaScript -->
 <script>
 function switchTab(tabId, btn) {
-    // Hide all tab contents
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(content => content.classList.remove('active'));
+    document.querySelectorAll('.premium-tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.premium-tab-btn').forEach(b => b.classList.remove('active'));
     
-    // Remove active class from all buttons
-    const buttons = document.querySelectorAll('.profile-menu-btn');
-    buttons.forEach(button => button.classList.remove('active'));
-    
-    // Show active tab
     document.getElementById(tabId).classList.add('active');
     btn.classList.add('active');
 }
@@ -426,30 +412,22 @@ function switchTab(tabId, btn) {
 function previewImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-        
         reader.onload = function(e) {
             const preview = document.getElementById('avatarPreview');
             const icon = document.getElementById('avatarIcon');
-            
             preview.src = e.target.result;
             preview.style.display = 'block';
+            if (icon) icon.style.display = 'none';
             
-            if (icon) {
-                icon.style.display = 'none';
-            }
-            
-            // Also sync the file selection with the hidden inputs in main details form
             const syncInput = document.getElementById('photo-upload-sync');
-            if (syncInput) {
-                syncInput.files = input.files;
-            }
+            if (syncInput) syncInput.files = input.files;
+            
+            document.getElementById('avatarForm').submit();
         }
-        
         reader.readAsDataURL(input.files[0]);
     }
 }
 
-// Sync file selection from main form back to avatar form input if changed
 document.getElementById('photo-upload-sync')?.addEventListener('change', function() {
     const mainUpload = document.getElementById('photo-upload');
     if (mainUpload) {

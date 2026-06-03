@@ -39,7 +39,7 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
         
         <div class="insurance-form-side">
             <div class="insurance-form-header">
-                <h1>Health insurance offers and prices for individuals and families in Egypt <span class="insurance-shield-icon"><i class="fa-solid fa-shield-heart"></i></span></h1>
+                <h1>Health insurance offers for individuals and families <span class="insurance-shield-icon"><i class="fa-solid fa-shield-heart"></i></span></h1>
                 <p class="insurance-subtitle">Add your information and compare the best offers</p>
             </div>
             
