@@ -7,6 +7,8 @@
     --bg-soft-gray: #F4F7F9;
     --text-main: #2D3436;
     --white: #FFFFFF;
+    --gradient-primary: linear-gradient(135deg, #0052CC 0%, #1A2B48 100%);
+    --gradient-light: linear-gradient(135deg, #F4F7F9 0%, #FFFFFF 100%);
 }
 
 * {
@@ -20,9 +22,10 @@ html {
 }
 
 body {
-    font-family: "Work Sans", sans-serif;
+    font-family: "Inter", sans-serif;
     background-color: var(--bg-soft-gray);
     color: var(--text-main);
+    overflow-x: hidden;
 }
 
 ul {
@@ -36,158 +39,559 @@ a {
 }
 
 /* ==========================================
-   2. Hero & Regular Sections
+   2. Common Components
    ========================================== */
 .section-padding {
-    padding: 80px 0;
-}
-
-.hero {
     padding: 100px 0;
-    background: linear-gradient(135deg, var(--bg-soft-gray) 0%, var(--white) 100%);
 }
 
-.hero h1 {
+.section-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.1) 0%, rgba(26, 43, 72, 0.1) 100%);
+    color: var(--action-blue);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.section-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: var(--primary-navy);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.section-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-main);
+    opacity: 0.7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.section-text {
+    font-size: 1.125rem;
+    color: var(--text-main);
+    opacity: 0.8;
+    line-height: 1.8;
+    margin-bottom: 16px;
+}
+
+/* ==========================================
+   3. Hero Section
+   ========================================== */
+.about-hero {
+    padding: 140px 0 100px;
+    background: var(--gradient-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-bg-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.hero-bg-shapes .shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.hero-bg-shapes .shape-1 {
+    width: 600px;
+    height: 600px;
+    top: -300px;
+    right: -200px;
+}
+
+.hero-bg-shapes .shape-2 {
+    width: 400px;
+    height: 400px;
+    bottom: -200px;
+    left: -100px;
+}
+
+.hero-bg-shapes .shape-3 {
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hero-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-title {
     font-size: 3.5rem;
     font-weight: 800;
-    line-height: 1.2;
-    color: var(--primary-navy);
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 24px;
+    letter-spacing: -1px;
 }
 
-.text-highlight {
+.hero-title .text-highlight {
+    background: linear-gradient(135deg, #60A5FA 0%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 500px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.hero-buttons .btn-primary {
+    background: var(--white);
+    color: var(--primary-navy);
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.hero-buttons .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hero-buttons .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 12px 32px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.hero-buttons .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--white);
+}
+
+.hero-image-wrapper {
+    position: relative;
+}
+
+.hero-image {
+    width: 100%;
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.hero-image-badge {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    background: var(--white);
+    padding: 20px 28px;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.hero-image-badge .badge-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
     color: var(--action-blue);
+    line-height: 1;
+}
+
+.hero-image-badge .badge-text {
+    font-size: 0.875rem;
+    color: var(--text-main);
+    opacity: 0.7;
+}
+
+/* ==========================================
+   4. Stats Section
+   ========================================== */
+.about-stats-section {
+    padding: 60px 0;
+    background: var(--white);
+    margin-top: -40px;
+    position: relative;
+    z-index: 10;
+}
+
+.about-stats-section .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.about-stats-section .stat-item {
+    text-align: center;
+    padding: 30px 20px;
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.about-stats-section .stat-item:hover {
+    background: var(--bg-soft-gray);
+    transform: translateY(-5px);
+}
+
+.about-stats-section .stat-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.1) 0%, rgba(26, 43, 72, 0.1) 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 1.5rem;
+    color: var(--action-blue);
+}
+
+.about-stats-section .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary-navy);
+    line-height: 1.2;
+}
+
+.about-stats-section .stat-suffix {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--action-blue);
+}
+
+.about-stats-section .stat-label {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--text-main);
+    opacity: 0.7;
+    margin-top: 8px;
+}
+
+/* ==========================================
+   5. Mission Section
+   ========================================== */
+.mission-section {
+    background: var(--bg-soft-gray);
+}
+
+.mission-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 60px;
+    box-shadow: 0 10px 40px rgba(26, 43, 72, 0.06);
+}
+
+.mission-image-wrapper {
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.05) 0%, rgba(26, 43, 72, 0.05) 100%);
+    border-radius: 24px;
+    padding: 40px;
+    display: inline-block;
+}
+
+.mission-image {
+    width: 200px;
+    transition: transform 0.5s ease;
+}
+
+.mission-image-wrapper:hover .mission-image {
+    transform: scale(1.05) rotate(5deg);
+}
+
+.mission-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.mission-feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-soft-gray);
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.mission-feature i {
+    color: #10B981;
+    font-size: 1rem;
+}
+
+/* ==========================================
+   6. Values Section
+   ========================================== */
+.values-section {
+    background: var(--white);
+}
+
+.value-card {
+    background: var(--bg-soft-gray);
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.value-card:hover {
+    background: var(--white);
+    border-color: var(--action-blue);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 82, 204, 0.1);
+}
+
+.value-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--action-blue) 0%, var(--primary-navy) 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    font-size: 2rem;
+    color: var(--white);
+    transition: all 0.4s ease;
+}
+
+.value-card:hover .value-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.value-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 12px;
+}
+
+.value-text {
+    font-size: 1rem;
+    color: var(--text-main);
+    opacity: 0.7;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   7. Services Section
+   ========================================== */
+.services-section {
+    background: var(--bg-soft-gray);
 }
 
 .service-card {
     background: var(--white);
-    border: 1px solid #EAEAEA;
-    border-radius: 16px;
-    padding: 40px 30px;
+    border: 2px solid #EAEAEA;
+    border-radius: 24px;
+    padding: 40px;
     height: 100%;
-    transition: 0.3s;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-primary);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
 }
 
 .service-card:hover {
-    box-shadow: 0 15px 30px rgba(0, 82, 204, 0.08);
     border-color: var(--action-blue);
-    transform: translateY(-5px);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0, 82, 204, 0.12);
 }
 
-.info-icon {
+.service-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.service-icon {
     width: 64px;
     height: 64px;
-    background: var(--bg-soft-gray);
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.1) 0%, rgba(26, 43, 72, 0.1) 100%);
     color: var(--action-blue);
-    border-radius: 50%;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    margin: 0 auto 20px;
+    font-size: 1.75rem;
+    transition: all 0.4s ease;
+}
+
+.service-card:hover .service-icon {
+    background: var(--gradient-primary);
+    color: var(--white);
+    transform: scale(1.1);
+}
+
+.service-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin: 0;
+}
+
+.service-description {
+    font-size: 1rem;
+    color: var(--text-main);
+    opacity: 0.7;
+    line-height: 1.6;
+    margin-bottom: 24px;
 }
 
 .service-list li {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
     color: var(--text-main);
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 10px;
-    opacity: 0.8;
+    gap: 12px;
+    font-size: 1rem;
 }
 
 .service-list i {
     color: var(--action-blue);
+    font-size: 1.125rem;
+    width: 24px;
 }
 
-.mission-section {
-    background-color: var(--bg-soft-gray);
-    border-radius: 24px;
-    padding: 60px;
+.service-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--action-blue);
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 20px;
+    transition: all 0.3s ease;
 }
 
-/* ==========================================================================
-   3. TEAM SLIDER SECTION (Refactored & Highly Optimized)
-   ========================================================================== */
+.service-link:hover {
+    color: var(--primary-navy);
+    gap: 12px;
+}
 
-/* ==========================================================================
-   3. TEAM SLIDER SECTION (Pure CSS Flexbox Layout)
-   ========================================================================== */
-
+/* ==========================================
+   8. Team Slider Section
+   ========================================== */
 .team-slider-section {
-    background-color: var(--white);
+    background: var(--white);
     padding: 100px 0;
     overflow: hidden;
     position: relative;
 }
 
-/* الـ Wrapper الأساسي اللي بيفرش الصورة شمال والكلام يمين على خط واحد */
 .team-slider-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* طرد الصورة لأقصى الشمال والكلام لليمين */
+    justify-content: space-between;
     max-width: 1140px;
     margin: 0 auto;
     padding: 0 20px;
-    gap: 60px; /* مسافة أمان أفقية ثابتة ومريحة بين العمودين */
+    gap: 80px;
 }
 
-/* عمود الشق الأيسر (الصورة) */
 .team-image-column {
     flex-shrink: 0;
 }
 
-/* عمود الشق الأيمن (المحتوى) */
 .team-content-column {
     flex: 1;
-    max-width: 550px; /* الحفاظ على عرض البلوك النصي متناسق */
+    max-width: 550px;
     display: flex;
     flex-direction: column;
 }
 
-.team-header-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary-navy);
-    margin-bottom: 35px;
-    line-height: 1.2;
-    letter-spacing: -0.5px;
-}
-
-/* ==========================================
-   Image Wrapper Shapes (The Creative Layout)
-   ========================================== */
+/* Image Wrapper Shapes */
 .team-img-wrapper {
     position: relative;
-    width: 380px; 
+    width: 380px;
     height: 440px;
 }
 
-/* Back Box (الظلال الهندسية الخلفية) */
 .shape-back {
     position: absolute;
     top: 20px;
-    right: -20px; 
+    right: -20px;
     width: 140px;
     height: 140px;
-    background-color: var(--bg-soft-gray);
+    background: linear-gradient(135deg, rgba(0, 82, 204, 0.1) 0%, rgba(26, 43, 72, 0.1) 100%);
     border-radius: 30px 30px 30px 80px;
     z-index: 1;
-    transition: transform 0.3s ease;
+    transition: all 0.4s ease;
 }
 
-/* Main Image Container */
 .shape-main {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--action-blue); 
+    background: var(--gradient-primary);
     border-radius: 40px 100px 40px 40px;
     z-index: 2;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(26, 43, 72, 0.06);
+    box-shadow: 0 30px 60px rgba(26, 43, 72, 0.15);
 }
 
 .shape-main img {
@@ -195,108 +599,302 @@ a {
     height: 100%;
     object-fit: cover;
     object-position: center top;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s ease;
 }
 
-/* تأثير الـ Hover على الصورة والـ Shape الخلفي */
 .team-img-wrapper:hover .shape-main img {
-    transform: scale(1.04);
-}
-.team-img-wrapper:hover .shape-back {
-    transform: translate(5px, -5px);
+    transform: scale(1.05);
 }
 
-/* Cutout Box (البوكس الداكن الإضافي) */
+.team-img-wrapper:hover .shape-back {
+    transform: translate(10px, -10px);
+}
+
 .shape-cutout {
     position: absolute;
-    bottom: 0px; 
+    bottom: 0px;
     left: -30px;
-    width: 150px; 
+    width: 150px;
     height: 150px;
-    background-color: var(--primary-navy);
+    background: var(--primary-navy);
     border-radius: 40px;
     z-index: 1;
-    /* border: 8px solid var(--white); */
-    box-shadow: 0 10px 25px rgba(26, 43, 72, 0.1);
+    box-shadow: 0 15px 35px rgba(26, 43, 72, 0.2);
+    transition: all 0.4s ease;
 }
 
-/* ==========================================
-   Content Area Text Alignment & Controls
-   ========================================== */
+.team-img-wrapper:hover .shape-cutout {
+    transform: translate(-5px, 5px);
+}
+
+/* Team Content */
+.team-member-info {
+    margin-bottom: 40px;
+}
+
 .member-name {
-    font-size: 2rem;
+    font-size: 2.25rem;
     font-weight: 800;
     color: var(--primary-navy);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     letter-spacing: -0.5px;
+}
+
+.member-role {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--action-blue);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 .member-desc {
     color: var(--text-main);
-    opacity: 0.8;
+    opacity: 0.75;
     font-size: 1.1rem;
     line-height: 1.8;
-    margin-bottom: 24px; 
+    margin-bottom: 24px;
 }
 
-.member-role {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--action-blue);
-    margin-bottom: 40px; /* ⬅️ وسعنا المساحة دي عشان ننزل الأزرار بعيد تماماً عن بروز الـ Cutout Box */
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-/* Slider Controls (التحكم في الأزرار) */
-.team-slider-controls {
+.member-social {
     display: flex;
     gap: 12px;
 }
 
+.social-link {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--bg-soft-gray);
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: var(--action-blue);
+    color: var(--white);
+    transform: translateY(-3px);
+}
+
+/* Slider Controls */
+.team-slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .team-slider-controls button {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     border: 2px solid var(--action-blue);
-    background-color: var(--white);
+    background: var(--white);
     color: var(--action-blue);
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 10px rgba(0, 82, 204, 0.05);
 }
 
 .team-slider-controls button:hover {
-    background-color: var(--action-blue);
+    background: var(--action-blue);
     color: var(--white);
-    box-shadow: 0 6px 15px rgba(0, 82, 204, 0.2);
-    transform: translateY(-2px);
+    transform: scale(1.1);
 }
 
-.team-slider-controls button:active {
-    transform: translateY(0);
+.slider-dots {
+    display: flex;
+    gap: 8px;
 }
 
-/* ── Animation Fade In ── */
+.slider-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #E0E0E0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slider-dot.active {
+    background: var(--action-blue);
+    width: 30px;
+    border-radius: 5px;
+}
+
+/* Animation Fade In */
 .fade-in {
-    animation: sliderFade 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: sliderFade 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 @keyframes sliderFade {
-    0% { opacity: 0; transform: translateX(15px); }
-    100% { opacity: 1; transform: translateX(0); }
+    0% {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* ==========================================
-   Responsive Media Queries (التوافق مع الموبايل)
+   9. CTA Section
    ========================================== */
-@media (max-width: 991px) {
+.cta-section {
+    padding: 100px 0;
+    background: var(--gradient-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+}
+
+.cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+}
+
+.cta-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.cta-content h2 {
+    font-size: 2.75rem;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 16px;
+    letter-spacing: -0.5px;
+}
+
+.cta-content p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 32px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cta-buttons .btn-primary {
+    background: var(--white);
+    color: var(--primary-navy);
+    border: none;
+    padding: 16px 36px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cta-buttons .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.cta-buttons .btn-outline-light {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    padding: 14px 36px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.cta-buttons .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--white);
+}
+
+/* ==========================================
+   10. Responsive Media Queries
+   ========================================== */
+@media (max-width: 1199px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+    
     .team-slider-wrapper {
-        flex-direction: column; /* قلب الـ Layout رأسي في الموبايل */
+        gap: 60px;
+    }
+    
+    .team-img-wrapper {
+        width: 340px;
+        height: 400px;
+    }
+}
+
+@media (max-width: 991px) {
+    .about-hero {
+        padding: 120px 0 80px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .hero-image-badge {
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .about-stats-section .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .section-title {
+        font-size: 2.25rem;
+    }
+    
+    .mission-card {
+        padding: 40px;
+    }
+    
+    .team-slider-wrapper {
+        flex-direction: column;
         gap: 50px;
         text-align: center;
     }
@@ -318,12 +916,104 @@ a {
 
     .shape-cutout {
         left: -20px;
-        width: 160px;
-        height: 65px;
-        bottom: 20px;
+        width: 130px;
+        height: 130px;
+        bottom: 10px;
     }
 
     .team-slider-controls {
         justify-content: center;
+    }
+    
+    .member-social {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .section-padding {
+        padding: 70px 0;
+    }
+    
+    .about-hero {
+        padding: 100px 0 60px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-badge {
+        font-size: 0.75rem;
+        padding: 8px 16px;
+    }
+    
+    .about-stats-section .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+    
+    .about-stats-section .stat-number {
+        font-size: 2rem;
+    }
+    
+    .about-stats-section .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .section-title {
+        font-size: 1.875rem;
+    }
+    
+    .mission-card {
+        padding: 30px 20px;
+    }
+    
+    .service-card {
+        padding: 30px;
+    }
+    
+    .value-card {
+        padding: 30px 20px;
+    }
+    
+    .member-name {
+        font-size: 1.75rem;
+    }
+    
+    .cta-content h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .about-stats-section .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+    }
+    
+    .cta-buttons .btn-primary,
+    .cta-buttons .btn-outline-light {
+        width: 100%;
     }
 }
