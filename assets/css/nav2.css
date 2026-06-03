@@ -28,9 +28,8 @@ html {
 
 body {
     background-color: #f4f4f4;
-    padding-top: 70px;
-    /* يترك مساحة ثابتة فوق لا يغطيها الهيدر */
-
+    padding-top: 0;
+    /* Removed padding-top since hero section goes behind transparent header */
 }
 
 /* --- Header & Navigation --- */
@@ -39,9 +38,29 @@ header {
     top: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 16px 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header.scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 4px 20px rgba(26, 43, 72, 0.08);
+    padding: 12px 0;
+    backdrop-filter: blur(10px);
+}
+
+header.scrolled .logo {
+    color: var(--primary-navy);
+}
+
+header.scrolled .main-nav ul li a {
+    color: #333;
+}
+
+header.scrolled .main-nav ul li a:hover {
+    color: var(--action-blue);
 }
 
 .container {
@@ -55,10 +74,12 @@ header {
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-navy);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--white);
     text-decoration: none;
+    letter-spacing: -0.5px;
+    transition: color 0.3s ease;
 }
 
 /* --- تنسيق الجزء اليمين اللي شايل الـ 2 ناف --- */
@@ -92,14 +113,34 @@ header {
 
 .main-nav ul li a {
     text-decoration: none;
-    color: #333;
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 500;
     transition: 0.3s;
+    padding: 8px 4px;
+    position: relative;
+}
+
+.main-nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--white);
+    transition: width 0.3s ease;
+}
+
+.main-nav ul li a:hover::after {
+    width: 100%;
+}
+
+header.scrolled .main-nav ul li a::after {
+    background: var(--action-blue);
 }
 
 .main-nav ul li a:hover {
-    /* color: #00b894;  */
-    color: var(--primary-navy);
+    color: var(--white);
 }
 
 /* --- Dropdown Menu --- */
@@ -140,17 +181,32 @@ header {
 .btn-login,
 .btn-register {
     text-decoration: none;
-    background-color: var(--primary-navy);
-    color: white !important;
-    padding: 8px 20px;
+    background-color: var(--white);
+    color: var(--primary-navy) !important;
+    padding: 10px 24px;
     border-radius: 25px;
-    font-weight: 500;
-    transition: 0.3s;
-    border: 2px solid var(--primary-navy);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid var(--white);
+    font-size: 0.9375rem;
 }
 
 .btn-login:hover,
 .btn-register:hover {
+    background-color: transparent;
+    color: var(--white) !important;
+    transform: translateY(-2px);
+}
+
+header.scrolled .btn-login,
+header.scrolled .btn-register {
+    background-color: var(--primary-navy);
+    color: var(--white) !important;
+    border-color: var(--primary-navy);
+}
+
+header.scrolled .btn-login:hover,
+header.scrolled .btn-register:hover {
     background-color: transparent;
     color: var(--primary-navy) !important;
 }
@@ -313,6 +369,19 @@ header {
 .notif-dropdown-header i {
     font-size: 16px;
     color: var(--primary-navy);
+}
+
+.notif-see-all-btn {
+    margin-left: auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--action-blue);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.notif-see-all-btn:hover {
+    opacity: 0.7;
 }
 
 .notif-list {
