@@ -133,6 +133,45 @@ if (PAYMOB_MODE === 'live') {
             throw new Exception("Order registration failed with Paymob. Error: " . $paymob_error);
         }
 
+        // ── STEP 2.5: Insert Pending Policy & Payment Records ─────────────
+        require_once 'includes/functions.php';
+        
+        $check_pol = mysqli_query($connect, "SELECT policy_id FROM policies WHERE application_id = $app_id LIMIT 1");
+        if ($check_pol && mysqli_num_rows($check_pol) > 0) {
+            $pol_row = mysqli_fetch_assoc($check_pol);
+            $policy_id = $pol_row['policy_id'];
+            mysqli_query($connect, "UPDATE policies SET status = 'cancelled', payment_ref = NULL WHERE policy_id = $policy_id");
+        } else {
+            $policy_number = generatePolicyNumber($connect, $app['category_name'] ?? 'Insurance');
+            $start_date = date('Y-m-d');
+            $end_date   = date('Y-m-d', strtotime('+1 year'));
+            $doc_path   = 'uploads/policies/policy_' . $app_id . '.pdf';
+
+            $ins_pol = mysqli_prepare($connect,
+                "INSERT INTO policies (application_id, policy_number, start_date, end_date, document_path, status)
+                 VALUES (?, ?, ?, ?, ?, 'cancelled')"
+            );
+            mysqli_stmt_bind_param($ins_pol, 'issss', $app_id, $policy_number, $start_date, $end_date, $doc_path);
+            mysqli_stmt_execute($ins_pol);
+            $policy_id = mysqli_insert_id($connect);
+            mysqli_stmt_close($ins_pol);
+        }
+
+        $check_pay = mysqli_query($connect, "SELECT payment_id FROM payments WHERE policy_id = $policy_id LIMIT 1");
+        if ($check_pay && mysqli_num_rows($check_pay) > 0) {
+            $pay_row = mysqli_fetch_assoc($check_pay);
+            $payment_id = $pay_row['payment_id'];
+            mysqli_query($connect, "UPDATE payments SET amount = $amount, status = 'pending', transaction_ref = '$order_id' WHERE payment_id = $payment_id");
+        } else {
+            $ins_pay = mysqli_prepare($connect,
+                "INSERT INTO payments (policy_id, amount, method, status, transaction_ref)
+                 VALUES (?, ?, 'credit_card', 'pending', ?)"
+            );
+            mysqli_stmt_bind_param($ins_pay, 'ids', $policy_id, $amount, $order_id);
+            mysqli_stmt_execute($ins_pay);
+            mysqli_stmt_close($ins_pay);
+        }
+
         // ── STEP 3: Request Payment Key ───────────────────────────────────
         $key_url  = "https://accept.paymob.com/api/acceptance/payment_keys";
         $key_data = json_encode([

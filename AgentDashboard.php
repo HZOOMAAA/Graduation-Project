@@ -17,8 +17,8 @@ if (isset($_POST['update_status'])) {
         if (mysqli_num_rows($check) > 0) {
             mysqli_query($connect, "UPDATE applications SET status = '$new_status' WHERE application_id = $application_id");
             $msg = $new_status === 'awaiting_payment'
-                ? "Application approved <i class='bx bx-check' style='color: var(--green);'></i> — customer notified to proceed with payment."
-                : "Application rejected <i class='bx bx-x' style='color: var(--red);'></i>. Please provide a rejection message below for the customer.";
+                ? "Application approved. Customer notified to proceed with payment."
+                : "Application rejected. Please provide a rejection message below for the customer.";
             header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
             exit();
         } else {

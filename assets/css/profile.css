@@ -316,7 +316,7 @@ body {
 .detail-col { flex: 1; }
 .detail-col .d-label { display: block; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 4px; }
 .detail-col .d-value { display: block; font-size: 14px; font-weight: 600; color: var(--text-main); display: flex; align-items: center; gap: 6px; }
-.detail-col .d-value i { color: var(--secondary); }
+.detail-col .d-value i { color: var(--primary-dark); }
 
 .app-card-footer {
     padding: 16px 20px;
@@ -332,6 +332,7 @@ body {
 .btn-yellow:hover { background: #fde047; }
 .btn-green { background: #22c55e; color: #fff; box-shadow: 0 4px 10px rgba(34,197,94,0.3); }
 .btn-green:hover { background: #16a34a; transform: translateY(-2px); }
+.btn-blue { background: #dbeafe; color: #1e40af; }
 
 /* Alerts */
 .premium-alert { padding: 16px 20px; border-radius: var(--radius-md); margin-bottom: 25px; font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 12px; }

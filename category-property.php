@@ -68,7 +68,7 @@ $draft_usage = ($draft && isset($draft['category']) && $draft['category'] === 'p
                                 <span class="custom-option" data-value="warehouse">Warehouse/Factory</span>
                             </div>
                         </div>
-                        <input type="hidden" name="property_type" id="property-type-input" value="<?php echo htmlspecialchars($draft_type); ?>" required>
+                        <input type="hidden" name="property_type" id="property-type-input" value="<?php echo htmlspecialchars($draft_type); ?>">
                     </div>
 
                     <div class="input-group">
@@ -91,18 +91,18 @@ $draft_usage = ($draft && isset($draft['category']) && $draft['category'] === 'p
                                 <span class="custom-option" data-value="before_2020">Before 2020</span>
                             </div>
                         </div>
-                        <input type="hidden" name="construction_year" id="construction-year-input" value="<?php echo htmlspecialchars($draft_year); ?>" required>
+                        <input type="hidden" name="construction_year" id="construction-year-input" value="<?php echo htmlspecialchars($draft_year); ?>" >
                     </div>
                 </div>
 
                 <div class="input-row">
                     <div class="input-group">
                         <label for="property_value">Estimated Building Value (EGP)</label>
-                        <input type="number" id="property_value" name="property_value" placeholder="e.g. 2000000" value="<?php echo htmlspecialchars($draft_prop_val); ?>" required>
+                        <input type="number" id="property_value" name="property_value" placeholder="e.g. 2000000" value="<?php echo htmlspecialchars($draft_prop_val); ?>">
                     </div>
                     <div class="input-group">
                         <label for="contents_value">Contents & Furniture Value (EGP)</label>
-                        <input type="number" id="contents_value" name="contents_value" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($draft_cont_val); ?>" required>
+                        <input type="number" id="contents_value" name="contents_value" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($draft_cont_val); ?>">
                     </div>
                 </div>
 
@@ -124,19 +124,19 @@ $draft_usage = ($draft && isset($draft['category']) && $draft['category'] === 'p
                             <span class="custom-option" data-value="comprehensive">Comprehensive - All Risks</span>
                         </div>
                     </div>
-                    <input type="hidden" name="coverage_type" id="coverage-input" value="<?php echo htmlspecialchars($draft_coverage); ?>" required>
+                    <input type="hidden" name="coverage_type" id="coverage-input" value="<?php echo htmlspecialchars($draft_coverage); ?>">
                 </div>
 
                 <div class="input-group">
                     <label for="property_address">Full Property Address</label>
-                    <input type="text" id="property_address" name="property_address" placeholder="City, District, Street No." value="<?php echo htmlspecialchars($draft_address); ?>" required style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--hub-input-bg); font-size: 15px;">
+                    <input type="text" id="property_address" name="property_address" placeholder="City, District, Street No." value="<?php echo htmlspecialchars($draft_address); ?>" style="width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--hub-input-bg); font-size: 15px;">
                 </div>
 
                 <div class="radio-group">
                     <label class="radio-main-label">Property Usage Status:</label>
                     <div class="radio-options">
                         <label class="custom-radio">
-                            <input type="radio" name="property_usage" value="owned" <?php echo $draft_usage === 'owned' ? 'checked' : ''; ?> required>
+                            <input type="radio" name="property_usage" value="owned" <?php echo $draft_usage === 'owned' ? 'checked' : ''; ?> >
                             <span class="radio-text">Owned</span>
                         </label>
                         <label class="custom-radio">
@@ -148,7 +148,7 @@ $draft_usage = ($draft && isset($draft['category']) && $draft['category'] === 'p
 
                 <button type="submit" class="check-btn" id="submitBtn">
                     <span class="btn-content" id="submitBtnText">
-                        Check Offers <i class="fa-solid fa-arrow-right btn-icon"></i>
+                       <i class="fa-solid fa-arrow-right btn-icon"></i> Check Offers 
                     </span>
                     <span id="submitBtnLoader" style="display:none;">
                         <i class="fas fa-spinner fa-spin"></i> Submitting...

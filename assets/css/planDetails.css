@@ -316,7 +316,7 @@ body {
 .pd-submit-btn {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, var(--blue) 0%, #2563eb 100%);
+    background: linear-gradient(135deg, var(--blue) 0%, #1A2B48 100%);
     color: #fff;
     border: none;
     border-radius: 12px;

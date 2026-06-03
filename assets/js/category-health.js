@@ -16,9 +16,9 @@ function addSpouseField() {
         </button>
         <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Spouse Birthdate</h4>
         <div class="insurance-birthdate-grid">
-            <input type="number" name="spouse_day" placeholder="DD" min="1" max="31" required>
-            <input type="number" name="spouse_month" placeholder="MM" min="1" max="12" required>
-            <input type="number" name="spouse_year" placeholder="YYYY" min="1920" max="2026" required>
+            <input type="number" name="spouse_day" placeholder="DD" min="1" max="31">
+            <input type="number" name="spouse_month" placeholder="MM" min="1" max="12">
+            <input type="number" name="spouse_year" placeholder="YYYY" min="1920" max="2026">
         </div>
     `;
 
@@ -52,9 +52,9 @@ function addChildField() {
         </button>
         <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Child ${childCounter} Birthdate</h4>
         <div class="insurance-birthdate-grid">
-            <input type="number" name="child_day[]" placeholder="DD" min="1" max="31" required>
-            <input type="number" name="child_month[]" placeholder="MM" min="1" max="12" required>
-            <input type="number" name="child_year[]" placeholder="YYYY" min="1920" max="2026" required>
+            <input type="number" name="child_day[]" placeholder="DD" min="1" max="31">
+            <input type="number" name="child_month[]" placeholder="MM" min="1" max="12">
+            <input type="number" name="child_year[]" placeholder="YYYY" min="1920" max="2026">
         </div>
     `;
 
@@ -138,10 +138,10 @@ function showModal(type, title, message) {
 
     if (type === 'success') {
         icon.classList.add('app-modal-icon--success');
-        icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
     } else {
         icon.classList.add('app-modal-icon--error');
-        icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
     }
 
     titleEl.textContent = title;
