@@ -50,9 +50,9 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                 <div class="insurance-input-group">
                     <label>Birthdate*</label>
                     <div class="insurance-birthdate-grid">
-                        <input type="number" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" required>
-                        <input type="number" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" required>
-                        <input type="number" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                        <input type="number" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" >
+                        <input type="number" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" >
+                        <input type="number" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" >
                     </div>
                 </div>
 
@@ -87,9 +87,9 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                                 </button>
                                 <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Spouse Birthdate</h4>
                                 <div class="insurance-birthdate-grid">
-                                    <input type="number" name="spouse_day" value="<?php echo htmlspecialchars($draft_spouse['day']); ?>" placeholder="DD" min="1" max="31" required>
-                                    <input type="number" name="spouse_month" value="<?php echo htmlspecialchars($draft_spouse['month']); ?>" placeholder="MM" min="1" max="12" required>
-                                    <input type="number" name="spouse_year" value="<?php echo htmlspecialchars($draft_spouse['year']); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                                    <input type="number" name="spouse_day" value="<?php echo htmlspecialchars($draft_spouse['day']); ?>" placeholder="DD" min="1" max="31" >
+                                    <input type="number" name="spouse_month" value="<?php echo htmlspecialchars($draft_spouse['month']); ?>" placeholder="MM" min="1" max="12" >
+                                    <input type="number" name="spouse_year" value="<?php echo htmlspecialchars($draft_spouse['year']); ?>" placeholder="YYYY" min="1920" max="2026" >
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -108,9 +108,9 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                                     </button>
                                     <h4 style="margin-top:0; margin-bottom:12px; color:#111827; font-weight:600;">Child <?php echo $childNum; ?> Birthdate</h4>
                                     <div class="insurance-birthdate-grid">
-                                        <input type="number" name="child_day[]" value="<?php echo htmlspecialchars($child['day']); ?>" placeholder="DD" min="1" max="31" required>
-                                        <input type="number" name="child_month[]" value="<?php echo htmlspecialchars($child['month']); ?>" placeholder="MM" min="1" max="12" required>
-                                        <input type="number" name="child_year[]" value="<?php echo htmlspecialchars($child['year']); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                                        <input type="number" name="child_day[]" value="<?php echo htmlspecialchars($child['day']); ?>" placeholder="DD" min="1" max="31" >
+                                        <input type="number" name="child_month[]" value="<?php echo htmlspecialchars($child['month']); ?>" placeholder="MM" min="1" max="12" >
+                                        <input type="number" name="child_year[]" value="<?php echo htmlspecialchars($child['year']); ?>" placeholder="YYYY" min="1920" max="2026" >
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -129,12 +129,12 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                     <label class="insurance-chronic-label">Does any of your family members need monthly treatment or suffer from a chronic disease?*</label>
                     <div class="insurance-radio-options">
                         <label class="insurance-custom-radio">
-                            <input type="radio" name="family_chronic" value="yes" <?php echo $draft_chronic === 'yes' ? 'checked' : ''; ?> required>
+                            <input type="radio" name="family_chronic" value="yes" <?php echo $draft_chronic === 'yes' ? 'checked' : ''; ?> >
                             <span class="insurance-radio-circle"></span>
                             <span class="insurance-radio-text">Yes</span>
                         </label>
                         <label class="insurance-custom-radio">
-                            <input type="radio" name="family_chronic" value="no" <?php echo $draft_chronic === 'no' ? 'checked' : ''; ?> required>
+                            <input type="radio" name="family_chronic" value="no" <?php echo $draft_chronic === 'no' ? 'checked' : ''; ?> >
                             <span class="insurance-radio-circle"></span>
                             <span class="insurance-radio-text">No</span>
                         </label>

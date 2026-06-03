@@ -42,7 +42,7 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
 
         <div class="form-container">
             <div class="header">
-                <h2>Secure Your Family's Future <i class='bx bxs-heart-letter'></i></h2>
+                <h2>Secure Your Family's Future <i class='bx bx-calendar-heart'></i></h2>
                 <p>Calculate your premium and protect the people you love the most</p>
             </div>
 
@@ -53,9 +53,9 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
                 <div class="input-group">
                     <label>Birthdate*</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 15px;">
-                        <input type="number" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" required>
-                        <input type="number" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" required>
-                        <input type="number" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" required>
+                        <input type="number" id="birth_day" name="birth_day" value="<?php echo htmlspecialchars($draft_bd); ?>" placeholder="DD" min="1" max="31" >
+                        <input type="number" id="birth_month" name="birth_month" value="<?php echo htmlspecialchars($draft_bm); ?>" placeholder="MM" min="1" max="12" >
+                        <input type="number" id="birth_year" name="birth_year" value="<?php echo htmlspecialchars($draft_by); ?>" placeholder="YYYY" min="1920" max="2026" >
                     </div>
                 </div>
 
@@ -69,7 +69,7 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
                     <div class="input-group">
                         <label for="coverage_amount">Insurance Coverage Amount (EGP)</label>
                         <input type="number" id="coverage_amount" name="coverage_amount" placeholder="e.g. 1000000"
-                            value="<?php echo htmlspecialchars($draft_coverage); ?>" required>
+                            value="<?php echo htmlspecialchars($draft_coverage); ?>" >
                     </div>
 
                     <div class="input-group">
@@ -92,7 +92,7 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
                                 <span class="custom-option" data-value="whole_life">Whole Life </span>
                             </div>
                         </div>
-                        <input type="hidden" name="policy_term" id="policy-term-input" value="<?php echo htmlspecialchars($draft_term); ?>" required>
+                        <input type="hidden" name="policy_term" id="policy-term-input" value="<?php echo htmlspecialchars($draft_term); ?>" >
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
                     <div class="input-group">
                         <label for="beneficiary_name">Primary Beneficiary Name</label>
                         <input type="text" id="beneficiary_name" name="beneficiary_name"
-                            placeholder="Who receives the payout?" value="<?php echo htmlspecialchars($draft_beneficiary); ?>" required>
+                            placeholder="Who receives the payout?" value="<?php echo htmlspecialchars($draft_beneficiary); ?>" >
                     </div>
 
                     <div class="input-group">
@@ -121,13 +121,16 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
                                 <span class="custom-option" data-value="parent">Parent</span>
                             </div>
                         </div>
-                        <input type="hidden" name="beneficiary_relation" id="relation-input" value="<?php echo htmlspecialchars($draft_relation); ?>" required>
+                        <input type="hidden" name="beneficiary_relation" id="relation-input" value="<?php echo htmlspecialchars($draft_relation); ?>" >
                     </div>
                 </div>
 
                 <button type="submit" class="check-btn" id="submitBtn">
                     <span class="btn-content" id="submitBtnText">
-                        Show Results <i class="fa-solid fa-arrow-right btn-icon"></i>
+                        Check Offers <i class="fa-solid fa-arrow-right btn-icon"></i>
+                    </span>
+                    <span id="submitBtnLoader" style="display:none;">
+                        <i class="fas fa-spinner fa-spin"></i> Submitting...
                     </span>
                 </button>
 
@@ -142,5 +145,4 @@ $draft_relation = ($draft && isset($draft['category']) && $draft['category'] ===
 </section>
 
 <script src="/Graduation-Project/assets/js/category-life.js?v=1.3"></script>
-
 <?php include 'includes/footer.php'; ?>

@@ -265,7 +265,6 @@ body {
 }
 
 .check-btn {
-    width: 100%;
     padding: 16px 28px;
     background-color: var(--titles-color);
     color: var(--white);
@@ -315,8 +314,8 @@ body {
 .app-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(11, 17, 27, 0.5);
-    backdrop-filter: blur(8px); /* تأثير بلور ناعم وعميق يعزل المودال بفخامة */
+    background: rgba(11, 17, 27, 0.5); /* الميكس الداكن الناعم بتاعك */
+    backdrop-filter: blur(8px); /* لمسة الـ iOS الفخمة */
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -325,7 +324,7 @@ body {
 
 .app-modal-box {
     background: var(--white);
-    border-radius: 24px;
+    border-radius: 24px; /* الحواف الناعمة الاحترافية */
     padding: 48px 40px;
     max-width: 420px;
     width: 90%;
@@ -334,7 +333,45 @@ body {
     animation: modalFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* ── العناصر الداخلية المضافة لتكملة الديزاين ── */
+
+/* تنسيق حاوية الأيقونة */
+.app-modal-icon {
+    font-size: 56px; /* حجم كبير وواضح */
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+}
+
+/* ألوان الأيقونات لتتماشى مع حالة الـ Popup */
+.app-modal-icon .fa-circle-check { color: #10b981; } /* أخضر نجاح */
+.app-modal-icon .fa-circle-xmark { color: #ef4444; } /* أحمر خطأ */
+.app-modal-icon .fa-circle-exclamation { color: #f59e0b; } /* برتقالي تنبيه */
+
+/* تنسيق العنوان الرئيسي */
+#appModalTitle {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-navy); /* كحلي COVERLY */
+    margin: 0 0 12px 0;
+    letter-spacing: -0.5px;
+}
+
+/* تنسيق نص الرسالة */
+#appModalMsg {
+    font-size: 14px;
+    color: #4b5563; /* رمادي متناسق ومريح للعين */
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    padding: 0 10px;
+}
+
+/* ────────────────────────────────────────── */
+
 .app-modal-btn {
+    width: 100%; /* جعل الزرار بكامل العرض لتنسيق أفضل للـ Card */
     padding: 14px 48px;
     background: var(--primary-navy);
     color: var(--white);
@@ -349,6 +386,11 @@ body {
 .app-modal-btn:hover {
     background: var(--action-blue);
     box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    transform: translateY(-1px); /* حركة خفيفة للأعلى عند الـ Hover */
+}
+
+.app-modal-btn:active {
+    transform: translateY(1px);
 }
 
 @keyframes modalFadeUp {

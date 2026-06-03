@@ -55,9 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (result.login_required) {
                 // ── Redirect to login page ───────────────────────────────────
                 window.location.href = result.redirect_url;
-            } 
-        }
-         finally {
+            } else {
+                // لو السيرفر رجع success: false وفي رسالة خطأ معينة من الـ PHP
+                showModal('error', 'Submission Failed', result.message || 'Something went wrong.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showModal('error', 'Connection Error', 'Unable to connect to the server. Please try again.');
+        } finally {
             document.getElementById('submitBtnText').style.display   = 'inline';
             document.getElementById('submitBtnLoader').style.display = 'none';
             document.getElementById('submitBtn').disabled = false;
@@ -65,21 +70,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// ── Modal Helpers ──────────────────────────────────────────────────────────────
+// ── Modal Helpers المربوطة والمطابقة تماماً لملف الـ CSS المطور ──────────────────
 function showModal(type, title, message) {
     const overlay = document.getElementById('appModal');
     const icon    = document.getElementById('appModalIcon');
     const titleEl = document.getElementById('appModalTitle');
     const msgEl   = document.getElementById('appModalMsg');
 
+    // إعادة ضبط الكلاس الأساسي للأيقونة لمنع تداخل الكلاسات القديمة
     icon.className = 'app-modal-icon';
 
+    // استخدام نفس الـ Icons العصرية المتوافقة مع ملف الـ CSS الفخم المحدث
     if (type === 'success') {
-        icon.classList.add('app-modal-icon--success');
-        icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+        icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
     } else {
-        icon.classList.add('app-modal-icon--error');
-        icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+        icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
     }
 
     titleEl.textContent = title;
