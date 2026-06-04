@@ -390,7 +390,7 @@ include __DIR__ . '/includes/nav2.php';
                                         <?php if ($status === 'waiting_docs' || $status === 'rejected'): ?>
                                             <a href="planDetails.php?application_id=<?= $row['application_id'] ?>" class="btn-sm btn-yellow"><i class="fa-solid fa-upload"></i> Upload</a>
                                         <?php elseif ($status === 'paid' && !empty($row['document_path'])): ?>
-                                            <a href="/Graduation-Project/<?= htmlspecialchars($row['document_path']) ?>" target="_blank" class="btn-sm btn-green"><i class="fa-solid fa-download"></i> Policy</a>
+                                            <a href="download_policy.php?id=<?= $row['application_id'] ?>" target="_blank" class="btn-sm btn-green"><i class="fa-solid fa-download"></i> Policy</a>
                                         <?php elseif ($status === 'awaiting_payment'): ?>
                                             <a href="payment.php?app_id=<?= $row['application_id'] ?>" class="btn-sm btn-blue"><i class="fa-solid fa-credit-card"></i> Pay Now</a>
                                         <?php endif; ?>

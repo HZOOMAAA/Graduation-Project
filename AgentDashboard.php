@@ -449,7 +449,7 @@ $cnt = [
                 <p><strong><i class='bx bx-calendar-check'></i> Valid Commencement Date:</strong> <span class="txt-medium"><?php echo date('F d, Y', strtotime($policy['start_date'])); ?></span></p>
                 <p><strong><i class='bx bx-calendar-x'></i> Valid Expiration Date:</strong> <span class="txt-medium"><?php echo date('F d, Y', strtotime($policy['end_date'])); ?></span></p>
                 <p><strong><i class='bx bxs-info-circle'></i> Operations Status:</strong> <span class="badge badge-success-pill"><?php echo ucfirst($policy['status']); ?></span></p>
-                <p><strong><i class='bx bx-download'></i> Legal Document:</strong> <a href="/Graduation-Project/<?php echo htmlspecialchars($policy['document_path']); ?>" class="btn btn-sm btn-download-pdf"><i class='bx bxs-file-pdf'></i> Download Official PDF Ledger</a></p>
+                <p><strong><i class='bx bx-download'></i> Legal Document:</strong> <a href="download_policy.php?id=<?php echo $app_details['application_id']; ?>" target="_blank" class="btn btn-sm btn-download-pdf"><i class='bx bxs-file-pdf'></i> Download Official PDF Ledger</a></p>
             </div>
         </div>
 

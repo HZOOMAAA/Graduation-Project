@@ -265,7 +265,7 @@ include 'includes/nav2.php';
                     <button onclick="window.print()" class="action-btn btn-secondary">
                         <i class="fa-solid fa-print"></i> Print Invoice
                     </button>
-                    <a href="uploads/policies/policy_<?php echo $app_id; ?>.pdf" target="_blank" class="action-btn btn-secondary">
+                    <a href="download_policy.php?id=<?php echo $app_id; ?>" target="_blank" class="action-btn btn-secondary">
                         <i class="fa-solid fa-file-pdf"></i> Download PDF
                     </a>
                 </div>

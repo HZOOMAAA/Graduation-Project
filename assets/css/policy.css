@@ -1,0 +1,452 @@
+:root {
+    --primary: #581c87;
+    --primary-dark: #3b0764;
+    --accent: #b45309;
+    --accent-gold: #d97706;
+    --text-dark: #1e1b4b;
+    --text-light: #475569;
+    --bg-glass: rgba(255, 255, 255, 0.85);
+    --border-gold: rgba(217, 119, 6, 0.35);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+    color: #f1f5f9;
+}
+
+/* ── Floating Controls (Screen Only) ── */
+.controls-bar {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 15px 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInDown 0.6s ease-out;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+    color: #ffffff;
+    transform: translateX(-4px);
+}
+
+.btn-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    transition: all 0.2s ease;
+}
+
+.btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 85, 247, 0.6);
+}
+
+/* ── Certificate Wrapper ── */
+.certificate-container {
+    width: 100%;
+    max-width: 900px;
+    background: #ffffff;
+    color: var(--text-dark);
+    border-radius: 4px;
+    padding: 60px;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Elegant double border */
+.certificate-border-outer {
+    border: 14px double var(--primary-dark);
+    padding: 30px;
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+
+.certificate-border-inner {
+    border: 2px solid var(--accent-gold);
+    padding: 35px 40px;
+    height: 100%;
+    position: relative;
+}
+
+/* ── Watermark Background ── */
+.certificate-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    opacity: 0.04;
+    pointer-events: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23581c87'><path d='M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 12c-2.7 0-5.08-1.5-6.26-3.7-.06-.12-.09-.25-.09-.39 0-.55.45-1 1-1h10.65c.55 0 1 .45 1 1 0 .14-.03.27-.09.39-1.18 2.2-3.56 3.7-6.26 3.7z'/></svg>") no-repeat center/contain;
+}
+
+/* ── Header ── */
+.cert-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.cert-logo {
+    font-family: 'Outfit', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.cert-logo i {
+    margin-right: 5px;
+    color: var(--accent-gold);
+}
+
+.cert-title-badge {
+    font-family: 'Cinzel', serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--primary-dark);
+    letter-spacing: 3px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.cert-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.cert-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-light);
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 35px auto;
+}
+
+/* ── Policy Main Data ── */
+.policy-hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f5f9;
+    border-top: 2px solid #f1f5f9;
+    padding: 20px 10px;
+    margin-bottom: 35px;
+}
+
+.hero-data-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hero-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-light);
+    text-transform: uppercase;
+}
+
+.hero-val {
+    font-family: 'Outfit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.policy-no-badge {
+    background: #faf5ff;
+    border: 1px dashed var(--primary);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ── Grid Columns: Holder & Plan Info ── */
+.cert-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.info-section-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-list li {
+    font-size: 13.5px;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.info-list li strong {
+    color: var(--text-light);
+    font-weight: 600;
+    display: inline-block;
+    width: 110px;
+}
+
+/* ── Coverage Specifications Table ── */
+.coverage-table-wrapper {
+    margin-bottom: 45px;
+}
+
+.coverage-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.coverage-table th {
+    background-color: #f8fafc;
+    color: var(--text-light);
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.coverage-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-dark);
+    vertical-align: top;
+}
+
+.coverage-table tr:hover td {
+    background-color: #fafbfd;
+}
+
+.coverage-table td.prop-name {
+    font-weight: 600;
+    color: var(--text-light);
+    width: 40%;
+    text-transform: capitalize;
+}
+
+.coverage-table td.prop-val {
+    font-weight: 500;
+}
+
+/* ── Signatures & Stamps ── */
+.cert-footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 50px;
+}
+
+.footer-stamp-box {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* SVG Circular Stamp Seal */
+.official-seal {
+    width: 85px;
+    height: 85px;
+    position: relative;
+}
+
+.sig-container {
+    text-align: center;
+    width: 200px;
+}
+
+.sig-line {
+    border-top: 1px solid #cbd5e1;
+    margin-top: 10px;
+    padding-top: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.sig-handwritten {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #475569;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+
+.sig-handwritten.coverly-officer {
+    color: var(--primary);
+    font-size: 20px;
+    letter-spacing: 1px;
+}
+
+/* Disclaimer */
+.legal-disclaimer {
+    text-align: center;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 50px;
+    line-height: 1.5;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 15px;
+}
+
+/* ── Animations ── */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── PRINT STYLES (A4 Portrait) ── */
+@media print {
+    body {
+        background: none !important;
+        color: #000000 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+    }
+
+    .controls-bar {
+        display: none !important;
+    }
+
+    .certificate-container {
+        box-shadow: none !important;
+        padding: 10mm !important;
+        width: 210mm !important;
+        height: 297mm !important;
+        background: #ffffff !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+        page-break-after: avoid;
+        page-break-before: avoid;
+    }
+
+    .certificate-border-outer {
+        border-color: #000000 !important;
+        border-width: 10px !important;
+        padding: 15mm !important;
+        height: 277mm !important;
+    }
+
+    .certificate-border-inner {
+        border-color: #b45309 !important;
+        padding: 15mm 20mm !important;
+        height: 247mm !important;
+    }
+
+    .sig-handwritten.coverly-officer {
+        color: #581c87 !important;
+    }
+}
