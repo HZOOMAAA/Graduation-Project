@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch('/Graduation-Project/submit_car_application.php', {
+            const response = await fetch('/Graduation-Project/category-car.php', {
                 method: 'POST',
                 body:   formData,
             });

@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        form.action = '/Graduation-Project/submit_health_application.php';
+        form.action = '/Graduation-Project/category-health.php';
         form.method = 'POST';
         form.submit();
     });

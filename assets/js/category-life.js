@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const formData = new FormData(this);
 
-        fetch('/Graduation-Project/submit_life_application.php', {
+        fetch('/Graduation-Project/category-life.php', {
             method: 'POST',
             body: formData
         })

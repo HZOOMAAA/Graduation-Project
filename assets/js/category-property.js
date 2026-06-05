@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const formData = new FormData(this);
         
-        fetch('/Graduation-Project/submit_property_application.php', {
+        fetch('/Graduation-Project/category-property.php', {
             method: 'POST',
             body: formData
         })
