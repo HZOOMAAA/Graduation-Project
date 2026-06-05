@@ -226,7 +226,7 @@ body {
 /* الـ Grid الخاص بكروت الـ Overview الأربعة */
 .overview-stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     margin-bottom: 30px;
 }
@@ -241,7 +241,7 @@ body {
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
 }
 
 .stat-card-icon {
@@ -257,7 +257,7 @@ body {
 }
 
 .stat-card-number {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: var(--primary-navy);
     margin: 12px 0 4px 0;
@@ -276,7 +276,7 @@ body {
     font-weight: 500;
 }
 
-/* شارات النسبة المئوية الفخمة (الصعود والهبوط) */
+/* شارات النسبة المئوية الفخمة */
 .stat-trend-up {
     color: var(--success-green);
     background: var(--success-bg);
@@ -302,6 +302,25 @@ body {
     font-weight: 600;
     padding: 2px 8px;
     border-radius: 50px;
+}
+
+/* -- 3. Mobile & Tablet Responsiveness -- */
+@media (max-width: 1200px) {
+    .overview-stats-grid {
+        grid-template-columns: repeat(3, 1fr); /* 3 cards f awel saf */
+    }
+}
+
+@media (max-width: 768px) {
+    .overview-stats-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 cards lel screens el as8ar */
+    }
+}
+
+@media (max-width: 480px) {
+    .overview-stats-grid {
+        grid-template-columns: 1fr; /* card wa7ed lel mobile */
+    }
 }
 
 /* ── 2️⃣ الـ Layout المزدوج (تقسيم الشاشة لعمودين) ── */

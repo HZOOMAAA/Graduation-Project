@@ -97,6 +97,7 @@ if (isset($_POST['add_plan'])) {
     $company = mysqli_real_escape_string($connect, $_POST['insurance_company']);
     $details = mysqli_real_escape_string($connect, $_POST['bio']);
     $price = (float)$_POST['base_price'];
+    $commission_rate=(float)$_POST['commission_rate'];
     
     $eligibility_raw = trim($_POST['eligibility_rules']);
     $eligibility = 'NULL';
@@ -138,7 +139,7 @@ if (isset($_POST['add_plan'])) {
             $error = $logo_upload_error;
         } else {
             $logo_escaped = mysqli_real_escape_string($connect, $logo_path);
-            $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, eligibility_rules, logo) VALUES ('$name', $category_id, '$company', '$details', $price, $eligibility, '$logo_escaped')");
+            $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, commission_rate, eligibility_rules, logo) VALUES ('$name', $category_id, '$company', '$details', $price,$commission_rate, $eligibility, '$logo_escaped')");
             if ($insert) {
                 $success = "Insurance plan added successfully!";
                 header("Location: AdminDashboard.php?tab=add_plan&success=" . urlencode($success));
@@ -157,6 +158,8 @@ if (isset($_POST['edit_plan'])) {
     $company = mysqli_real_escape_string($connect, $_POST['insurance_company']);
     $details = mysqli_real_escape_string($connect, $_POST['bio']);
     $price = (float)$_POST['base_price'];
+    $commission_rate=(float)$_POST['commission_rate'];
+
     
     $eligibility_raw = trim($_POST['eligibility_rules']);
     $eligibility = 'NULL';
@@ -197,9 +200,10 @@ if (isset($_POST['edit_plan'])) {
 
         if ($logo_upload_error !== '') {
             $error = $logo_upload_error;
+        } else {
             $update = mysqli_query(
                 $connect,
-                "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
+                "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, commission_rate = $commission_rate, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
             );
             if ($update) {
                 $success = "Insurance plan updated successfully!";
@@ -364,6 +368,15 @@ $total_agents = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cn
 $total_customers = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM users WHERE role='customer'"))['cnt'];
 $total_plans  = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM insurance_plans"))['cnt'];
 
+// Calculate total revenue as SUM(base_price * commission_rate) for paid applications
+$revenue_result = mysqli_fetch_assoc(mysqli_query($connect, "
+    SELECT COALESCE(SUM(p.base_price * p.commission_rate), 0) as total_revenue
+    FROM applications a
+    JOIN insurance_plans p ON a.plan_id = p.plan_id
+    WHERE a.status = 'paid'
+"));
+$total_revenue = (float)($revenue_result['total_revenue'] ?? 0);
+
 $all_plans = mysqli_query($connect, "
     SELECT p.*, cat.name as category_name
     FROM insurance_plans p
@@ -424,10 +437,14 @@ for ($i = 6; $i >= 0; $i--) {
 
 $start_date = date('Y-m-d 00:00:00', strtotime("-6 days"));
 $revenue_query = "
-    SELECT DATE(payment_date) as payment_day, SUM(amount) as daily_revenue 
-    FROM payments 
-    WHERE status = 'completed' AND payment_date >= '$start_date'
-    GROUP BY DATE(payment_date)
+    SELECT DATE(pay.payment_date) as payment_day, 
+           SUM(p.base_price * p.commission_rate) as daily_revenue 
+    FROM payments pay
+    JOIN policies pol ON pay.policy_id = pol.policy_id
+    JOIN applications a ON pol.application_id = a.application_id
+    JOIN insurance_plans p ON a.plan_id = p.plan_id
+    WHERE pay.status = 'completed' AND pay.payment_date >= '$start_date'
+    GROUP BY DATE(pay.payment_date)
 ";
 $revenue_res = mysqli_query($connect, $revenue_query);
 if ($revenue_res) {
@@ -532,43 +549,52 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
 
 
-            <div class="overview-stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
-                    <div class="stat-card-number"><?php echo $total_customers; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Customers</span>
-                        <span class="stat-trend-up">↑ 11.01%</span>
-                    </div>
-                </div>
+<div class="overview-stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-user'></i></div>
+        <div class="stat-card-number"><?php echo $total_customers; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Customers</span>
+            <span class="stat-trend-up">↑ 11.01%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
-                    <div class="stat-card-number"><?php echo $total_apps; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Total applications</span>
-                        <span class="stat-trend-down">↓ 4.05%</span>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
+        <div class="stat-card-number"><?php echo $total_apps; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Total applications</span>
+            <span class="stat-trend-down">↓4.05%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-group'></i></div>
-                    <div class="stat-card-number"><?php echo $total_agents; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Active Agents</span>
-                        <span class="stat-trend-up">↑ 2.3%</span>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-group'></i></div>
+        <div class="stat-card-number"><?php echo $total_agents; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Active Agents</span>
+            <span class="stat-trend-up">↑ 2.3%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
-                    <div class="stat-card-number"><?php echo $total_plans; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Insurance Plans</span>
-                        <span class="stat-trend-stable">Stable</span>
-                    </div>
-                </div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
+        <div class="stat-card-number"><?php echo $total_plans; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Insurance Plans</span>
+            <span class="stat-trend-stable">Stable</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon" style="background: #ECFDF5; color: #10B981;"><i class='bx bx-dollar-circle'></i></div>
+        <div class="stat-card-number">EGP <?php echo number_format($total_revenue, 2); ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Total Revenue</span>
+            <span class="stat-trend-up">↑ Commission Based</span>
+        </div>
+    </div>
+</div>
 
             <div class="overview-twin-layout">
                 
@@ -1113,6 +1139,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         <input type="number" step="0.01" name="base_price" placeholder="Enter base price" required>
                     </div>
                     <div class="form-group">
+                        <label>Commission Rate</label>
+                        <input type="number" step="0.01" name="commission_rate" placeholder="Enter Commission Rate (e.g. 0.15)" required>
+                    </div>
+                    <div class="form-group">
                         <label>Details / Bio</label>
                         <textarea name="bio" rows="4" placeholder="Enter plan details" required></textarea>
                     </div>
@@ -1551,6 +1581,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     <input type="number" step="0.01" name="base_price" id="edit-plan-price" placeholder="Enter base price" required>
                 </div>
                 <div class="form-group">
+                    <label>Commission Rate</label>
+                    <input type="number" step="0.01" name="commission_rate" id="edit-plan-commission" placeholder="Commission Rate (e.g. 0.15)" required>
+                </div>
+                <div class="form-group">
                     <label>Details / Bio</label>
                     <textarea name="bio" id="edit-plan-bio" rows="3" placeholder="Enter plan details" required></textarea>
                 </div>
@@ -1810,6 +1844,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             document.getElementById('edit-plan-category').value = plan.category_id;
             document.getElementById('edit-plan-company').value = plan.insurance_company;
             document.getElementById('edit-plan-price').value = plan.base_price;
+            document.getElementById('edit-plan-commission').value = plan.commission_rate;
             document.getElementById('edit-plan-bio').value = plan.bio;
 
             // Trigger Rules Panel Display
