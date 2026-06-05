@@ -5,13 +5,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ── Validate method ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: /Graduation-Project/category-health.php');
     exit;
 }
 
-// ── Collect & sanitize inputs ─────────────────────────────────────────────────
 $birth_day = isset($_POST['birth_day']) ? intval($_POST['birth_day']) : 0;
 $birth_month = isset($_POST['birth_month']) ? intval($_POST['birth_month']) : 0;
 $birth_year = isset($_POST['birth_year']) ? intval($_POST['birth_year']) : 0;
@@ -21,7 +19,6 @@ $client_phone = isset($_POST['client_phone']) ? trim(mysqli_real_escape_string($
 
 $family_chronic = isset($_POST['family_chronic']) ? trim($_POST['family_chronic']) : 'no';
 
-// ── Spouse (optional) ─────────────────────────────────────────────────────────
 $has_spouse = false;
 $spouse_data = null;
 if (!empty($_POST['spouse_day']) && !empty($_POST['spouse_month']) && !empty($_POST['spouse_year'])) {
@@ -33,7 +30,6 @@ if (!empty($_POST['spouse_day']) && !empty($_POST['spouse_month']) && !empty($_P
     ];
 }
 
-// ── Children (optional, arrays) ───────────────────────────────────────────────
 $children = [];
 if (!empty($_POST['child_day']) && is_array($_POST['child_day'])) {
     $days = $_POST['child_day'];
@@ -51,7 +47,6 @@ if (!empty($_POST['child_day']) && is_array($_POST['child_day'])) {
     }
 }
 
-// ── Calculate primary member's age ────────────────────────────────────────────
 $age = 0;
 if ($birth_year > 0 && $birth_month > 0 && $birth_day > 0) {
     $birthdate = new DateTime("$birth_year-$birth_month-$birth_day");
@@ -59,7 +54,6 @@ if ($birth_year > 0 && $birth_month > 0 && $birth_day > 0) {
     $age = $today->diff($birthdate)->y;
 }
 
-// ── Basic validation ──────────────────────────────────────────────────────────
 $errors = [];
 if ($birth_day < 1 || $birth_day > 31)
     $errors[] = 'Valid birth day is required.';
@@ -76,7 +70,6 @@ if (!empty($errors)) {
     exit;
 }
 
-// ── Build JSON payload ────────────────────────────────────────────────────────
 $applicationData = [
     'category' => 'health',
     'client_name' => $client_name,
@@ -93,7 +86,6 @@ $applicationData = [
     'submitted_at' => date('Y-m-d H:i:s'),
 ];
 
-// ── Resolve category ID ──────────────────────────────────────────────────────
 $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE name LIKE '%Medical%' OR name LIKE '%health%' LIMIT 1");
 if (!$catResult || mysqli_num_rows($catResult) === 0) {
     $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE category_id = 2 LIMIT 1");
@@ -101,18 +93,15 @@ if (!$catResult || mysqli_num_rows($catResult) === 0) {
 $catRow = mysqli_fetch_assoc($catResult);
 $category_id = $catRow ? intval($catRow['category_id']) : 2;
 
-// ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id'] = $category_id;
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_after_login'] = '/Graduation-Project/category-health.php';
     header('Location: /Graduation-Project/auth/login.php');
     exit;
 }
 
-// ── Redirect to plans page ────────────────────────────────────────────────────
 header('Location: /Graduation-Project/plans.php');
 exit;
 ?>

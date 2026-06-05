@@ -7,13 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 header('Content-Type: application/json');
 
-// ── Validate method ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
 }
 
-// ── Collect & sanitize inputs ─────────────────────────────────────────────────
 $property_type      = isset($_POST['property_type'])      ? trim(mysqli_real_escape_string($connect, $_POST['property_type']))      : '';
 $construction_year  = isset($_POST['construction_year'])  ? trim(mysqli_real_escape_string($connect, $_POST['construction_year']))  : '';
 $property_value     = isset($_POST['property_value'])     ? floatval($_POST['property_value'])                                      : 0;
@@ -25,7 +23,6 @@ $property_usage     = isset($_POST['property_usage'])     ? trim(mysqli_real_esc
 $client_name  = isset($_SESSION['name'])  ? trim(mysqli_real_escape_string($connect, $_SESSION['name']))  : 'Valued Customer';
 $client_phone = isset($_SESSION['phone']) ? trim(mysqli_real_escape_string($connect, $_SESSION['phone'])) : '';
 
-// ── Basic validation ──────────────────────────────────────────────────────────
 $errors = [];
 if (empty($property_type))     $errors[] = 'Property type is required.';
 if (empty($construction_year)) $errors[] = 'Construction year is required.';
@@ -39,7 +36,6 @@ if (!empty($errors)) {
     exit;
 }
 
-// ── Build JSON payload ────────────────────────────────────────────────────────
 $applicationData = [
     'category'          => 'property',
     'client_name'       => $client_name,
@@ -54,7 +50,6 @@ $applicationData = [
     'submitted_at'      => date('Y-m-d H:i:s'),
 ];
 
-// ── Resolve category ID ──────────────────────────────────────────────────────
 $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE name LIKE '%Property%' LIMIT 1");
 if (!$catResult || mysqli_num_rows($catResult) === 0) {
     mysqli_query($connect, "INSERT INTO categories (name) VALUES ('Property Insurance')");
@@ -64,11 +59,9 @@ if (!$catResult || mysqli_num_rows($catResult) === 0) {
     $category_id = intval($catRow['category_id']);
 }
 
-// ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id']      = $category_id;
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_after_login'] = '/Graduation-Project/category-property.php';
     echo json_encode([

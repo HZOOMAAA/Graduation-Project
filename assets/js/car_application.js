@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        // ── Validate hidden inputs filled by custom selects ────────────────
         const brand     = document.getElementById('brand-input').value.trim();
         const model     = document.getElementById('model-input').value.trim();
         const year      = document.getElementById('year-input').value.trim();
@@ -33,12 +32,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // ── Show loader ────────────────────────────────────────────────────
         document.getElementById('submitBtnText').style.display   = 'none';
         document.getElementById('submitBtnLoader').style.display = 'inline';
         document.getElementById('submitBtn').disabled = true;
 
-        // ── Build FormData & POST ──────────────────────────────────────────
         const formData = new FormData(form);
 
         try {
@@ -50,17 +47,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
 
             if (result.success) {
-                // ── Redirect to plan-selection page ──────────────────────────
                 window.location.href = '/Graduation-Project/plans.php';
             } else if (result.login_required) {
-                // ── Redirect to login page ───────────────────────────────────
                 window.location.href = result.redirect_url;
             } else {
-                // لو السيرفر رجع success: false وفي رسالة خطأ معينة من الـ PHP
                 showModal('error', 'Submission Failed', result.message || 'Something went wrong.');
             }
         } catch (error) {
-            console.error('Error:', error);
             showModal('error', 'Connection Error', 'Unable to connect to the server. Please try again.');
         } finally {
             document.getElementById('submitBtnText').style.display   = 'inline';
@@ -70,17 +63,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// ── Modal Helpers المربوطة والمطابقة تماماً لملف الـ CSS المطور ──────────────────
 function showModal(type, title, message) {
     const overlay = document.getElementById('appModal');
     const icon    = document.getElementById('appModalIcon');
     const titleEl = document.getElementById('appModalTitle');
     const msgEl   = document.getElementById('appModalMsg');
 
-    // إعادة ضبط الكلاس الأساسي للأيقونة لمنع تداخل الكلاسات القديمة
     icon.className = 'app-modal-icon';
 
-    // استخدام نفس الـ Icons العصرية المتوافقة مع ملف الـ CSS الفخم المحدث
     if (type === 'success') {
         icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
     } else {

@@ -42,18 +42,14 @@ let currentIndex = 0;
 function changeMember(direction) {
     const container = document.getElementById("team-slider-container");
 
-    // Reset animation
     container.classList.remove("fade-in");
 
-    // Calculate new index
     currentIndex = (currentIndex + direction + teamMembers.length) % teamMembers.length;
 
-    // Update content
     document.getElementById("team-name").innerText = teamMembers[currentIndex].name;
     document.getElementById("team-role").innerText = teamMembers[currentIndex].role;
     document.getElementById("team-desc").innerText = teamMembers[currentIndex].desc;
     document.getElementById("team-img").src = teamMembers[currentIndex].img;
 
-    // Apply animation
     container.classList.add("fade-in");
 }

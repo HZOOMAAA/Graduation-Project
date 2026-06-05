@@ -1,10 +1,9 @@
 <?php
 require_once 'includes/connection.php';
-require_once 'includes/auth_check.php'; // ensures user is logged in
+require_once 'includes/auth_check.php';
 
 header('Content-Type: application/json');
 
-// ── Only accept POST ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
@@ -15,7 +14,6 @@ $customer_id    = $_SESSION['user_id'];
 $is_session_flow = ($application_id === 0);
 
 if ($is_session_flow) {
-    // Session-based flow
     $appData = $_SESSION['temp_application_data'] ?? null;
     if ($appData) {
         if (empty($appData['client_name']) && isset($_SESSION['name'])) {
@@ -33,7 +31,6 @@ if ($is_session_flow) {
         exit;
     }
 } else {
-    // ── Validate database application belongs to this customer and is in waiting_docs ──────
     $stmt = mysqli_prepare($connect,
         "SELECT application_id, status, category_id FROM applications WHERE application_id = ? AND customer_id = ?"
     );
@@ -54,7 +51,6 @@ if ($is_session_flow) {
     $category_id = intval($app['category_id']);
 }
 
-// ── Fetch category name to determine type ───────────────────────────────────────
 $category_name = '';
 $catQuery = mysqli_prepare($connect, "SELECT name FROM categories WHERE category_id = ?");
 mysqli_stmt_bind_param($catQuery, 'i', $category_id);
@@ -94,7 +90,6 @@ if ($is_health) {
     $requiredFields = ['national_id', 'property_deed'];
     $multiFields = ['property_photos'];
 } else {
-    // Car / default
     $fileFields = [
         'national_id'  => 'National ID',
         'car_license'  => 'Car License',
@@ -104,7 +99,6 @@ if ($is_health) {
     $multiFields = ['car_photos'];
 }
 
-// ── Upload directory ───────────────────────────────────────────────────────────
 $uploadDir = __DIR__ . '/uploads/documents/';
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);
@@ -123,7 +117,6 @@ foreach ($fileFields as $fieldName => $docType) {
         continue;
     }
 
-    // Normalise to arrays for uniform handling
     if ($isMulti) {
         $names    = $_FILES[$fieldName]['name'];
         $tmpNames = $_FILES[$fieldName]['tmp_name'];
@@ -141,7 +134,7 @@ foreach ($fileFields as $fieldName => $docType) {
             $errors[] = "Upload error for $docType.";
             continue;
         }
-        if ($sizes[$i] > 8 * 1024 * 1024) {        // 8 MB cap
+        if ($sizes[$i] > 8 * 1024 * 1024) {
             $errors[] = "$docType: file size must not exceed 8 MB.";
             continue;
         }
@@ -153,7 +146,6 @@ foreach ($fileFields as $fieldName => $docType) {
             continue;
         }
 
-        // Store file details for post-validation processing
         $validFiles[] = [
             'fieldName' => $fieldName,
             'docType'   => $docType,
@@ -177,11 +169,9 @@ if (empty($validFiles)) {
     exit;
 }
 
-// ── Now we have passed ALL validations. We can proceed with DB updates and file writing ──
 $db_updated = false;
 
 if ($is_session_flow) {
-    // 1. Insert application row
     $sql = "INSERT INTO applications (customer_id, category_id, plan_id, status, application_data, created_at)
             VALUES (?, ?, ?, 'under_review', ?, NOW())";
     $appStmt = mysqli_prepare($connect, $sql);
@@ -200,7 +190,6 @@ if ($is_session_flow) {
     }
     mysqli_stmt_close($appStmt);
 } else {
-    // 1. Update application status to under_review for existing application
     if ($app['status'] === 'rejected') {
         $updStmt = mysqli_prepare($connect,
             "UPDATE applications 
@@ -225,7 +214,6 @@ if (!$db_updated) {
     exit;
 }
 
-// 2. Move files to directory using final application_id
 $uploadedDocs = [];
 $move_errors = [];
 
@@ -249,7 +237,6 @@ if (!empty($move_errors)) {
     exit;
 }
 
-// 3. Insert documents into the documents table
 $insStmt = mysqli_prepare($connect,
     "INSERT INTO documents (application_id, doc_type, file_path, uploaded_at) VALUES (?, ?, ?, NOW())"
 );
@@ -260,7 +247,6 @@ foreach ($uploadedDocs as $doc) {
 }
 mysqli_stmt_close($insStmt);
 
-// 4. Also store any notes in application_data
 $notes = trim($_POST['notes'] ?? '');
 if ($notes !== '') {
     $noteStmt = mysqli_prepare($connect,
@@ -273,7 +259,6 @@ if ($notes !== '') {
     mysqli_stmt_close($noteStmt);
 }
 
-// 5. If it was the session flow, clean up session draft variables
 if ($is_session_flow) {
     unset($_SESSION['temp_application_data']);
     unset($_SESSION['temp_category_id']);

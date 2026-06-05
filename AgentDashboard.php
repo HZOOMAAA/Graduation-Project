@@ -6,7 +6,6 @@ $error   = '';
 $success = '';
 $agent_id = $_SESSION['user_id'];
 
-// ── Handle Agent Decision (under_review → awaiting_payment / rejected) ──
 if (isset($_POST['update_status'])) {
     $application_id = (int)$_POST['application_id'];
     $new_status = in_array($_POST['update_status'], ['awaiting_payment', 'rejected'])
@@ -27,7 +26,6 @@ if (isset($_POST['update_status'])) {
     }
 }
 
-// ── Handle Rejection Message submission ──
 if (isset($_POST['submit_rejection_message'])) {
     $application_id = (int)$_POST['application_id'];
     $rejection_message = trim($_POST['rejection_message'] ?? '');
@@ -53,42 +51,11 @@ if (isset($_POST['submit_rejection_message'])) {
     }
 }
 
-// ── Handle Policy Issuance (awaiting_payment → paid) ─────────────────
-if (isset($_POST['issue_policy'])) {
-    $application_id = (int)$_POST['application_id'];
-    $payment_ref    = mysqli_real_escape_string($connect, trim($_POST['payment_ref'] ?? ''));
-    $start_date     = mysqli_real_escape_string($connect, $_POST['start_date']);
-    $end_date       = mysqli_real_escape_string($connect, $_POST['end_date']);
-
-    $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND agent_id = $agent_id AND status = 'awaiting_payment'");
-    if (mysqli_num_rows($check) > 0) {
-        // Generate policy number
-        $policy_no = 'POL-' . strtoupper(substr(md5($application_id . time()), 0, 8));
-        $doc_path  = "uploads/policies/policy_{$application_id}.pdf";
-
-        // Insert policy record
-        $ins = mysqli_query($connect, "INSERT INTO policies (application_id, policy_number, start_date, end_date, document_path, payment_ref, status)
-            VALUES ($application_id, '$policy_no', '$start_date', '$end_date', '$doc_path', '$payment_ref', 'active')");
-
-        if ($ins) {
-            // Mark application as paid
-            mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $application_id");
-            $msg = "Payment confirmed <i class='bx bx-check' style='color: var(--green);'></i> Policy issued: $policy_no";
-            header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
-            exit();
-        } else {
-            $error = "Failed to issue policy: " . mysqli_error($connect);
-        }
-    } else {
-        $error = "Policy can only be issued for applications awaiting payment.";
-    }
-}
 
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'applications';
 
 if (isset($_GET['success'])) $success = $_GET['success'];
 
-// ── Badge helper ──────────────────────────────────────────────────────
 function statusBadgeStyle($status) {
     $map = [
         'pending_selection' => 'background:#f1f3f4; color:#5f6368;',
@@ -105,7 +72,6 @@ function statusLabel($status) {
     return ucfirst(str_replace('_', ' ', $status));
 }
 
-// ── Fetch applications list ────────────────────────────────────────────
 $status_filter = '';
 if ($active_tab === 'applications') {
     $status_filter = "AND a.status = 'under_review'";
@@ -130,7 +96,6 @@ $applications = mysqli_query($connect, "
     ORDER BY a.created_at DESC
 ");
 
-// ── Fetch single application details ──────────────────────────────────
 $app_details  = null;
 $documents    = null;
 $policy       = null;
@@ -157,7 +122,6 @@ if ($active_tab === 'details' && isset($_GET['id'])) {
     }
 }
 
-// ── Sidebar counts ────────────────────────────────────────────────────
 function sidebarCount($connect, $agent_id, $status) {
     $r = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as c FROM applications WHERE agent_id = $agent_id AND status = '$status'"));
     return (int)$r['c'];

@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/includes/auth_check.php';
 requireRole('admin');
-// Note: connection.php is already included by auth_check.php, no need to include it again
 
 $error = '';
 $success = '';
 
-// Handle Add Agent
 if (isset($_POST['add_agent'])) {
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $email = mysqli_real_escape_string($connect, $_POST['email']);
@@ -31,13 +29,11 @@ if (isset($_POST['add_agent'])) {
     }
 }
 
-// Handle Delete Agent
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     $delete = mysqli_query($connect, "DELETE FROM users WHERE user_id = $id AND role = 'agent'");
     if ($delete) {
         $success = "Agent deleted successfully!";
-        // Redirect to avoid re-deletion on refresh
         header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
         exit();
     } else {
@@ -45,7 +41,6 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// Handle Delete Plan
 if (isset($_GET['delete_plan'])) {
     $id = (int)$_GET['delete_plan'];
     $delete = mysqli_query($connect, "DELETE FROM insurance_plans WHERE plan_id = $id");
@@ -58,13 +53,11 @@ if (isset($_GET['delete_plan'])) {
     }
 }
 
-// Handle Edit Agent
 if (isset($_POST['edit_agent'])) {
     $id = (int)$_POST['user_id'];
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $email = mysqli_real_escape_string($connect, $_POST['email']);
     
-    // Check email uniqueness excluding current user
     $check_email = mysqli_query($connect, "SELECT * FROM users WHERE email = '$email' AND user_id != $id");
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
@@ -98,7 +91,6 @@ if (isset($_POST['edit_agent'])) {
     }
 }
 
-// Handle Add Plan
 if (isset($_POST['add_plan'])) {
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $category_id = (int)$_POST['category_id'];
@@ -121,7 +113,6 @@ if (isset($_POST['add_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format (e.g. [\"Rule 1\", \"Rule 2\"])";
     } else {
-        // Handle logo upload
         $logo_path = '';
         $logo_upload_error = '';
         if (!empty($_FILES['logo']['name'])) {
@@ -159,7 +150,6 @@ if (isset($_POST['add_plan'])) {
     }
 }
 
-// Handle Edit Plan
 if (isset($_POST['edit_plan'])) {
     $id = (int)$_POST['plan_id'];
     $name = mysqli_real_escape_string($connect, $_POST['name']);
@@ -183,7 +173,6 @@ if (isset($_POST['edit_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format.";
     } else {
-        // Handle logo upload for edit
         $logo_sql_part = '';
         $logo_upload_error = '';
         if (!empty($_FILES['logo']['name'])) {
@@ -208,8 +197,6 @@ if (isset($_POST['edit_plan'])) {
 
         if ($logo_upload_error !== '') {
             $error = $logo_upload_error;
-        } else {
-            // Build update query safely. Logo part is appended only when a new logo is uploaded.
             $update = mysqli_query(
                 $connect,
                 "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
@@ -226,12 +213,10 @@ if (isset($_POST['edit_plan'])) {
 }
 
 
-// Handle Assign Agent — only allowed when status = waiting_docs
 if (isset($_POST['assign_agent'])) {
     $application_id = (int)$_POST['application_id'];
     $agent_id = (int)$_POST['agent_id'];
 
-    // Ensure application is in waiting_docs before assigning
     $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND status = 'under_review'");
     if ($check && mysqli_num_rows($check) > 0) {
         $update = mysqli_query($connect, "UPDATE applications SET agent_id = $agent_id, status = 'under_review' WHERE application_id = $application_id");
@@ -248,13 +233,10 @@ if (isset($_POST['assign_agent'])) {
 
 
 
-// Fetch agents
 $agents = mysqli_query($connect, "SELECT * FROM users WHERE role = 'agent'");
 
-// Fetch customers
 $customers = mysqli_query($connect, "SELECT * FROM users WHERE role = 'customer'");
 
-// Fetch categories for the plan form
 $categories_result = mysqli_query($connect, "SELECT * FROM categories");
 $categories = [];
 if ($categories_result) {
@@ -263,7 +245,6 @@ if ($categories_result) {
     }
 }
 
-// Fetch applications — Admin manages only the early stages (assign agent)
 $applications_query = "
     SELECT a.*,
            c.name as customer_name,
@@ -290,7 +271,6 @@ $unassigned_count_query = mysqli_query($connect, "
 $unassigned_count_row = mysqli_fetch_assoc($unassigned_count_query);
 $unassigned_count = (int)($unassigned_count_row['cnt'] ?? 0);
 
-// Fetch 5 most recent applications for overview
 $recent_applications_query = "
     SELECT a.*,
            c.name as customer_name,
@@ -316,7 +296,6 @@ function getOverviewStatusStyle($status) {
     }
 }
 
-// Fetch category distribution stats (with plan count per category)
 $category_distribution_query = "
     SELECT cat.category_id, cat.name,
            COUNT(DISTINCT a.application_id) as cnt,
@@ -329,7 +308,6 @@ $category_distribution_query = "
 ";
 $category_distribution = mysqli_query($connect, $category_distribution_query);
 
-// Total count of all applications (to calculate percentages)
 $total_apps_all_categories_row = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as total FROM applications"));
 $total_apps_all_categories = intval($total_apps_all_categories_row['total'] ?? 0);
 
@@ -376,7 +354,6 @@ function getCategoryDesignProps($cat_name) {
 
 
 
-// Stats for overview
 $stats = [];
 foreach (['under_review','awaiting_payment','paid','rejected'] as $s) {
     $r = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM applications WHERE status='$s'"));
@@ -387,7 +364,6 @@ $total_agents = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cn
 $total_customers = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM users WHERE role='customer'"))['cnt'];
 $total_plans  = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM insurance_plans"))['cnt'];
 
-// Fetch all plans for viewer
 $all_plans = mysqli_query($connect, "
     SELECT p.*, cat.name as category_name
     FROM insurance_plans p
@@ -395,7 +371,6 @@ $all_plans = mysqli_query($connect, "
     ORDER BY cat.name, p.base_price ASC
 ");
 
-// Helper to display time elapsed nicely
 if (!function_exists('get_time_elapsed')) {
     function get_time_elapsed($datetime, $full = false) {
         $now = new DateTime;
@@ -437,11 +412,10 @@ $recent_transactions_query = "
 ";
 $recent_transactions = mysqli_query($connect, $recent_transactions_query);
 
-// Fetch daily revenue for last 7 days
 $days = [];
 for ($i = 6; $i >= 0; $i--) {
     $date_str = date('Y-m-d', strtotime("-$i days"));
-    $label_str = date('D (d M)', strtotime("-$i days")); // e.g. "Mon (01 Jun)"
+    $label_str = date('D (d M)', strtotime("-$i days"));
     $days[$date_str] = [
         'label' => $label_str,
         'revenue' => 0.0
@@ -464,8 +438,6 @@ if ($revenue_res) {
         }
     }
 }
-
-// Extract labels and data arrays
 $chart_labels = [];
 $chart_data = [];
 foreach ($days as $date => $info) {
@@ -476,7 +448,6 @@ foreach ($days as $date => $info) {
 $chart_labels_json = json_encode($chart_labels);
 $chart_data_json = json_encode($chart_data);
 
-// Fetch all contact messages for viewer
 mysqli_query($connect, "CREATE TABLE IF NOT EXISTS contact_messages (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -490,8 +461,6 @@ $all_messages = mysqli_query($connect, "SELECT * FROM contact_messages ORDER BY 
 if (isset($_GET['success'])) {
     $success = $_GET['success'];
 }
-
-// Determine active tab: use ?tab= param (default: overview)
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 ?>
 <!DOCTYPE html>
@@ -561,7 +530,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         <?php if ($active_tab === 'overview'): ?>
             <div class="page-title"><i class='bx bx-home'></i> Dashboard Overview</div>
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
-            <!-- test marwan wael -->
 
 
             <div class="overview-stats-grid">
@@ -811,10 +779,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                 </div>
 
             </div>
-
-
-            
-            <!-- end test marwan wael -->
 
 
         <?php elseif ($active_tab === 'add'): ?>
@@ -1068,7 +1032,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             <th>Category</th>
                             <th>Company</th>
                             <th>Base Price</th>
-                            <!-- <th>Eligibility Rules</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -1081,21 +1044,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                     <td class="search-plan-category"><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($p['insurance_company']); ?></td>
                                     <td><strong>$<?php echo number_format($p['base_price'], 2); ?></strong></td>
-                                    <!-- <td>
-                                        <?php
-                                        $rules = json_decode($p['eligibility_rules'] ?? '{}', true);
-                                        if ($rules) {
-                                            echo '<ul style="margin:0; padding-left:16px; font-size:12px; color:#374151; line-height:1.6;">';
-                                            foreach ($rules as $k => $v) {
-                                                $val = is_array($v) ? implode(', ', $v) : $v;
-                                                echo '<li><b>' . htmlspecialchars(str_replace('_',' ',$k)) . ':</b> ' . htmlspecialchars($val) . '</li>';
-                                            }
-                                            echo '</ul>';
-                                        } else {
-                                            echo '<small style="color:#9ca3af;">None</small>';
-                                        }
-                                        ?>
-                                    </td> -->
                                     <td>
                                         <button class="btn btn-sm btn-edit edit-plan-btn" 
                                                 data-id="<?php echo $p['plan_id']; ?>" 
@@ -1169,14 +1117,12 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         <textarea name="bio" rows="4" placeholder="Enter plan details" required></textarea>
                     </div>
 
-                    <!-- Dynamic Eligibility Rules Builder -->
                     <div class="form-group">
                         <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules <small style="color:#9ca3af;">(Auto-generated based on category)</small></label>
                         <p id="selectCategoryHint" style="color:#9ca3af; font-size:13px; margin:8px 0;">
                             <i class='bx bx-info-circle'></i> Please select a category above to see the eligibility rule fields.
                         </p>
 
-                        <!-- Car Insurance Rules -->
                         <div id="rules-car" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1207,7 +1153,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Health Insurance Rules -->
                         <div id="rules-health" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1241,7 +1186,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Life Insurance Rules -->
                         <div id="rules-life" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1272,7 +1216,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Property Insurance Rules -->
                         <div id="rules-property" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field" style="grid-column: 1 / -1;">
@@ -1304,12 +1247,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- JSON Preview -->
                         <div id="jsonPreview" style="display:none; margin-top:12px;">
                             <pre id="jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                         </div>
 
-                        <!-- Hidden field that holds the final JSON -->
                         <input type="hidden" name="eligibility_rules" id="eligibilityRulesHidden">
                     </div>
 
@@ -1330,7 +1271,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                 const hiddenField = document.getElementById('eligibilityRulesHidden');
                 const allPanels = document.querySelectorAll('.eligibility-rules-panel');
 
-                // Map category names to panel IDs
                 function getCategoryKey(name) {
                     name = name.toLowerCase();
                     if (name.includes('car') || name.includes('motor') || name.includes('vehicle')) return 'car';
@@ -1345,7 +1285,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     const catName = selected.getAttribute('data-name') || '';
                     const key = getCategoryKey(catName);
 
-                    // Hide all panels
                     allPanels.forEach(p => p.style.display = 'none');
 
                     if (key) {
@@ -1362,7 +1301,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     buildJson();
                 });
 
-                // Build JSON from all visible rule inputs
                 function buildJson() {
                     const visiblePanel = document.querySelector('.eligibility-rules-panel[style*="display: block"], .eligibility-rules-panel[style*="display:block"]');
                     if (!visiblePanel) {
@@ -1374,7 +1312,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     const inputs = visiblePanel.querySelectorAll('.rule-input');
                     const json = {};
 
-                    // Group array-type checkboxes
                     const arrayGroups = {};
 
                     inputs.forEach(input => {
@@ -1382,7 +1319,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         const type = input.getAttribute('data-type');
 
                         if (type === 'array') {
-                            // Checkbox array
                             if (!arrayGroups[key]) arrayGroups[key] = [];
                             if (input.checked) {
                                 arrayGroups[key].push(input.value);
@@ -1402,14 +1338,12 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         }
                     });
 
-                    // Merge array groups
                     for (const [key, arr] of Object.entries(arrayGroups)) {
                         if (arr.length > 0) {
                             json[key] = arr;
                         }
                     }
 
-                    // Update hidden field and preview
                     if (Object.keys(json).length > 0) {
                         const jsonStr = JSON.stringify(json, null, 2);
                         hiddenField.value = JSON.stringify(json);
@@ -1421,7 +1355,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     }
                 }
 
-                // Attach listeners to all rule inputs
                 document.addEventListener('input', function(e) {
                     if (e.target.classList.contains('rule-input')) buildJson();
                 });
@@ -1481,8 +1414,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         </table>
     </div>
 </div>
-
-  <!-- popup -->
    <div id="messageModal" class="custom-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1510,7 +1441,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
         </div>
     </div>
-    <!-- endpopup -->
 
 
         <?php endif; ?>
@@ -1524,7 +1454,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 </script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
 
-<!-- Custom Confirmation Modal -->
 <div id="customConfirmModal" class="custom-modal">
     <div class="modal-content" style="max-width: 400px; text-align: center; padding: 30px 24px;">
         <div style="font-size: 48px; color: #EF4444; margin-bottom: 16px;">
@@ -1539,7 +1468,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 </div>
 
-<!-- Edit Agent Modal -->
 <div id="editAgentModal" class="custom-modal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
@@ -1575,7 +1503,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 </div>
 
-<!-- Edit Plan Modal -->
 <div id="editPlanModal" class="custom-modal">
     <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
         <div class="modal-header">
@@ -1628,11 +1555,9 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     <textarea name="bio" id="edit-plan-bio" rows="3" placeholder="Enter plan details" required></textarea>
                 </div>
 
-                <!-- Dynamic Eligibility Rules Builder for Edit Modal -->
                 <div class="form-group">
                     <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules</label>
                     
-                    <!-- Car Insurance Rules -->
                     <div id="edit-rules-car" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1661,7 +1586,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Health Insurance Rules -->
                     <div id="edit-rules-health" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1695,7 +1619,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Life Insurance Rules -->
                     <div id="edit-rules-life" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1726,7 +1649,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Property Insurance Rules -->
                     <div id="edit-rules-property" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field" style="grid-column: 1 / -1;">
@@ -1758,15 +1680,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- JSON Preview in Edit Modal -->
                     <div id="edit-jsonPreview" style="display:none; margin-top:12px;">
-                        <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
-                            <!-- <i class='bx bx-code-alt'></i> Generatedzzz JSON (auto-filled) -->
-                        </label>
                         <pre id="edit-jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                     </div>
 
-                    <!-- Hidden field to hold rules JSON -->
                     <input type="hidden" name="eligibility_rules" id="edit-eligibilityRulesHidden">
                 </div>
 
@@ -1799,7 +1716,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         return null;
     }
 
-    // Toggle rules panel inside edit modal
     function toggleRulesPanel() {
         const selected = categorySelect.options[categorySelect.selectedIndex];
         const catName = selected ? (selected.getAttribute('data-name') || '') : '';
@@ -1821,7 +1737,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 
     categorySelect.addEventListener('change', toggleRulesPanel);
 
-    // Build JSON for Edit Rules Panel
     function buildJson() {
         const visiblePanel = document.querySelector('.edit-eligibility-rules-panel[style*="display: block"], .edit-eligibility-rules-panel[style*="display:block"]');
         if (!visiblePanel) {
@@ -1990,7 +1905,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     });
 })();
 
-// Edit modal logo upload preview
 const editZone = document.getElementById('editLogoZone');
 const editInput = document.getElementById('editLogoInput');
 const editPreview = document.getElementById('editLogoPreview');
@@ -2015,14 +1929,12 @@ if (editZone) {
     });
 }
 
-// Edit Agent Modal logic
 (function() {
     const editAgentModal = document.getElementById('editAgentModal');
     const closeBtn = document.getElementById('closeEditAgentModalBtn');
     const cancelBtn = document.getElementById('cancelEditAgentBtn');
     if (!editAgentModal) return;
 
-    // Attach click handlers to all Edit Agent buttons
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.edit-agent-btn');
         if (btn) {
@@ -2032,13 +1944,12 @@ if (editZone) {
             document.getElementById('edit-agent-id').value = agentData.user_id;
             document.getElementById('edit-agent-name').value = agentData.name;
             document.getElementById('edit-agent-email').value = agentData.email;
-            document.getElementById('edit-agent-password').value = ''; // reset password input
+            document.getElementById('edit-agent-password').value = '';
 
             editAgentModal.classList.add('show');
         }
     });
 
-    // Close Modal helpers
     function closeModal() {
         editAgentModal.classList.remove('show');
     }
@@ -2049,7 +1960,6 @@ if (editZone) {
     });
 })();
 
-// Custom Confirmation Modal logic
 (function() {
     const confirmModal = document.getElementById('customConfirmModal');
     const cancelBtn = document.getElementById('confirmModalCancelBtn');

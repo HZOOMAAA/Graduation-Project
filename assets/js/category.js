@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. تعريف عناصر الماركة والموديل
     const brandWrapper = document.getElementById('brand-wrapper');
     const brandOptionsContainer = document.getElementById('brand-options');
     const brandInput = document.getElementById('brand-input');
@@ -10,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const modelInput = document.getElementById('model-input');
     const modelTrigger = modelWrapper ? modelWrapper.querySelector('.custom-select-trigger span') : null;
 
-    // 2. دالة جلب الماركات (Brands)
     async function fetchBrands() {
         if (!brandTrigger) return;
         brandTrigger.textContent = "Loading Brands...";
@@ -43,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 3. دالة جلب الموديلات (Models)
     async function fetchModels(brandName) {
         if (!modelTrigger) return;
         modelTrigger.textContent = "Loading Models...";
@@ -75,11 +72,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 4. السحر هنا: كود بيشغل أي قائمة حتى السنين من غير ما نغير الـ HTML
     document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
         const trigger = wrapper.querySelector('.custom-select-trigger');
         
-        // عشان يفتح ويقفل
         trigger.addEventListener('click', function() {
             document.querySelectorAll('.custom-select-wrapper').forEach(w => {
                 if (w !== wrapper) w.classList.remove('open');
@@ -87,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
             wrapper.classList.toggle('open');
         });
 
-        // عشان يشغل اختيارات السنين الثابتة
         const staticOptions = wrapper.querySelectorAll('.custom-option');
         const hiddenInput = wrapper.parentElement.querySelector('input[type="hidden"]');
         const triggerSpan = wrapper.querySelector('.custom-select-trigger span');
@@ -103,18 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 5. قفل القوائم لو ضغطت بره
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.custom-select-wrapper')) {
             document.querySelectorAll('.custom-select-wrapper').forEach(w => w.classList.remove('open'));
         }
     });
 
-    // 6. تشغيل الـ API
     fetchBrands();
     if (brandInput && brandInput.value) {
         fetchModels(brandInput.value);
     }
 });
-
-

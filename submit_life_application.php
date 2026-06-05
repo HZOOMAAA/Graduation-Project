@@ -7,13 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 header('Content-Type: application/json');
 
-// ── Validate method ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
 }
 
-// ── Collect & sanitize inputs ─────────────────────────────────────────────────
 $birth_day   = isset($_POST['birth_day'])   ? intval($_POST['birth_day'])   : 0;
 $birth_month = isset($_POST['birth_month']) ? intval($_POST['birth_month']) : 0;
 $birth_year  = isset($_POST['birth_year'])  ? intval($_POST['birth_year'])  : 0;
@@ -26,7 +24,6 @@ $policy_term          = isset($_POST['policy_term'])          ? trim(mysqli_real
 $beneficiary_name     = isset($_POST['beneficiary_name'])     ? trim(mysqli_real_escape_string($connect, $_POST['beneficiary_name'])) : '';
 $beneficiary_relation = isset($_POST['beneficiary_relation']) ? trim(mysqli_real_escape_string($connect, $_POST['beneficiary_relation'])) : '';
 
-// ── Calculate age ─────────────────────────────────────────────────────────────
 $age = 0;
 if ($birth_year > 0 && $birth_month > 0 && $birth_day > 0) {
     $birthdate = new DateTime("$birth_year-$birth_month-$birth_day");
@@ -34,7 +31,6 @@ if ($birth_year > 0 && $birth_month > 0 && $birth_day > 0) {
     $age       = $today->diff($birthdate)->y;
 }
 
-// ── Basic validation ──────────────────────────────────────────────────────────
 $errors = [];
 if ($birth_day < 1 || $birth_day > 31)     $errors[] = 'Valid birth day is required.';
 if ($birth_month < 1 || $birth_month > 12) $errors[] = 'Valid birth month is required.';
@@ -50,7 +46,6 @@ if (!empty($errors)) {
     exit;
 }
 
-// ── Build JSON payload ────────────────────────────────────────────────────────
 $applicationData = [
     'category'             => 'life',
     'client_name'          => $client_name,
@@ -66,7 +61,6 @@ $applicationData = [
     'submitted_at'         => date('Y-m-d H:i:s'),
 ];
 
-// ── Resolve category ID ──────────────────────────────────────────────────────
 $catResult = mysqli_query($connect, "SELECT category_id FROM categories WHERE name LIKE '%Life%' LIMIT 1");
 if (!$catResult || mysqli_num_rows($catResult) === 0) {
     mysqli_query($connect, "INSERT INTO categories (name) VALUES ('Life Insurance')");
@@ -76,11 +70,9 @@ if (!$catResult || mysqli_num_rows($catResult) === 0) {
     $category_id = intval($catRow['category_id']);
 }
 
-// ── Store draft details inside the PHP Session ────────────────────────────────
 $_SESSION['temp_application_data'] = $applicationData;
 $_SESSION['temp_category_id']      = $category_id;
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_after_login'] = '/Graduation-Project/category-life.php';
     echo json_encode([
