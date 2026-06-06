@@ -60,7 +60,7 @@ if (!$access_granted) {
 }
 
 // ── 3. Check Policy Status ────────────────────────────────────────────────────
-if ($app['status'] !== 'paid' || empty($app['policy_number'])) {
+if (!in_array($app['status'], ['paid', 'confirmed']) || empty($app['policy_number'])) {
     die("<div style='font-family:sans-serif;padding:30px;text-align:center;'><h3>Policy status is inactive or awaiting payment.</h3><a href='profile.php'>Return to Profile</a></div>");
 }
 

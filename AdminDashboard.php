@@ -981,6 +981,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                     <td>
                                         <span class="badge" style="<?php
                                             if ($row['status'] === 'paid') echo 'background:#e8f5e9; color:#1b5e20;';
+                                            elseif ($row['status'] === 'confirmed') echo 'background:#e8fdf5; color:#0f5132;';
                                             elseif ($row['status'] === 'rejected') echo 'background:#fdecea; color:#c62828;';
                                             elseif ($row['status'] === 'under_review') echo 'background:#fff3e0; color:#e65100;';
                                             elseif ($row['status'] === 'waiting_docs') echo 'background:#e3f0ff; color:#1a73e8;';

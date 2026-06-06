@@ -630,3 +630,31 @@ tbody tr:hover {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* ── Confirmed Button Actions ── */
+.action-buttons-flex {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-confirm-company {
+    background-color: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+
+.btn-confirm-company:hover {
+    background-color: #E2E8F0;
+    color: #0F172A;
+}
+
+.btn-download-pdf {
+    background: #10B981;
+    color: var(--white);
+}
+
+.btn-download-pdf:hover {
+    background: #059669;
+}
