@@ -97,6 +97,19 @@ include 'includes/nav2.php';
 $user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
 $user_phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
 
+if (isset($_SESSION['user_id'])) {
+    $user_id = intval($_SESSION['user_id']);
+    $u_query = mysqli_query($connect, "SELECT name, phone FROM users WHERE user_id = $user_id");
+    if ($u_query && mysqli_num_rows($u_query) > 0) {
+        $u_row = mysqli_fetch_assoc($u_query);
+        $user_name = $u_row['name'];
+        $user_phone = $u_row['phone'];
+        // Keep session in sync
+        $_SESSION['name'] = $user_name;
+        $_SESSION['phone'] = $user_phone;
+    }
+}
+
 $draft = $_SESSION['temp_application_data'] ?? null;
 $draft_bd = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['birth_day'] : '';
 $draft_bm = ($draft && isset($draft['category']) && $draft['category'] === 'life') ? $draft['birth_month'] : '';
