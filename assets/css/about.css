@@ -55,7 +55,7 @@ a {
 }
 
 .text-highlight {
-    color: var(--action-blue);
+    color: var(--primary-navy);
 }
 
 .service-card {
@@ -85,6 +85,24 @@ a {
     font-size: 28px;
     margin: 0 auto 20px;
 }
+
+.hero-btn {
+    background: linear-gradient(135deg, var(--action-blue) 0%, var(--primary-navy) 100%);
+    color: var(--white) !important;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 82, 204, 0.15);
+}
+
+
+
+
+
 
 .service-list li {
     margin-bottom: 15px;
@@ -125,11 +143,13 @@ a {
 .team-slider-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* طرد الصورة لأقصى الشمال والكلام لليمين */
+    justify-content: space-between;
+    /* طرد الصورة لأقصى الشمال والكلام لليمين */
     max-width: 1140px;
     margin: 0 auto;
     padding: 0 20px;
-    gap: 60px; /* مسافة أمان أفقية ثابتة ومريحة بين العمودين */
+    gap: 60px;
+    /* مسافة أمان أفقية ثابتة ومريحة بين العمودين */
 }
 
 /* عمود الشق الأيسر (الصورة) */
@@ -140,7 +160,8 @@ a {
 /* عمود الشق الأيمن (المحتوى) */
 .team-content-column {
     flex: 1;
-    max-width: 550px; /* الحفاظ على عرض البلوك النصي متناسق */
+    max-width: 550px;
+    /* الحفاظ على عرض البلوك النصي متناسق */
     display: flex;
     flex-direction: column;
 }
@@ -159,7 +180,7 @@ a {
    ========================================== */
 .team-img-wrapper {
     position: relative;
-    width: 380px; 
+    width: 380px;
     height: 440px;
 }
 
@@ -167,7 +188,7 @@ a {
 .shape-back {
     position: absolute;
     top: 20px;
-    right: -20px; 
+    right: -20px;
     width: 140px;
     height: 140px;
     background-color: var(--bg-soft-gray);
@@ -183,7 +204,7 @@ a {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--action-blue); 
+    background-color: var(--action-blue);
     border-radius: 40px 100px 40px 40px;
     z-index: 2;
     overflow: hidden;
@@ -202,6 +223,7 @@ a {
 .team-img-wrapper:hover .shape-main img {
     transform: scale(1.04);
 }
+
 .team-img-wrapper:hover .shape-back {
     transform: translate(5px, -5px);
 }
@@ -209,9 +231,9 @@ a {
 /* Cutout Box (البوكس الداكن الإضافي) */
 .shape-cutout {
     position: absolute;
-    bottom: 0px; 
+    bottom: 0px;
     left: -30px;
-    width: 150px; 
+    width: 150px;
     height: 150px;
     background-color: var(--primary-navy);
     border-radius: 40px;
@@ -236,14 +258,15 @@ a {
     opacity: 0.8;
     font-size: 1.1rem;
     line-height: 1.8;
-    margin-bottom: 24px; 
+    margin-bottom: 24px;
 }
 
 .member-role {
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--action-blue);
-    margin-bottom: 40px; /* ⬅️ وسعنا المساحة دي عشان ننزل الأزرار بعيد تماماً عن بروز الـ Cutout Box */
+    margin-bottom: 40px;
+    /* ⬅️ وسعنا المساحة دي عشان ننزل الأزرار بعيد تماماً عن بروز الـ Cutout Box */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -287,8 +310,15 @@ a {
 }
 
 @keyframes sliderFade {
-    0% { opacity: 0; transform: translateX(15px); }
-    100% { opacity: 1; transform: translateX(0); }
+    0% {
+        opacity: 0;
+        transform: translateX(15px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 /* ==========================================
@@ -296,7 +326,8 @@ a {
    ========================================== */
 @media (max-width: 991px) {
     .team-slider-wrapper {
-        flex-direction: column; /* قلب الـ Layout رأسي في الموبايل */
+        flex-direction: column;
+        /* قلب الـ Layout رأسي في الموبايل */
         gap: 50px;
         text-align: center;
     }
