@@ -39,7 +39,7 @@ if (isset($_POST['submit_rejection_message'])) {
         ");
         mysqli_stmt_bind_param($stmt, 'si', $rejection_message, $application_id);
         if (mysqli_stmt_execute($stmt)) {
-            $msg = "Rejection message saved and customer notified <i class='bx bx-check' style='color: var(--green);'></i>.";
+            $msg = "Rejection message saved and customer notified.";
             header("Location: AgentDashboard.php?tab=details&id=$application_id&success=" . urlencode($msg));
             exit();
         } else {
@@ -48,6 +48,23 @@ if (isset($_POST['submit_rejection_message'])) {
         mysqli_stmt_close($stmt);
     } else {
         $error = "Application not found or is not in rejected status.";
+    }
+}
+
+if (isset($_POST['confirm_payment_company'])) {
+    $application_id = (int)$_POST['application_id'];
+
+    $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND agent_id = $agent_id AND status = 'paid'");
+    if ($check && mysqli_num_rows($check) > 0) {
+        if (mysqli_query($connect, "UPDATE applications SET status = 'confirmed' WHERE application_id = $application_id")) {
+            $msg = "Application #$application_id status has been updated to 'Confirmed'. The policy is now fully processed.";
+            header("Location: AgentDashboard.php?tab=confirmed&success=" . urlencode($msg));
+            exit();
+        } else {
+            $error = "Failed to update status to Confirmed: " . mysqli_error($connect);
+        }
+    } else {
+        $error = "Application not found or is not in 'Paid' status.";
     }
 }
 
@@ -63,6 +80,7 @@ function statusBadgeStyle($status) {
         'under_review'      => 'background:#fff3e0; color:#e65100;',
         'awaiting_payment'  => 'background:#fce8ff; color:#7b1fa2;',
         'paid'              => 'background:#e8f5e9; color:#1b5e20;',
+        'confirmed'         => 'background:#e8fdf5; color:#0f5132;',
         'rejected'          => 'background:#fdecea; color:#c62828;',
     ];
     return $map[$status] ?? 'background:#f1f3f4; color:#5f6368;';
@@ -79,6 +97,8 @@ if ($active_tab === 'applications') {
     $status_filter = "AND a.status = 'awaiting_payment'";
 } elseif ($active_tab === 'paid') {
     $status_filter = "AND a.status = 'paid'";
+} elseif ($active_tab === 'confirmed') {
+    $status_filter = "AND a.status = 'confirmed'";
 } elseif ($active_tab === 'rejected') {
     $status_filter = "AND a.status = 'rejected'";
 }
@@ -130,6 +150,7 @@ $cnt = [
     'under_review'      => sidebarCount($connect, $agent_id, 'under_review'),
     'awaiting_payment'  => sidebarCount($connect, $agent_id, 'awaiting_payment'),
     'paid'              => sidebarCount($connect, $agent_id, 'paid'),
+    'confirmed'         => sidebarCount($connect, $agent_id, 'confirmed'),
     'rejected'          => sidebarCount($connect, $agent_id, 'rejected'),
 ];
 ?>
@@ -159,6 +180,7 @@ $cnt = [
             'applications' => ['<i class="bx bx-book-open"></i>', 'Under Review',      'under_review',     '#e65100'],
             'awaiting'     => ['<i class="bx bx-credit-card"></i>', 'Awaiting Payment',  'awaiting_payment', '#7b1fa2'],
             'paid'         => ['<i class="bx bx-check-circle"></i>', 'Paid / Issued',      'paid',             '#1b5e20'],
+            'confirmed'    => ['<i class="bx bx-badge-check"></i>', 'Confirmed Policies', 'confirmed',        '#10B981'],
             'rejected'     => ['<i class="bx bx-x-circle"></i>', 'Rejected',           'rejected',         '#c62828'],
         ];
         foreach ($nav as $tab => [$icon, $label, $status, $color]):
@@ -191,15 +213,16 @@ $cnt = [
         'applications' => ['<i class="bx bx-book-open"></i> My Work Queue',      'Applications assigned to you for document verification and approval.'],
         'awaiting'     => ['<i class="bx bx-credit-card"></i> Awaiting Payment',    'Approved applications waiting for customer payment and policy issuance.'],
         'paid'         => ['<i class="bx bx-check-circle"></i> Paid & Issued',        'Fully completed policies. Payment received and policy document issued.'],
+        'confirmed'    => ['<i class="bx bx-badge-check"></i> Confirmed Policies','Policies that have been confirmed and sent to the insurance company.'],
         'rejected'     => ['<i class="bx bx-x-circle"></i> Rejected Applications','Applications that were rejected after review.'],
     ];
     $cols_review = ['App ID','Customer','Category','Chosen Plan','base Price','Date','Action'];
     $cols_awaiting = ['App ID','Customer','Category','Plan','base Price','Date','Action'];
-    $cols_paid    = ['App ID','Customer','Email','Plan','base Price','Policy No.'];
+    $cols_paid    = ['App ID','Customer','Email','Plan','base Price','Policy No.','Action'];
     $cols_rejected = ['App ID','Customer','Category','Date','Action'];
     ?>
 
-    <?php if (in_array($active_tab, ['applications','awaiting','paid','rejected'])): ?>
+    <?php if (in_array($active_tab, ['applications','awaiting','paid','confirmed','rejected'])): ?>
         <?php [$title, $subtitle] = $tab_config[$active_tab]; ?>
         <div class="page-header-block">
             <div class="page-title"><?php echo $title; ?></div>
@@ -219,6 +242,7 @@ $cnt = [
                                 'applications' => $cols_review,
                                 'awaiting'     => $cols_awaiting,
                                 'paid'         => $cols_paid,
+                                'confirmed'    => $cols_paid,
                                 default        => $cols_rejected,
                             };
                             foreach ($headers as $h) echo "<th>$h</th>";
@@ -230,14 +254,14 @@ $cnt = [
                             <?php while ($row = mysqli_fetch_assoc($applications)): ?>
                                 <?php
                                 $row_policy = null;
-                                if ($active_tab === 'paid') {
+                                if ($active_tab === 'paid' || $active_tab === 'confirmed') {
                                     $row_policy = mysqli_fetch_assoc(mysqli_query($connect, "SELECT policy_number FROM policies WHERE application_id = {$row['application_id']} LIMIT 1"));
                                 }
                                 ?>
                                 <tr>
                                     <td><span class="txt-bold">#<?php echo $row['application_id']; ?></span></td>
                                     <td><span class="txt-medium"><?php echo htmlspecialchars($row['customer_name'] ?? 'Unknown'); ?></span></td>
-                                    <?php if ($active_tab === 'paid'): ?>
+                                    <?php if ($active_tab === 'paid' || $active_tab === 'confirmed'): ?>
                                         <td class="txt-muted"><?php echo htmlspecialchars($row['customer_email'] ?? 'N/A'); ?></td>
                                     <?php else: ?>
                                         <td><span class="badge badge-light-blue"><?php echo htmlspecialchars($row['category_name'] ?? 'N/A'); ?></span></td>
@@ -255,6 +279,36 @@ $cnt = [
                                             <?php if ($row_policy): ?>
                                                 <code class="policy-code"><?php echo htmlspecialchars($row_policy['policy_number']); ?></code>
                                             <?php else: ?>—<?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons-flex">
+                                                <a href="https://mail.google.com" target="_blank" class="btn btn-sm btn-confirm-company" title="Confirm to <?php echo htmlspecialchars($row['insurance_company'] ?? 'Company'); ?>">
+                                                    <i class='bx bx-mail-send'></i>to <?php echo htmlspecialchars($row['insurance_company'] ?? 'Company'); ?>
+                                                </a>
+
+                                            </div>
+                                            <form action="AgentDashboard.php" method="post" style="display:inline-block;">
+                                                <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
+                                                <button type="submit" name="confirm_payment_company" class="btn btn-sm btn-success" title="Mark as Confirmed to Company">
+                                                    <i class='bx bx-check-circle'></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    <?php elseif ($active_tab === 'confirmed'): ?>
+                                        <td>
+                                            <?php if ($row_policy): ?>
+                                                <code class="policy-code"><?php echo htmlspecialchars($row_policy['policy_number']); ?></code>
+                                            <?php else: ?>—<?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons-flex">
+                                                <a href="AgentDashboard.php?tab=details&id=<?php echo $row['application_id']; ?>" class="btn btn-sm btn-primary-action" title="View Details">
+                                                    <i class='bx bx-show-alt'></i> Details
+                                                </a>
+                                                <a href="download_policy.php?id=<?php echo $row['application_id']; ?>" target="_blank" class="btn btn-sm btn-download-pdf" style="padding: 6px 10px;" title="Download PDF Ledger">
+                                                    <i class='bx bxs-file-pdf'></i> PDF
+                                                </a>
+                                            </div>
                                         </td>
                                     <?php else: ?>
                                         <td class="txt-muted"><?php echo date('M d, Y', strtotime($row['created_at'])); ?></td>
@@ -404,7 +458,7 @@ $cnt = [
 
 
 
-        <?php elseif ($app_details['status'] === 'paid' && $policy): ?>
+        <?php elseif (($app_details['status'] === 'paid' || $app_details['status'] === 'confirmed') && $policy): ?>
         <div class="card decision-card policy-success-card">
             <h2><i class='bx bxs-badge-check' style="color: var(--success-green);"></i> Policy Legal Ledger Successfully Issued</h2>
             <div class="policy-details-grid">

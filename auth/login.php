@@ -24,6 +24,7 @@ if (isset($_POST['login'])) {
                 $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['role'] = $row['role'];
                 $_SESSION['name'] = $row['name'];
+                $_SESSION['phone'] = $row['phone'];
                 
                 // 5. Redirect based on role (Fixed paths)
                 if ($row['role'] == 'admin') {

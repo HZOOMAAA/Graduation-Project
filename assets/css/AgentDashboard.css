@@ -630,3 +630,228 @@ tbody tr:hover {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* ── Confirmed Button Actions ── */
+.action-buttons-flex {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.btn-confirm-company {
+    background-color: #F1F5F9;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+}
+
+.btn-confirm-company:hover {
+    background-color: #E2E8F0;
+    color: #0F172A;
+}
+
+.btn-download-pdf {
+    background: #10B981;
+    color: var(--white);
+}
+
+.btn-download-pdf:hover {
+    background: #059669;
+}
+
+
+.decision-card.policy-success-card {
+    background: var(--white);
+    border: 1px solid var(--success-border);
+    border-left: 6px solid var(--success-green); /* خط جانبي فخم بيدي إيحاء بالنجاح */
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.03);
+    margin-bottom: 25px;
+}
+
+/* عنوان الكارد */
+.policy-success-card h2 {
+    color: var(--primary-navy);
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.policy-success-card h2 i {
+    font-size: 26px; /* تكبير حجم الأيقونة الرئيسية */
+}
+
+/* -- 3. تقسيم تفاصيل الوثيقة (Grid System) -- */
+.policy-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* هيقسم الداتا لعمودين بشكل منظم */
+    gap: 20px 30px; /* المسافات بين العناصر */
+}
+
+/* تنسيق الـ Paragraphs جوه الجريد */
+.policy-details-grid p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* الأيقونات الصغيرة قبل الكلام */
+.policy-details-grid p strong {
+    color: var(--primary-navy);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 180px; /* بيضمن إن العناوين كلها تبدأ من نفس المحاذاة */
+}
+
+.policy-details-grid p strong i {
+    color: var(--text-muted);
+    font-size: 16px;
+}
+
+/* -- 4. تنسيق العناصر الخاصة (Badges, Codes, Buttons) -- */
+
+/* كود الوثيقة الكبير */
+.policy-code-large {
+    background: var(--bg-light);
+    color: var(--primary-navy);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+/* النصوص العادية */
+.txt-medium {
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+/* شارة الحالة (Active / Success) */
+.badge-success-pill {
+    background-color: var(--success-bg);
+    color: var(--success-green);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--success-border);
+}
+
+/* زرار تحميل الـ PDF */
+.btn-download-pdf {
+    background: #ffffff;
+    color: #ef4444; /* لون أحمر هادي يعبر عن الـ PDF */
+    border: 1px solid #fca5a5;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-download-pdf:hover {
+    background: #fee2e2;
+    border-color: #ef4444;
+    transform: translateY(-1px);
+}
+
+/* -- 5. الشاشات الصغيرة (Responsive Design) -- */
+@media (max-width: 768px) {
+    .policy-details-grid {
+        grid-template-columns: 1fr; /* بيتحول لعمود واحد في الموبايل */
+        gap: 16px;
+    }
+    
+    .policy-details-grid p strong {
+        min-width: 100%; /* العناوين بتاخد السطر كله لو الشاشة صغيرة */
+        margin-bottom: 2px;
+    }
+}
+
+
+
+.action-buttons-flex {
+    display: inline-flex; /* بيخلي الكونتنت ملموم على قد الأزرار */
+    align-items: center;  /* بيحاذي الزرارين في النص بالظبط رأسياً */
+    gap: 8px;             /* المسافة بين الزرارين */
+    white-space: nowrap;  /* السحر هنا: بيمنع أي زرار إنه ينزل سطر جديد مهما كانت الشاشة ضيقة */
+}
+
+/* لضمان إن الفورم مياخدش مساحة إضافية أو يبوظ الـ flex */
+.action-buttons-flex form {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
+
+/* -- ستايل الزرار الأول (Confirm to Company) -- */
+.btn-confirm-company {
+    background-color: var(--action-blue-bg);
+    color: var(--action-blue);
+    border: 1px solid #bfdbfe;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none; /* بيشيل الخط اللي تحت الكلام */
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* مسافة بين الأيقونة والكلام */
+    height: 34px; /* توحيد الارتفاع */
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.btn-confirm-company:hover {
+    background-color: var(--action-blue);
+    color: #ffffff;
+    border-color: var(--action-blue);
+    transform: translateY(-1px);
+}
+
+/* -- ستايل الزرار الثاني (صح / نجاح) -- */
+.btn-success {
+    background-color: var(--success-green-bg);
+    color: var(--success-green);
+    border: 1px solid #a7f3d0;
+    padding: 0 12px; /* شيلنا الـ padding الرأسي عشان الـ height متوحد */
+    border-radius: 6px;
+    font-size: 16px; /* تكبير الأيقونة شوية عشان واضحة */
+    display: inline-flex;
+    align-items: center;
+    justify-content: end;
+    height: 34px; /* نفس ارتفاع الزرار الأول بالظبط */
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.btn-success:hover {
+    background-color: var(--success-green);
+    color: #ffffff;
+    border-color: var(--success-green);
+    transform: translateY(-1px);
+}
+
+/* تأثير بسيط عند الضغط (Active State) */
+.btn-confirm-company:active, .btn-success:active {
+    transform: translateY(0);
+}

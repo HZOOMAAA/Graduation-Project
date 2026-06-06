@@ -346,6 +346,9 @@ include __DIR__ . '/includes/nav2.php';
                         <?php while ($row = mysqli_fetch_assoc($applications_res)): ?>
                             <?php 
                                 $status = $row['status'];
+                                if ($status === 'confirmed') {
+                                    $status = 'paid';
+                                }
                                 $status_text = str_replace('_', ' ', $status);
                                 $status_color = 'gray';
                                 $status_icon = 'fa-circle-notch';

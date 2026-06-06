@@ -118,6 +118,7 @@ $statusLabels = [
     'under_review' => ['<i class="bx bxs-hourglass"></i> Under Review', '#e65100', '#fff3e0'],
     'awaiting_payment' => ['<i class="bx bxs-credit-card"></i> Awaiting Payment', '#7b1fa2', '#fce8ff'],
     'paid' => ['<i class="bx bxs-shield"></i> Policy Issued', '#1b5e20', '#e8f5e9'],
+    'confirmed' => ['<i class="bx bxs-shield-check"></i> Policy Confirmed', '#0f5132', '#e8fdf5'],
     'rejected' => ['<i class="bx bxs-x-circle"></i> Rejected', '#c62828', '#fdecea'],
 ];
 [$statusText, $statusColor, $statusBg] = $statusLabels[$application['status']]
