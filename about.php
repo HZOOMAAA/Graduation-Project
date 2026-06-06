@@ -119,9 +119,9 @@
             
             <h3 id="team-name" class="member-name">Mahmoud Diaa</h3>
             <p id="team-desc" class="member-desc">
-                Mahmoud is responsible for leading our exceptional team of developers. He plays a crucial role in overseeing all stages of development, ensuring our digital products perform at the highest levels of technical efficiency and security.
+                Mahmoud contributed to the development of the system's user interface and core functionalities. He worked on building responsive front-end components and participated in implementing key system features, helping deliver a smooth and efficient user experience.
             </p>
-            <h5 id="team-role" class="member-role">Lead Full-Stack Developer</h5>
+            <h5 id="team-role" class="member-role">Front-End Developer & System Developer</h5>
             
             <!-- الأزرار هتنزل تحت براحتها بعيد عن بروز الصورة -->
             <div class="team-slider-controls">

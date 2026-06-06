@@ -1,38 +1,38 @@
 const teamMembers = [
     {
         name: "Mahmoud Diaa",
-        role: "Lead Full-Stack Developer",
-        desc: "Mahmoud is responsible for leading our exceptional team of developers. He plays a crucial role in overseeing all stages of development, ensuring our digital products perform at the highest levels of technical efficiency and security.",
+        role: "Front-End & System Developer",
+        desc: "Mahmoud contributed to the development of the system's user interface and core functionalities. He worked on building responsive front-end components and participated in implementing key system features, helping deliver a smooth and efficient user experience.",
         img: "assets/img/mahmoud.png"
     },
     {
         name: "Hazem Yousry",
-        role: "UI/UX Designer",
-        desc: "Hazem translates complex insurance data into seamless, user-friendly interfaces. She focuses on providing our clients with an intuitive digital experience that makes comparing policies as easy as online shopping.",
+        role: "Back-End Developer",
+        desc: "Hazem is responsible for developing and maintaining the server-side components of the system. He works on database management, API development, business logic implementation, and system integration to ensure secure, reliable, and efficient platform performance. ",
         img: "assets/img/hazem.png"
     },
     {
         name: "Marwan Wael",
-        role: "Database Engineer",
-        desc: "Marwan architects our data systems, guaranteeing that millions of records are stored safely. He implements strict security protocols to ensure that all client data remains absolutely confidential and quickly accessible.",
+        role: "Front-End Developer",
+        desc: "Marwan is responsible for building and enhancing the user interface of the platform. He develops responsive, interactive, and visually appealing web pages, ensuring a smooth user experience across different devices and browsers.",
         img: "assets/img/marwan.png"
     },
     {
         name: "Mohamed Ahmed",
-        role: "Business Analyst",
-        desc: "Mohamed bridges the gap between technology and the insurance market. By studying market needs and broker challenges, she ensures that COVERLY’s features solve real-world problems effectively.",
+        role: "Front-End & System Developer",
+        desc: "Mohamed contributed to both front-end development and system implementation. He worked on building responsive user interfaces, developing core system functionalities, and ensuring seamless integration between different components of the platform to deliver an efficient user experience.",
         img: "assets/img/medo.png"
     },
     {
         name: "Mohnad Azmy",
-        role: "System Architect",
-        desc: "Mohnad designs the robust infrastructure that powers COVERLY. He ensures our platform scales smoothly, maintaining 99.9% uptime even during peak usage and complex secure payment processing.",
+        role: "Business Analyst & System Developer",
+        desc: "Mohnad contributed to analyzing business requirements and developing core system functionalities. He helped bridge the gap between user needs and technical implementation, ensuring that the platform delivers practical solutions while maintaining efficiency, reliability, and a seamless user experience.",
         img: "assets/img/mohnad.png"
     },
     {
         name: "Iman Hatem",
-        role: "Quality Assurance",
-        desc: "Iman acts as our gatekeeper of quality. She meticulously tests every feature, button, and user journey to guarantee our clients experience a completely bug-free platform.",
+        role: "Business Analyst & System Developer",
+        desc: "Iman contributed to analyzing business requirements and participating in system development. She worked on understanding user needs, supporting feature implementation, and ensuring that business objectives were effectively translated into practical system solutions.",
         img: "assets/img/iman.png"
     }
 ];
