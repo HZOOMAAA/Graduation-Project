@@ -283,15 +283,16 @@ $cnt = [
                                         <td>
                                             <div class="action-buttons-flex">
                                                 <a href="https://mail.google.com" target="_blank" class="btn btn-sm btn-confirm-company" title="Confirm to <?php echo htmlspecialchars($row['insurance_company'] ?? 'Company'); ?>">
-                                                    <i class='bx bx-mail-send'></i> Confirm to <?php echo htmlspecialchars($row['insurance_company'] ?? 'Company'); ?>
+                                                    <i class='bx bx-mail-send'></i>to <?php echo htmlspecialchars($row['insurance_company'] ?? 'Company'); ?>
                                                 </a>
-                                                <form action="AgentDashboard.php" method="post" style="display:inline-block;">
-                                                    <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
-                                                    <button type="submit" name="confirm_payment_company" class="btn btn-sm btn-success" title="Mark as Confirmed to Company">
-                                                        <i class='bx bx-check-circle'></i>
-                                                    </button>
-                                                </form>
+
                                             </div>
+                                            <form action="AgentDashboard.php" method="post" style="display:inline-block;">
+                                                <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
+                                                <button type="submit" name="confirm_payment_company" class="btn btn-sm btn-success" title="Mark as Confirmed to Company">
+                                                    <i class='bx bx-check-circle'></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     <?php elseif ($active_tab === 'confirmed'): ?>
                                         <td>
