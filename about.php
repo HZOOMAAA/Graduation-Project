@@ -23,7 +23,7 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
                     <!-- <span class="badge bg-white text-primary px-3 py-2 border rounded-pill mb-3" style="color: var(--action-blue) !important;">Welcome to COVERLY</span> -->
-                    <h1 class="mb-4">Insurance Made <br><span class="text-highlight">Simple & Transparent.</span></h1>
+                    <h1 class="mb-4">Insurance Made <br>Simple & Transparent.</h1>
                     <p class="mb-4 fs-5" style="color: var(--text-main); opacity: 0.8;">Finding the right insurance used to be confusing. We built COVERLY to help you compare policies, understand the benefits, and choose the best plan for you—all online, with zero hassle.</p>
                     <div class="d-flex gap-3 justify-content-center justify-content-lg-start">
                         <a href="homepage.php#services" class="hero-btn"> Explore Services</a>
@@ -42,7 +42,6 @@
             <div class="mission-section shadow-sm">
                 <div class="row align-items-center">
                     <div class="col-lg-7 mb-4 mb-lg-0 pe-lg-5">
-                        <!-- <span class="badge text-primary px-3 py-2 border rounded-pill mb-3" style="background-color: var(--white); color: var(--action-blue) !important;">Our Mission</span> -->
                         <h2 class="fw-bold mb-3" style="color: var(--primary-navy);">Why We Built This Platform</h2>
                         <p class="fs-5 mb-3" style="color: var(--text-main); opacity: 0.8;">We noticed that buying insurance involves too much paperwork, hidden terms, and confusing jargon. As a team, we decided to digitize and simplify the entire process.</p>
                         <p class="fs-5 mb-0" style="color: var(--text-main); opacity: 0.8;">COVERLY acts as your personal digital broker. We gather the best medical, car, and life insurance plans from top providers, simplify the details, and present them to you clearly.</p>
