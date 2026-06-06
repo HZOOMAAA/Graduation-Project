@@ -59,6 +59,9 @@ if (isset($_POST['login'])) {
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
+    <a href="../homepage.php" class="back-home-btn">
+        <i class='bx bx-arrow-back'></i>
+    </a>
     <div class="auth-container">
         <h1>Login</h1>
         <?php if ($error): ?>

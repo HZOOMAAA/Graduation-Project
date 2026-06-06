@@ -1,12 +1,6 @@
 <?php
-/**
- * paymob_initiate.php
- * Initiator script for Paymob Visa/Mastercard payments.
- * Connects with Paymob API servers (Live Mode) or routes to simulated portal (Simulation Mode).
- */
 session_start();
 
-// Guard: User must be logged in as customer
 if (!isset($_SESSION['user_id'])) {
     header("Location: auth/login.php");
     exit();
@@ -24,7 +18,6 @@ if ($app_id <= 0) {
     exit();
 }
 
-// ── 1. Fetch Application & Customer Details ──
 $stmt = mysqli_prepare($connect,
     "SELECT a.application_id, a.final_price, a.status,
             u.name AS customer_name, u.email AS customer_email, u.phone AS customer_phone,
@@ -46,29 +39,23 @@ if (!$app) {
     exit();
 }
 
-// Security: Only allow paying if the application status is 'awaiting_payment'
 if ($app['status'] !== 'awaiting_payment') {
     header("Location: profile.php");
     exit();
 }
 
-// ✅ Use final_price (the actual price after any adjustments), fallback to base_price
 $amount       = (float)($app['final_price'] ?: $app['base_price']);
-$amount_cents = (int)($amount * 100); // e.g. 1500 EGP = 150000 cents
+$amount_cents = (int)($amount * 100);
 
-// Parse customer first and last name
 $name_parts = explode(' ', trim($app['customer_name'] ?? 'Coverly Customer'));
 $first_name = htmlspecialchars($name_parts[0]);
 $last_name  = htmlspecialchars(isset($name_parts[1]) ? implode(' ', array_slice($name_parts, 1)) : 'Customer');
 $email      = htmlspecialchars(!empty($app['customer_email']) ? $app['customer_email'] : 'customer@coverly.com');
 $phone      = htmlspecialchars(!empty($app['customer_phone']) ? $app['customer_phone'] : '+201000000000');
 
-// ── 2. Store app_id & provider in session so callback can read them ──
-// (Paymob does NOT pass these back in its redirect GET params)
 $_SESSION['app_id']   = $app_id;
 $_SESSION['provider'] = $provider;
 
-// ── 3. Run Flow based on Mode ──
 if (PAYMOB_MODE === 'live') {
 
     if (empty(PAYMOB_API_KEY) || empty(PAYMOB_INTEGRATION_ID) || empty(PAYMOB_IFRAME_ID)) {
@@ -77,8 +64,6 @@ if (PAYMOB_MODE === 'live') {
     }
 
     try {
-
-        // ── STEP 1: Get Auth Token ────────────────────────────────────────
         $auth_url  = "https://accept.paymob.com/api/auth/tokens";
         $auth_data = json_encode(["api_key" => trim(PAYMOB_API_KEY)]);
 
@@ -101,7 +86,6 @@ if (PAYMOB_MODE === 'live') {
             throw new Exception("Authentication failed. Paymob response: " . ($auth_res ?? 'No response'));
         }
 
-        // ── STEP 2: Register Order ────────────────────────────────────────
         $order_url  = "https://accept.paymob.com/api/ecommerce/orders";
         $order_data = json_encode([
             "auth_token"      => $auth_token,
@@ -133,7 +117,44 @@ if (PAYMOB_MODE === 'live') {
             throw new Exception("Order registration failed with Paymob. Error: " . $paymob_error);
         }
 
-        // ── STEP 3: Request Payment Key ───────────────────────────────────
+        require_once 'includes/functions.php';
+        
+        $check_pol = mysqli_query($connect, "SELECT policy_id FROM policies WHERE application_id = $app_id LIMIT 1");
+        if ($check_pol && mysqli_num_rows($check_pol) > 0) {
+            $pol_row = mysqli_fetch_assoc($check_pol);
+            $policy_id = $pol_row['policy_id'];
+            mysqli_query($connect, "UPDATE policies SET status = 'cancelled', payment_ref = NULL WHERE policy_id = $policy_id");
+        } else {
+            $policy_number = generatePolicyNumber($connect, $app['category_name'] ?? 'Insurance');
+            $start_date = date('Y-m-d');
+            $end_date   = date('Y-m-d', strtotime('+1 year'));
+            $doc_path   = 'uploads/policies/policy_' . $app_id . '.pdf';
+
+            $ins_pol = mysqli_prepare($connect,
+                "INSERT INTO policies (application_id, policy_number, start_date, end_date, document_path, status)
+                 VALUES (?, ?, ?, ?, ?, 'cancelled')"
+            );
+            mysqli_stmt_bind_param($ins_pol, 'issss', $app_id, $policy_number, $start_date, $end_date, $doc_path);
+            mysqli_stmt_execute($ins_pol);
+            $policy_id = mysqli_insert_id($connect);
+            mysqli_stmt_close($ins_pol);
+        }
+
+        $check_pay = mysqli_query($connect, "SELECT payment_id FROM payments WHERE policy_id = $policy_id LIMIT 1");
+        if ($check_pay && mysqli_num_rows($check_pay) > 0) {
+            $pay_row = mysqli_fetch_assoc($check_pay);
+            $payment_id = $pay_row['payment_id'];
+            mysqli_query($connect, "UPDATE payments SET amount = $amount, status = 'pending', transaction_ref = '$order_id' WHERE payment_id = $payment_id");
+        } else {
+            $ins_pay = mysqli_prepare($connect,
+                "INSERT INTO payments (policy_id, amount, method, status, transaction_ref)
+                 VALUES (?, ?, 'credit_card', 'pending', ?)"
+            );
+            mysqli_stmt_bind_param($ins_pay, 'ids', $policy_id, $amount, $order_id);
+            mysqli_stmt_execute($ins_pay);
+            mysqli_stmt_close($ins_pay);
+        }
+
         $key_url  = "https://accept.paymob.com/api/acceptance/payment_keys";
         $key_data = json_encode([
             "auth_token"           => $auth_token,
@@ -158,7 +179,6 @@ if (PAYMOB_MODE === 'live') {
             "currency"             => "EGP",
             "integration_id"       => (int)PAYMOB_INTEGRATION_ID,
             "lock_order_when_paid" => "true",
-            // ✅ Paymob will redirect user here after payment (success or fail)
             "redirect_url"         => "http://localhost/Graduation-Project/paymob_callback.php"
         ]);
 
@@ -181,7 +201,6 @@ if (PAYMOB_MODE === 'live') {
             throw new Exception("Payment Key generation failed. Verify if your Card Integration ID is active and matching EGP currency.");
         }
 
-        // ── Redirect to Paymob secure checkout iframe ─────────────────────
         $checkout_url = "https://accept.paymob.com/api/acceptance/iframes/" . PAYMOB_IFRAME_ID . "?payment_token=" . $payment_key;
         header("Location: " . $checkout_url);
         exit();
@@ -195,14 +214,10 @@ if (PAYMOB_MODE === 'live') {
     }
 
 } else {
-    // ── Simulation Mode ───────────────────────────────────────────────────
     header("Location: paymob_simulation.php?app_id=$app_id&provider=$provider");
     exit();
 }
 
-/**
- * Display premium HTML error card.
- */
 function displayError($title, $message) {
     ?>
     <meta charset="UTF-8">

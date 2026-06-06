@@ -406,17 +406,24 @@ include 'includes/nav2.php';
                                 <i class="bx bxs-error-circle" style="font-size: 18px;"></i>
                                 <span><strong>Notice:</strong> This application was rejected before.</span>
                             </div>
-                            <?php 
+                            
+                            <span style="font-size: 13.5px;">Please upload your new/corrected documents below to re-submit for review.</span>
+
+                            
+                        </div>
+                        <?php 
                             $app_data_details = json_decode($application['application_data'] ?? '{}', true);
                             $rejection_reason = $app_data_details['rejection_message'] ?? '';
                             if ($rejection_reason !== ''):
                             ?>
-                                <div style="margin-top: 4px; padding: 10px 14px; background: rgba(0, 0, 0, 0.04); border-radius: 6px; font-size: 13.5px; color: #c62828; border-left: 4px solid #c62828; line-height: 1.5; font-weight: 500;">
-                                    <strong>Agent Rejection Feedback:</strong> <?php echo htmlspecialchars($rejection_reason); ?>
-                                </div>
+<div style="margin-bottom: 12px; padding: 12px 16px; background-color: #fffbeb; border-radius: 8px; font-size: 13.5px; color: #b45309; border-left: 4px solid #f59e0b; line-height: 1.5; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+    <i class='bx bx-error-circle' style="font-size: 18px;"></i>
+    <div>
+        <strong>Agent Rejection Feedback:</strong> <?php echo htmlspecialchars($rejection_reason); ?>
+    </div>
+</div>
                             <?php endif; ?>
-                            <span style="font-size: 13.5px;">Please upload your new/corrected documents below to re-submit for review.</span>
-                        </div>
+
                     <?php endif; ?>
 
                     <!-- Error Alert (JS-injected) -->

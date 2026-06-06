@@ -82,24 +82,35 @@ if (isset($_POST['update_profile'])) {
             }
 
             if (empty($error)) {
+                $password_valid = true;
                 // Determine whether password needs to be updated
                 if (!empty($password)) {
-                    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                    $update_stmt = mysqli_prepare($connect, "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, photo = ?, password = ? WHERE user_id = ?");
-                    mysqli_stmt_bind_param($update_stmt, "ssssssi", $name, $email, $phone, $address, $photo_path, $hashed_password, $user_id);
+                    if (strlen($password) < 8) {
+                        $error = "Password must be at least 8 characters long!";
+                        $password_valid = false;
+                    } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+                        $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
+                        $password_valid = false;
+                    } else {
+                        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                        $update_stmt = mysqli_prepare($connect, "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, photo = ?, password = ? WHERE user_id = ?");
+                        mysqli_stmt_bind_param($update_stmt, "ssssssi", $name, $email, $phone, $address, $photo_path, $hashed_password, $user_id);
+                    }
                 } else {
                     $update_stmt = mysqli_prepare($connect, "UPDATE users SET name = ?, email = ?, phone = ?, address = ?, photo = ? WHERE user_id = ?");
                     mysqli_stmt_bind_param($update_stmt, "sssssi", $name, $email, $phone, $address, $photo_path, $user_id);
                 }
 
-                if (mysqli_stmt_execute($update_stmt)) {
-                    $success = "Your profile has been updated successfully!";
-                    $_SESSION['name'] = $name; // Update session name
-                    $_SESSION['phone'] = $phone;
-                } else {
-                    $error = "Failed to update profile details: " . mysqli_error($connect);
+                if ($password_valid) {
+                    if (mysqli_stmt_execute($update_stmt)) {
+                        $success = "Your profile has been updated successfully!";
+                        $_SESSION['name'] = $name; // Update session name
+                        $_SESSION['phone'] = $phone;
+                    } else {
+                        $error = "Failed to update profile details: " . mysqli_error($connect);
+                    }
+                    mysqli_stmt_close($update_stmt);
                 }
-                mysqli_stmt_close($update_stmt);
             }
         }
         mysqli_stmt_close($email_stmt);
@@ -379,7 +390,9 @@ include __DIR__ . '/includes/nav2.php';
                                         <?php if ($status === 'waiting_docs' || $status === 'rejected'): ?>
                                             <a href="planDetails.php?application_id=<?= $row['application_id'] ?>" class="btn-sm btn-yellow"><i class="fa-solid fa-upload"></i> Upload</a>
                                         <?php elseif ($status === 'paid' && !empty($row['document_path'])): ?>
-                                            <a href="/Graduation-Project/<?= htmlspecialchars($row['document_path']) ?>" target="_blank" class="btn-sm btn-green"><i class="fa-solid fa-download"></i> Policy</a>
+                                            <a href="download_policy.php?id=<?= $row['application_id'] ?>" target="_blank" class="btn-sm btn-green"><i class="fa-solid fa-download"></i> Policy</a>
+                                        <?php elseif ($status === 'awaiting_payment'): ?>
+                                            <a href="payment.php?app_id=<?= $row['application_id'] ?>" class="btn-sm btn-blue"><i class="fa-solid fa-credit-card"></i> Pay Now</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>

@@ -25,14 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
         wrappers.forEach(w => w.classList.remove("open"));
     });
 
-    // ── معالجة إرسال فورم تأمين الحياة بالـ AJAX ──
     const form = document.getElementById('lifeInsuranceForm');
     if (!form) return;
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-        // ── الفحص والتحقق من الحقول (Validation) ──
         const bDay        = document.getElementById('birth_day').value.trim();
         const bMonth      = document.getElementById('birth_month').value.trim();
         const bYear       = document.getElementById('birth_year').value.trim();
@@ -51,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!benefName) { showModal('error', 'Missing Field', 'Please enter the primary beneficiary name.'); return; }
         if (!benefRel) { showModal('error', 'Missing Field', 'Please select the relationship status.'); return; }
 
-        // ── تشغيل الـ Loader ──
         const submitBtn = document.getElementById('submitBtn');
         const btnText = document.getElementById('submitBtnText');
         const btnLoader = document.getElementById('submitBtnLoader');
@@ -62,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const formData = new FormData(this);
 
-        fetch('/Graduation-Project/submit_life_application.php', {
+        fetch('/Graduation-Project/category-life.php', {
             method: 'POST',
             body: formData
         })
@@ -77,11 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         })
         .catch(error => {
-            console.error('Error:', error);
             showModal('error', 'Connection Error', 'Server error. Please verify your internet connection.');
         })
         .finally(() => {
-            // غلق الـ Loader دائماً وإعادة تفعيل الزرار
             submitBtn.disabled = false;
             if (btnText) btnText.style.display = 'inline-block';
             if (btnLoader) btnLoader.style.display = 'none';
@@ -89,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// ── توحيد دالة الـ Modal لتطابق الـ CSS الفخم ──
 function showModal(type, title, message) {
     const modal = document.getElementById('appModal');
     const iconDiv = document.getElementById('appModalIcon');

@@ -6,5 +6,4 @@ function closePopup() {
     }
 }
 
-// Auto-close after 5 seconds
 setTimeout(closePopup, 5000);

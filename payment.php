@@ -122,14 +122,6 @@ include 'includes/nav2.php';
                     <button class="btn-continue">Proceed to Checkout <i class='bx bx-right-arrow-alt' style="vertical-align: middle; font-size: 16px; margin-left: 4px;"></i></button>
                 </div>
 
-                
-                <!-- <div class="payment-option" onclick="location.href='fawry.php?app_id=<?php echo $app_id; ?>'">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Fawry_logo.svg/320px-Fawry_logo.svg.png" alt="Fawry" class="payment-icon" style="object-fit:contain;">
-                    <h3 class="payment-name">Fawry Pay</h3>
-                    <p class="payment-desc">Generate a secure reference payment code valid at any local Fawry retailer machine.</p>
-                    <button class="btn-continue">Generate Code <i class='bx bx-right-arrow-alt' style="vertical-align: middle; font-size: 16px; margin-left: 4px;"></i></button>
-                </div> -->
-
                 <div class="payment-option" onclick="location.href='paymob_initiate.php?app_id=<?php echo $app_id; ?>&provider=mastercard'">
                     <img src="https://cdn-icons-png.flaticon.com/512/196/196561.png" alt="Mastercard" class="payment-icon">
                     <h3 class="payment-name">Mastercard</h3>

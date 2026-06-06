@@ -4,10 +4,8 @@
 
 
 
-    <!-- nav&hero -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- why choose -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -59,7 +57,6 @@
 <section class="why-choose-us py-5">
   <div class="container">
 
-    <!-- العنوان فوق -->
     <div class="row">
       <div class="col-12">
         <h2 class="text-center mb-5 section-title">
@@ -68,7 +65,6 @@
       </div>
     </div>
 
-    <!-- الكروت -->
     <div class="row g-4 text-center">
 
       <div class="col-md-6 col-lg-3">
@@ -128,7 +124,6 @@
         <h6 class="section-subtitle ">OUR PURPOSE</h6>
         
         <div class="cards-wrapper">
-            <!-- Mission Card -->
             <div class="purpose-card">
 
                 <h2 class="card-title"> <i class='bx bx-rocket'></i> Our Mission </h2>
@@ -137,7 +132,6 @@
                 </p>
             </div>
 
-            <!-- Vision Card -->
             <div class="purpose-card">
 
                 <h2 class="card-title"><i class='bx bxs-binoculars' ></i> Our Vision </h2>
@@ -155,7 +149,6 @@
 
   <h2>Trusted by Leading Insurance Partners</h2>
 
-  <!-- Slider -->
   <div class="slider">
     <div class="slide-track">
 
@@ -163,8 +156,6 @@
       <div class="slide"><img src="assets/img/axa.png" alt=""></div>
       <div class="slide"><img src="assets/img/met.png" alt=""></div>
       <div class="slide"><img src="assets/img/masr.png" alt=""></div>
-
-      <!-- duplicate for smooth loop -->
       <div class="slide"><img src="assets/img/download.png" alt=""></div>
       <div class="slide"><img src="assets/img/axa.png" alt=""></div>
       <div class="slide"><img src="assets/img/met.png" alt=""></div>
@@ -222,12 +213,10 @@
 
    <section class="faq-section" id="faq">
     <div class="faq-container">
-        <!-- Section Title -->
         <h2 class="faq-title">Frequently asked questions</h2>
         
         <div class="faq-accordion" id="faqAccordion">
 
-            <!-- Question 1 (open by default) -->
             <div class="faq-item active">
                 <button class="faq-question" aria-expanded="true" data-target="faqAnswer1">
                     <span>How long does it usually take to complete a project?</span>
@@ -238,7 +227,6 @@
                 </div>
             </div>
 
-            <!-- Question 2 -->
             <div class="faq-item">
                 <button class="faq-question" aria-expanded="false" data-target="faqAnswer2">
                     <span>Do you provide technical support after delivery?</span>
@@ -249,7 +237,6 @@
                 </div>
             </div>
 
-            <!-- Question 3 -->
             <div class="faq-item">
                 <button class="faq-question" aria-expanded="false" data-target="faqAnswer3">
                     <span>What payment methods are available?</span>
@@ -271,14 +258,12 @@
             btn.addEventListener('click', function() {
                 const isActive = item.classList.contains('active');
                 
-                // Close all items
                 faqItems.forEach(i => {
                     i.classList.remove('active');
                     i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
                     i.querySelector('.faq-answer').classList.remove('show');
                 });
                 
-                // Open clicked item if it was closed
                 if (!isActive) {
                     item.classList.add('active');
                     btn.setAttribute('aria-expanded', 'true');

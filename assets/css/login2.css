@@ -200,3 +200,54 @@ p a:hover {
 @keyframes fadeOut {
     to { opacity: 0; transform: translateY(-20px); }
 }
+
+
+/* =========================================
+   تنسيق زر العودة للرئيسية (Top Left)
+   ========================================= */
+.back-home-btn {
+    position: absolute;
+    top: 70px;
+    left: 100px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937; /* لون داكن شيك يناسب الـ Light background */
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    z-index: 100; /* لضمان ظهوره فوق تأثيرات الخلفية */
+}
+
+.back-home-btn i {
+    font-size: 18px;
+}
+
+.back-home-btn:hover {
+    background: #1f2937; /* يقلب غامق عند الـ hover */
+    color: #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.back-home-btn:active {
+    transform: translateY(1px);
+}
+
+/* تظبيطه على الشاشات الصغيرة عشان ما يضايقش الفورم */
+@media (max-width: 480px) {
+    .back-home-btn {
+        top: 16px;
+        left: 16px;
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}

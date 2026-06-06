@@ -1,9 +1,4 @@
 <?php
-/**
- * paymob_callback.php
- * Redirect callback handler for Paymob payment gateway integration.
- * Processes successful transactions, writes policy certificates to the DB, and shows beautiful receipts.
- */
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
@@ -17,12 +12,9 @@ require_once 'includes/paymob_config.php';
 
 $customer_id = (int)$_SESSION['user_id'];
 
-// ✅ Read app_id & provider from SESSION (set in paymob_initiate.php before redirect)
-// Paymob does NOT pass these back in the redirect GET params
 $app_id   = isset($_SESSION['app_id'])   ? (int)$_SESSION['app_id']   : 0;
 $provider = isset($_SESSION['provider']) ? $_SESSION['provider']       : 'visa';
 
-// Also accept GET fallback for simulation mode compatibility
 if ($app_id <= 0) {
     $app_id = isset($_GET['app_id']) ? (int)$_GET['app_id'] : 0;
 }
@@ -35,8 +27,6 @@ if ($app_id <= 0) {
     exit();
 }
 
-// ── HMAC Verification ────────────────────────────────────────────────────────
-// Verifies the callback is genuinely from Paymob and hasn't been tampered with
 function verify_paymob_hmac(array $params, string $secret): bool {
     $received = $params['hmac'] ?? '';
     if (empty($received)) return false;
@@ -59,24 +49,20 @@ function verify_paymob_hmac(array $params, string $secret): bool {
     return hash_equals($computed, $received);
 }
 
-// Only verify HMAC when coming from real Paymob (has hmac param)
 if (!empty($_GET['hmac']) && defined('PAYMOB_HMAC_SECRET') && !empty(PAYMOB_HMAC_SECRET)) {
     if (!verify_paymob_hmac($_GET, PAYMOB_HMAC_SECRET)) {
-        // HMAC mismatch — possible tampering, reject silently
         error_log("Paymob HMAC verification failed for app_id=$app_id txn=$txn_id");
         header("Location: profile.php?error=payment_verification_failed");
         exit();
     }
 }
 
-// ── 1. Fetch Application Details ─────────────────────────────────────────────
 $stmt = mysqli_prepare($connect,
     "SELECT a.*,
             u.name AS customer_name,
             p.name AS plan_name, p.insurance_company,
             cat.name AS category_name,
             p.base_price AS base_price
-            
      FROM applications a
      LEFT JOIN users u           ON a.customer_id = u.user_id
      LEFT JOIN insurance_plans p ON a.plan_id     = p.plan_id
@@ -98,12 +84,11 @@ $policy_number      = '';
 $payment_ref        = '';
 $transaction_status = 'failed';
 
-// ── 2. Process Successful Transaction ────────────────────────────────────────
 if ($success_raw === 'true') {
     $transaction_status = 'success';
+    $amount = (float)($app['final_price'] ?: $app['base_price']);
 
     if ($app['status'] === 'awaiting_payment') {
-        // Generate unique policy number for this category
         $policy_number = generatePolicyNumber($connect, $app['category_name'] ?? 'Insurance');
         $payment_ref   = 'PAYMOB-' . strtoupper($provider) . '-' . $txn_id;
 
@@ -111,24 +96,47 @@ if ($success_raw === 'true') {
         $end_date   = date('Y-m-d', strtotime('+1 year'));
         $doc_path   = 'uploads/policies/policy_' . $app_id . '.pdf';
 
-        // Prevent duplicate policy creation on page refresh
-        $check_pol = mysqli_query($connect, "SELECT policy_number FROM policies WHERE application_id = $app_id LIMIT 1");
-        if ($check_pol && mysqli_num_rows($check_pol) == 0) {
+        $check_pol = mysqli_query($connect, "SELECT policy_id, policy_number FROM policies WHERE application_id = $app_id LIMIT 1");
+        if ($check_pol && mysqli_num_rows($check_pol) > 0) {
+            $pol_row = mysqli_fetch_assoc($check_pol);
+            $policy_id = $pol_row['policy_id'];
+            $policy_number = $pol_row['policy_number'];
 
+            $db_ok = mysqli_query($connect, "UPDATE policies SET status = 'active', payment_ref = '$payment_ref' WHERE policy_id = $policy_id");
+
+            if ($db_ok) {
+                $pay_q = mysqli_query($connect, "SELECT payment_id FROM payments WHERE policy_id = $policy_id LIMIT 1");
+                if ($pay_q && mysqli_num_rows($pay_q) > 0) {
+                    mysqli_query($connect, "UPDATE payments SET status = 'completed', transaction_ref = '$txn_id', method = 'credit_card' WHERE policy_id = $policy_id");
+                } else {
+                    mysqli_query($connect, "INSERT INTO payments (policy_id, amount, method, status, transaction_ref) VALUES ($policy_id, $amount, 'credit_card', 'completed', '$txn_id')");
+                }
+
+                mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $app_id");
+                $app['status'] = 'paid';
+
+                unset($_SESSION['app_id'], $_SESSION['provider']);
+            } else {
+                $transaction_status = 'db_error';
+                $db_err_msg = mysqli_error($connect);
+            }
+
+        } else {
             $ins = mysqli_prepare($connect,
                 "INSERT INTO policies (application_id, policy_number, start_date, end_date, document_path, payment_ref, status)
                  VALUES (?, ?, ?, ?, ?, ?, 'active')"
             );
             mysqli_stmt_bind_param($ins, 'isssss', $app_id, $policy_number, $start_date, $end_date, $doc_path, $payment_ref);
             $db_ok = mysqli_stmt_execute($ins);
+            $policy_id = mysqli_insert_id($connect);
             mysqli_stmt_close($ins);
 
             if ($db_ok) {
-                // ✅ Mark application as paid
+                mysqli_query($connect, "INSERT INTO payments (policy_id, amount, method, status, transaction_ref) VALUES ($policy_id, $amount, 'credit_card', 'completed', '$txn_id')");
+
                 mysqli_query($connect, "UPDATE applications SET status = 'paid' WHERE application_id = $app_id");
                 $app['status'] = 'paid';
 
-                // ✅ Clear session payment data now that it's processed
                 unset($_SESSION['app_id'], $_SESSION['provider']);
 
             } else {
@@ -138,7 +146,6 @@ if ($success_raw === 'true') {
         }
     }
 
-    // If already paid (e.g. page refresh), load existing policy so receipt still shows
     if ($app['status'] === 'paid') {
         $pol_q = mysqli_query($connect, "SELECT policy_number, payment_ref FROM policies WHERE application_id = $app_id LIMIT 1");
         if ($pol_q && $pol_r = mysqli_fetch_assoc($pol_q)) {
@@ -148,7 +155,6 @@ if ($success_raw === 'true') {
     }
 }
 
-// ✅ Use final_price (actual charged amount), fallback to base_price
 $amount        = (float)($app['final_price'] ?: $app['base_price']);
 $plan_name     = htmlspecialchars($app['plan_name']         ?? '');
 $company       = htmlspecialchars($app['insurance_company'] ?? '');
@@ -171,7 +177,6 @@ include 'includes/nav2.php';
     <div class="callback-container">
 
         <?php if ($transaction_status === 'success'): ?>
-        <!-- ── SUCCESS SCREEN ── -->
         <div class="status-card success-card">
             <div class="icon-bubble success">
                 <i class="fa-solid fa-circle-check"></i>
@@ -231,7 +236,7 @@ include 'includes/nav2.php';
                     <button onclick="window.print()" class="action-btn btn-secondary">
                         <i class="fa-solid fa-print"></i> Print Invoice
                     </button>
-                    <a href="uploads/policies/policy_<?php echo $app_id; ?>.pdf" target="_blank" class="action-btn btn-secondary">
+                    <a href="download_policy.php?id=<?php echo $app_id; ?>" target="_blank" class="action-btn btn-secondary">
                         <i class="fa-solid fa-file-pdf"></i> Download PDF
                     </a>
                 </div>
@@ -243,7 +248,6 @@ include 'includes/nav2.php';
         </div>
 
         <?php elseif ($transaction_status === 'db_error'): ?>
-        <!-- ── DATABASE ERROR SCREEN ── -->
         <div class="status-card error-card">
             <div class="icon-bubble error">
                 <i class="fa-solid fa-circle-exclamation"></i>
@@ -276,7 +280,6 @@ include 'includes/nav2.php';
         </div>
 
         <?php else: ?>
-        <!-- ── TRANSACTION FAILED SCREEN ── -->
         <div class="status-card error-card">
             <div class="icon-bubble error">
                 <i class="fa-solid fa-circle-xmark"></i>

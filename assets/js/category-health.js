@@ -1,11 +1,7 @@
-// ── Dynamic spouse & children fields ──────────────────────────────────────────
-
-// دالة إضافة حقل الزوجة ديناميكياً (مرة واحدة فقط)
 function addSpouseField() {
     const container = document.getElementById('spouse-dynamic-area');
     const addSpouseBtn = document.getElementById('addSpouseBtn');
 
-    // كارت حقول الزوجة بالكلاس الجديد
     const spouseCard = document.createElement('div');
     spouseCard.className = 'insurance-member-card';
     spouseCard.id = 'spouse-card-node';
@@ -23,10 +19,9 @@ function addSpouseField() {
     `;
 
     container.appendChild(spouseCard);
-    addSpouseBtn.style.display = 'none'; // إخفاء زر الإضافة
+    addSpouseBtn.style.display = 'none';
 }
 
-// حذف حقل الزوجة وإعادة إظهار زر الإضافة
 function removeSpouseField() {
     const card = document.getElementById('spouse-card-node');
     if (card) {
@@ -37,7 +32,6 @@ function removeSpouseField() {
 
 let childCounter = 0;
 
-// دالة إضافة طفل ديناميكياً
 function addChildField() {
     childCounter++;
     const container = document.getElementById('children-dynamic-area');
@@ -61,16 +55,12 @@ function addChildField() {
     container.appendChild(childCard);
 }
 
-// حذف طفل معين
 function removeChildField(id) {
     const card = document.getElementById(`child-card-${id}`);
     if (card) {
         card.remove();
     }
 }
-
-
-// ── AJAX Form Submission ──────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('healthInsuranceForm');
@@ -79,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
-        // ── Validate required fields ────────────────────────────────────────
         const birthDay   = form.querySelector('input[name="birth_day"]').value.trim();
         const birthMonth = form.querySelector('input[name="birth_month"]').value.trim();
         const birthYear  = form.querySelector('input[name="birth_year"]').value.trim();
@@ -108,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // ── Validate spouse fields if added ─────────────────────────────────
         const spouseCard = document.getElementById('spouse-card-node');
         if (spouseCard) {
             const sd = spouseCard.querySelector('input[name="spouse_day"]').value.trim();
@@ -120,14 +108,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // ── Submit the form to PHP (which saves session data and redirects to plans.php) ──
-        form.action = '/Graduation-Project/submit_health_application.php';
+        form.action = '/Graduation-Project/category-health.php';
         form.method = 'POST';
         form.submit();
     });
 });
 
-// ── Modal Helpers ─────────────────────────────────────────────────────────────
 function showModal(type, title, message) {
     const overlay = document.getElementById('appModal');
     const icon    = document.getElementById('appModalIcon');

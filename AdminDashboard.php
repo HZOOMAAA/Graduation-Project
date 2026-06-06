@@ -1,12 +1,10 @@
 <?php
 require_once __DIR__ . '/includes/auth_check.php';
 requireRole('admin');
-// Note: connection.php is already included by auth_check.php, no need to include it again
 
 $error = '';
 $success = '';
 
-// Handle Add Agent
 if (isset($_POST['add_agent'])) {
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $email = mysqli_real_escape_string($connect, $_POST['email']);
@@ -16,6 +14,10 @@ if (isset($_POST['add_agent'])) {
     $check_email = mysqli_query($connect, "SELECT * FROM users WHERE email = '$email'");
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
+    } elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+        $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);     
         $insert = mysqli_query($connect, "INSERT INTO users (name, email, password, role) VALUES ('$name', '$email', '$hashed_password', '$role')");
@@ -27,13 +29,11 @@ if (isset($_POST['add_agent'])) {
     }
 }
 
-// Handle Delete Agent
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     $delete = mysqli_query($connect, "DELETE FROM users WHERE user_id = $id AND role = 'agent'");
     if ($delete) {
         $success = "Agent deleted successfully!";
-        // Redirect to avoid re-deletion on refresh
         header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
         exit();
     } else {
@@ -41,7 +41,6 @@ if (isset($_GET['delete'])) {
     }
 }
 
-// Handle Delete Plan
 if (isset($_GET['delete_plan'])) {
     $id = (int)$_GET['delete_plan'];
     $delete = mysqli_query($connect, "DELETE FROM insurance_plans WHERE plan_id = $id");
@@ -54,41 +53,51 @@ if (isset($_GET['delete_plan'])) {
     }
 }
 
-// Handle Edit Agent
 if (isset($_POST['edit_agent'])) {
     $id = (int)$_POST['user_id'];
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $email = mysqli_real_escape_string($connect, $_POST['email']);
     
-    // Check email uniqueness excluding current user
     $check_email = mysqli_query($connect, "SELECT * FROM users WHERE email = '$email' AND user_id != $id");
     if (mysqli_num_rows($check_email) > 0) {
         $error = "Email already exists!";
     } else {
+        $password_valid = true;
         if (!empty($_POST['password'])) {
-            $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-            $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email', password = '$hashed_password' WHERE user_id = $id AND role = 'agent'");
+            $password = $_POST['password'];
+            if (strlen($password) < 8) {
+                $error = "Password must be at least 8 characters long!";
+                $password_valid = false;
+            } elseif (!preg_match('/[a-z]/', $password) || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+                $error = "Password must contain at least one lowercase letter, one uppercase letter, and one number!";
+                $password_valid = false;
+            } else {
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+                $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email', password = '$hashed_password' WHERE user_id = $id AND role = 'agent'");
+            }
         } else {
             $update = mysqli_query($connect, "UPDATE users SET name = '$name', email = '$email' WHERE user_id = $id AND role = 'agent'");
         }
         
-        if ($update) {
-            $success = "Agent updated successfully!";
-            header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
-            exit();
-        } else {
-            $error = "Failed to update agent! " . mysqli_error($connect);
+        if ($password_valid) {
+            if ($update) {
+                $success = "Agent updated successfully!";
+                header("Location: AdminDashboard.php?tab=manage&success=" . urlencode($success));
+                exit();
+            } else {
+                $error = "Failed to update agent! " . mysqli_error($connect);
+            }
         }
     }
 }
 
-// Handle Add Plan
 if (isset($_POST['add_plan'])) {
     $name = mysqli_real_escape_string($connect, $_POST['name']);
     $category_id = (int)$_POST['category_id'];
     $company = mysqli_real_escape_string($connect, $_POST['insurance_company']);
     $details = mysqli_real_escape_string($connect, $_POST['bio']);
     $price = (float)$_POST['base_price'];
+    $commission_rate=(float)$_POST['commission_rate'];
     
     $eligibility_raw = trim($_POST['eligibility_rules']);
     $eligibility = 'NULL';
@@ -105,7 +114,6 @@ if (isset($_POST['add_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format (e.g. [\"Rule 1\", \"Rule 2\"])";
     } else {
-        // Handle logo upload
         $logo_path = '';
         $logo_upload_error = '';
         if (!empty($_FILES['logo']['name'])) {
@@ -131,7 +139,7 @@ if (isset($_POST['add_plan'])) {
             $error = $logo_upload_error;
         } else {
             $logo_escaped = mysqli_real_escape_string($connect, $logo_path);
-            $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, eligibility_rules, logo) VALUES ('$name', $category_id, '$company', '$details', $price, $eligibility, '$logo_escaped')");
+            $insert = mysqli_query($connect, "INSERT INTO insurance_plans (name, category_id, insurance_company, bio, base_price, commission_rate, eligibility_rules, logo) VALUES ('$name', $category_id, '$company', '$details', $price,$commission_rate, $eligibility, '$logo_escaped')");
             if ($insert) {
                 $success = "Insurance plan added successfully!";
                 header("Location: AdminDashboard.php?tab=add_plan&success=" . urlencode($success));
@@ -143,7 +151,6 @@ if (isset($_POST['add_plan'])) {
     }
 }
 
-// Handle Edit Plan
 if (isset($_POST['edit_plan'])) {
     $id = (int)$_POST['plan_id'];
     $name = mysqli_real_escape_string($connect, $_POST['name']);
@@ -151,6 +158,8 @@ if (isset($_POST['edit_plan'])) {
     $company = mysqli_real_escape_string($connect, $_POST['insurance_company']);
     $details = mysqli_real_escape_string($connect, $_POST['bio']);
     $price = (float)$_POST['base_price'];
+    $commission_rate=(float)$_POST['commission_rate'];
+
     
     $eligibility_raw = trim($_POST['eligibility_rules']);
     $eligibility = 'NULL';
@@ -167,7 +176,6 @@ if (isset($_POST['edit_plan'])) {
     if (!$json_is_valid) {
         $error = "Eligibility rules must be valid JSON format.";
     } else {
-        // Handle logo upload for edit
         $logo_sql_part = '';
         $logo_upload_error = '';
         if (!empty($_FILES['logo']['name'])) {
@@ -193,10 +201,9 @@ if (isset($_POST['edit_plan'])) {
         if ($logo_upload_error !== '') {
             $error = $logo_upload_error;
         } else {
-            // Build update query safely. Logo part is appended only when a new logo is uploaded.
             $update = mysqli_query(
                 $connect,
-                "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
+                "UPDATE insurance_plans SET name = '$name', category_id = $category_id, insurance_company = '$company', bio = '$details', base_price = $price, commission_rate = $commission_rate, eligibility_rules = $eligibility{$logo_sql_part} WHERE plan_id = $id"
             );
             if ($update) {
                 $success = "Insurance plan updated successfully!";
@@ -210,12 +217,10 @@ if (isset($_POST['edit_plan'])) {
 }
 
 
-// Handle Assign Agent — only allowed when status = waiting_docs
 if (isset($_POST['assign_agent'])) {
     $application_id = (int)$_POST['application_id'];
     $agent_id = (int)$_POST['agent_id'];
 
-    // Ensure application is in waiting_docs before assigning
     $check = mysqli_query($connect, "SELECT application_id FROM applications WHERE application_id = $application_id AND status = 'under_review'");
     if ($check && mysqli_num_rows($check) > 0) {
         $update = mysqli_query($connect, "UPDATE applications SET agent_id = $agent_id, status = 'under_review' WHERE application_id = $application_id");
@@ -232,13 +237,10 @@ if (isset($_POST['assign_agent'])) {
 
 
 
-// Fetch agents
 $agents = mysqli_query($connect, "SELECT * FROM users WHERE role = 'agent'");
 
-// Fetch customers
 $customers = mysqli_query($connect, "SELECT * FROM users WHERE role = 'customer'");
 
-// Fetch categories for the plan form
 $categories_result = mysqli_query($connect, "SELECT * FROM categories");
 $categories = [];
 if ($categories_result) {
@@ -247,7 +249,6 @@ if ($categories_result) {
     }
 }
 
-// Fetch applications — Admin manages only the early stages (assign agent)
 $applications_query = "
     SELECT a.*,
            c.name as customer_name,
@@ -266,7 +267,14 @@ $applications_query = "
 ";
 $applications = mysqli_query($connect, $applications_query);
 
-// Fetch 5 most recent applications for overview
+$unassigned_count_query = mysqli_query($connect, "
+    SELECT COUNT(*) as cnt 
+    FROM applications 
+    WHERE status = 'under_review' AND (agent_id IS NULL OR agent_id = 0)
+");
+$unassigned_count_row = mysqli_fetch_assoc($unassigned_count_query);
+$unassigned_count = (int)($unassigned_count_row['cnt'] ?? 0);
+
 $recent_applications_query = "
     SELECT a.*,
            c.name as customer_name,
@@ -278,7 +286,7 @@ $recent_applications_query = "
     LEFT JOIN users ag ON a.agent_id = ag.user_id
     WHERE a.status IN ('under_review')
     ORDER BY a.created_at DESC
-    LIMIT 3 
+    LIMIT 5 
 ";
 $recent_applications = mysqli_query($connect, $recent_applications_query);
 
@@ -292,7 +300,6 @@ function getOverviewStatusStyle($status) {
     }
 }
 
-// Fetch category distribution stats (with plan count per category)
 $category_distribution_query = "
     SELECT cat.category_id, cat.name,
            COUNT(DISTINCT a.application_id) as cnt,
@@ -305,7 +312,6 @@ $category_distribution_query = "
 ";
 $category_distribution = mysqli_query($connect, $category_distribution_query);
 
-// Total count of all applications (to calculate percentages)
 $total_apps_all_categories_row = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as total FROM applications"));
 $total_apps_all_categories = intval($total_apps_all_categories_row['total'] ?? 0);
 
@@ -352,7 +358,6 @@ function getCategoryDesignProps($cat_name) {
 
 
 
-// Stats for overview
 $stats = [];
 foreach (['under_review','awaiting_payment','paid','rejected'] as $s) {
     $r = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM applications WHERE status='$s'"));
@@ -363,7 +368,15 @@ $total_agents = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cn
 $total_customers = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM users WHERE role='customer'"))['cnt'];
 $total_plans  = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM insurance_plans"))['cnt'];
 
-// Fetch all plans for viewer
+// Calculate total revenue as SUM(base_price * commission_rate) for paid applications
+$revenue_result = mysqli_fetch_assoc(mysqli_query($connect, "
+    SELECT COALESCE(SUM(p.base_price * p.commission_rate), 0) as total_revenue
+    FROM applications a
+    JOIN insurance_plans p ON a.plan_id = p.plan_id
+    WHERE a.status = 'paid'
+"));
+$total_revenue = (float)($revenue_result['total_revenue'] ?? 0);
+
 $all_plans = mysqli_query($connect, "
     SELECT p.*, cat.name as category_name
     FROM insurance_plans p
@@ -371,7 +384,87 @@ $all_plans = mysqli_query($connect, "
     ORDER BY cat.name, p.base_price ASC
 ");
 
-// Fetch all contact messages for viewer
+if (!function_exists('get_time_elapsed')) {
+    function get_time_elapsed($datetime, $full = false) {
+        $now = new DateTime;
+        $ago = new DateTime($datetime);
+        $diff = $now->diff($ago);
+
+        $diff->w = floor($diff->d / 7);
+        $diff->d -= $diff->w * 7;
+
+        $string = array(
+            'y' => 'year',
+            'm' => 'month',
+            'w' => 'week',
+            'd' => 'day',
+            'h' => 'hour',
+            'i' => 'minute',
+            's' => 'second',
+        );
+        foreach ($string as $k => &$v) {
+            if ($diff->$k) {
+                $v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
+            } else {
+                unset($string[$k]);
+            }
+        }
+
+        if (!$full) $string = array_slice($string, 0, 1);
+        return $string ? implode(', ', $string) . ' ago' : 'Just Now';
+    }
+}
+
+// Fetch recent transactions from database
+$recent_transactions_query = "
+    SELECT p.*, pol.policy_number 
+    FROM payments p
+    LEFT JOIN policies pol ON p.policy_id = pol.policy_id
+    ORDER BY p.payment_date DESC
+    LIMIT 10
+";
+$recent_transactions = mysqli_query($connect, $recent_transactions_query);
+
+$days = [];
+for ($i = 6; $i >= 0; $i--) {
+    $date_str = date('Y-m-d', strtotime("-$i days"));
+    $label_str = date('D (d M)', strtotime("-$i days"));
+    $days[$date_str] = [
+        'label' => $label_str,
+        'revenue' => 0.0
+    ];
+}
+
+$start_date = date('Y-m-d 00:00:00', strtotime("-6 days"));
+$revenue_query = "
+    SELECT DATE(pay.payment_date) as payment_day, 
+           SUM(p.base_price * p.commission_rate) as daily_revenue 
+    FROM payments pay
+    JOIN policies pol ON pay.policy_id = pol.policy_id
+    JOIN applications a ON pol.application_id = a.application_id
+    JOIN insurance_plans p ON a.plan_id = p.plan_id
+    WHERE pay.status = 'completed' AND pay.payment_date >= '$start_date'
+    GROUP BY DATE(pay.payment_date)
+";
+$revenue_res = mysqli_query($connect, $revenue_query);
+if ($revenue_res) {
+    while ($row = mysqli_fetch_assoc($revenue_res)) {
+        $day = $row['payment_day'];
+        if (isset($days[$day])) {
+            $days[$day]['revenue'] = (float)$row['daily_revenue'];
+        }
+    }
+}
+$chart_labels = [];
+$chart_data = [];
+foreach ($days as $date => $info) {
+    $chart_labels[] = $info['label'];
+    $chart_data[] = $info['revenue'];
+}
+
+$chart_labels_json = json_encode($chart_labels);
+$chart_data_json = json_encode($chart_data);
+
 mysqli_query($connect, "CREATE TABLE IF NOT EXISTS contact_messages (
     message_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -385,8 +478,6 @@ $all_messages = mysqli_query($connect, "SELECT * FROM contact_messages ORDER BY 
 if (isset($_GET['success'])) {
     $success = $_GET['success'];
 }
-
-// Determine active tab: use ?tab= param (default: overview)
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 ?>
 <!DOCTYPE html>
@@ -416,6 +507,9 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         
         <a href="AdminDashboard.php?tab=applications" class="<?php echo $active_tab === 'applications' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-book-content'></i></span> Applications
+            <?php if ($unassigned_count > 0): ?>
+                <span class="sidebar-badge" style="background: #e65100;"><?php echo $unassigned_count; ?></span>
+            <?php endif; ?>
         </a>
         <a href="AdminDashboard.php?tab=plans" class="<?php echo $active_tab === 'plans' ? 'active' : ''; ?>">
             <span class="icon"><i class='bx bx-shield'></i></span> Insurance Plans
@@ -451,48 +545,56 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         <?php endif; ?>
 
         <?php if ($active_tab === 'overview'): ?>
-            <div class="page-title">Dashboard Overview</div>
+            <div class="page-title"><i class='bx bx-home'></i> Dashboard Overview</div>
             <div class="page-subtitle">A live summary of all activity across the insurance platform.</div>
-            <!-- test marwan wael -->
 
 
-            <div class="overview-stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-user'></i></div>
-                    <div class="stat-card-number"><?php echo $total_customers; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Customers</span>
-                        <span class="stat-trend-up">↑ 11.01%</span>
-                    </div>
-                </div>
+<div class="overview-stats-grid">
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-user'></i></div>
+        <div class="stat-card-number"><?php echo $total_customers; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Customers</span>
+            <span class="stat-trend-up">↑ 11.01%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
-                    <div class="stat-card-number"><?php echo $total_apps; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Total applications</span>
-                        <span class="stat-trend-down">↓ 4.05%</span>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-book-content'></i></div>
+        <div class="stat-card-number"><?php echo $total_apps; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Total applications</span>
+            <span class="stat-trend-down">↓4.05%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-group'></i></div>
-                    <div class="stat-card-number"><?php echo $total_agents; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Active Agents</span>
-                        <span class="stat-trend-up">↑ 2.3%</span>
-                    </div>
-                </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-group'></i></div>
+        <div class="stat-card-number"><?php echo $total_agents; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Active Agents</span>
+            <span class="stat-trend-up">↑ 2.3%</span>
+        </div>
+    </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
-                    <div class="stat-card-number"><?php echo $total_plans; ?></div>
-                    <div class="stat-card-meta">
-                        <span class="label">Insurance Plans</span>
-                        <span class="stat-trend-stable">Stable</span>
-                    </div>
-                </div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-card-icon"><i class='bx bx-shield'></i></div>
+        <div class="stat-card-number"><?php echo $total_plans; ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Insurance Plans</span>
+            <span class="stat-trend-stable">Stable</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-card-icon" style="background: #ECFDF5; color: #10B981;"><i class='bx bx-dollar-circle'></i></div>
+        <div class="stat-card-number">EGP <?php echo number_format($total_revenue, 2); ?></div>
+        <div class="stat-card-meta">
+            <span class="label">Total Revenue</span>
+            <span class="stat-trend-up">↑ Commission Based</span>
+        </div>
+    </div>
+</div>
 
             <div class="overview-twin-layout">
                 
@@ -622,33 +724,20 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
 
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 30px; align-items: start;">
-                
-                <div class="card" style="border-left: 4px solid var(--error-red);">
-                    <h2 class="card-title-main" style="color: var(--primary-navy);"><i class='bx bx-bell-off' style="color: var(--error-red); vertical-align: middle; margin-right: 5px;"></i> Action Required</h2>
-                    <p class="card-subtitle-main">Critical items that require immediate administrator supervision.</p>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
-                        
-                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFF5F5; border-radius: 8px;">
-                            <i class='bx bx-error-alt' style="font-size: 20px; color: var(--error-red);"></i>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #9B1C1C;">3 Unassigned Claims</div>
-                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Accident reports waiting for agent verification.</div>
-                            </div>
-                        </div>
+            
 
-                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #FFFBEB; border-radius: 8px;">
-                            <i class='bx bx-time-five' style="font-size: 20px; color: #D97706;"></i>
-                            <div>
-                                <div style="font-size: 13px; font-weight: 600; color: #92400E;">5 Policies Expiring</div>
-                                <div style="font-size: 11px; color: #111827; opacity: 0.8;">Customer renewals notice needs to be sent this week.</div>
-                            </div>
-                        </div>
+            <div class="overview-twin-layout" style="margin-bottom: 30px;">
 
-                    </div>
-                </div>
 
+                <div class="card">
+        <div class="card-header-wrapper">
+            <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
+            <span class="stat-trend-up">↑ 12.5% YoY</span>
+        </div>
+        <p class="card-subtitle-main">Daily overview of total premium collection over the last 7 days to monitor financial health.</p>
+        
+        <div id="revenueChart" style="min-height: 250px;"></div>
+    </div>
                 <div class="card">
                     <div class="card-header-wrapper">
                         <h2 class="card-title-main"><i class='bx bx-credit-card-front' style="color: var(--action-blue); vertical-align: middle; margin-right: 5px;"></i> Recent Transactions</h2>
@@ -668,20 +757,48 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><strong style="color: var(--primary-navy);">#POL-9942</strong></td>
-                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 8,500.00</td>
-                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bx-credit-card'></i> Credit Card</span></td>
-                                    <td style="color: var(--text-muted); font-size: 12px;">Just Now</td>
-                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
-                                </tr>
-                                <tr>
-                                    <td><strong style="color: var(--primary-navy);">#POL-1082</strong></td>
-                                    <td style="font-weight: 600; color: var(--primary-navy);">EGP 3,500.00</td>
-                                    <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='bx bxl-paypal'></i> PayPal</span></td>
-                                    <td style="color: var(--text-muted); font-size: 12px;">20 mins ago</td>
-                                    <td style="text-align: right;"><span class="badge" style="background: #D1FAE5; color: #065F46; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;">Success</span></td>
-                                </tr>
+                                <?php if ($recent_transactions && mysqli_num_rows($recent_transactions) > 0): ?>
+                                    <?php while ($txn = mysqli_fetch_assoc($recent_transactions)): 
+                                        $method_label = 'Credit Card';
+                                        $method_icon = 'bx bx-credit-card';
+                                        switch (strtolower($txn['method'] ?? '')) {
+                                            case 'paypal':
+                                                $method_label = 'PayPal';
+                                                $method_icon = 'bx bxl-paypal';
+                                                break;
+                                            case 'bank_transfer':
+                                                $method_label = 'Bank Transfer';
+                                                $method_icon = 'bx bx-transfer';
+                                                break;
+                                            case 'cash':
+                                                $method_label = 'Cash';
+                                                $method_icon = 'bx bx-money';
+                                                break;
+                                        }
+
+                                        $status_label = 'Success';
+                                        $status_style = 'background: #D1FAE5; color: #065F46;';
+                                        if ($txn['status'] === 'pending') {
+                                            $status_label = 'Pending';
+                                            $status_style = 'background: #FEF3C7; color: #92400E;';
+                                        } elseif ($txn['status'] === 'failed') {
+                                            $status_label = 'Failed';
+                                            $status_style = 'background: #FEE2E2; color: #991B1B;';
+                                        }
+                                    ?>
+                                        <tr>
+                                            <td><strong style="color: var(--primary-navy);">#<?= htmlspecialchars($txn['policy_number'] ?: 'N/A') ?></strong></td>
+                                            <td style="font-weight: 600; color: var(--primary-navy);">EGP <?= number_format($txn['amount'], 2) ?></td>
+                                            <td><span style="font-size: 12px; font-weight: 500; color: var(--text-main);"><i class='<?= $method_icon ?>'></i> <?= $method_label ?></span></td>
+                                            <td style="color: var(--text-muted); font-size: 12px;"><?= get_time_elapsed($txn['payment_date']) ?></td>
+                                            <td style="text-align: right;"><span class="badge" style="<?= $status_style ?> font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px;"><?= $status_label ?></span></td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 24px; color: var(--text-muted);">No transactions found.</td>
+                                    </tr>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -690,35 +807,8 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
 
-            <div class="overview-twin-layout" style="margin-bottom: 30px;">
-    
-    <div class="card">
-        <div class="card-header-wrapper">
-            <h2 class="card-title-main"><i class='bx bx-trending-up' style="color: var(--action-blue);"></i> Revenue Analytics</h2>
-            <span class="stat-trend-up">↑ 12.5% YoY</span>
-        </div>
-        <p class="card-subtitle-main">Monthly overview of total premium collection to monitor financial health.</p>
-        
-        <div id="revenueChart" style="min-height: 250px;"></div>
-    </div>
-
-    <div class="card">
-        <div class="card-header-wrapper">
-            <h2 class="card-title-main"><i class='bx bx-pie-chart-alt-2' style="color: #10B981;"></i> Risk Retention (Loss Ratio)</h2>
-            <span style="font-size: 11px; font-weight: 600; color: #1E4ED8; background: #EBF5FF; padding: 2px 8px; border-radius: 4px;">Critical KPI</span>
-        </div>
-        <p class="card-subtitle-main">Comparing total collected premiums against paid insurance claims.</p>
-        
-        <div id="lossRatioChart" style="min-height: 250px; display: flex; align-items: center; justify-content: center;"></div>
-    </div>
-
-</div>
-            
-            <!-- end test marwan wael -->
-
-
         <?php elseif ($active_tab === 'add'): ?>
-            <div class="page-title">Add New Agent</div>
+            <div class="page-title"><i class='bx bx-user-plus'></i> Add New Agent</div>
             <div class="page-subtitle">Fill in the form below to create a new agent account.</div>
 
             <div class="card">
@@ -743,7 +833,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'manage'): ?>
-            <div class="page-title"><i class='bx bx-group'></i>Manage Agents</div>
+            <div class="page-title"><i class='bx bx-group'></i> Manage Agents</div>
             <div class="page-subtitle">View, edit or remove agent accounts from the system.</div>
                         <div class="card">
     
@@ -800,7 +890,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'customers'): ?>
-            <div class="page-title"><i class='bx bx-user'></i>Customers</div>
+            <div class="page-title"><i class='bx bx-user'></i> Customers</div>
             <div class="page-subtitle">View registered customers in the system.</div>
 
             <div class="card">
@@ -851,7 +941,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'applications'): ?>
-            <div class="page-title">New Customer Applications</div>
+            <div class="page-title"><i class='bx bx-list-ul'></i> New Customer Applications</div>
             <div class="page-subtitle">Assign an agent once the customer has selected a plan and uploaded the required documents.</div>
 
             <div class="table-responsive-container">
@@ -936,7 +1026,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
 
         <?php elseif ($active_tab === 'plans'): ?>
-            <div class="page-title"><i class='bx bx-shield'></i>Insurance Plans</div>
+            <div class="page-title"><i class='bx bx-shield'></i> Insurance Plans</div>
             <div class="page-subtitle">All available plans with their eligibility rules. Customers see these during instant quotation.</div>
 
             <div class="card">
@@ -968,7 +1058,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             <th>Category</th>
                             <th>Company</th>
                             <th>Base Price</th>
-                            <!-- <th>Eligibility Rules</th> -->
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -981,21 +1070,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                     <td class="search-plan-category"><?php echo htmlspecialchars($p['category_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($p['insurance_company']); ?></td>
                                     <td><strong>$<?php echo number_format($p['base_price'], 2); ?></strong></td>
-                                    <!-- <td>
-                                        <?php
-                                        $rules = json_decode($p['eligibility_rules'] ?? '{}', true);
-                                        if ($rules) {
-                                            echo '<ul style="margin:0; padding-left:16px; font-size:12px; color:#374151; line-height:1.6;">';
-                                            foreach ($rules as $k => $v) {
-                                                $val = is_array($v) ? implode(', ', $v) : $v;
-                                                echo '<li><b>' . htmlspecialchars(str_replace('_',' ',$k)) . ':</b> ' . htmlspecialchars($val) . '</li>';
-                                            }
-                                            echo '</ul>';
-                                        } else {
-                                            echo '<small style="color:#9ca3af;">None</small>';
-                                        }
-                                        ?>
-                                    </td> -->
                                     <td>
                                         <button class="btn btn-sm btn-edit edit-plan-btn" 
                                                 data-id="<?php echo $p['plan_id']; ?>" 
@@ -1065,18 +1139,20 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         <input type="number" step="0.01" name="base_price" placeholder="Enter base price" required>
                     </div>
                     <div class="form-group">
+                        <label>Commission Rate</label>
+                        <input type="number" step="0.01" name="commission_rate" placeholder="Enter Commission Rate (e.g. 0.15)" required>
+                    </div>
+                    <div class="form-group">
                         <label>Details / Bio</label>
                         <textarea name="bio" rows="4" placeholder="Enter plan details" required></textarea>
                     </div>
 
-                    <!-- Dynamic Eligibility Rules Builder -->
                     <div class="form-group">
                         <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules <small style="color:#9ca3af;">(Auto-generated based on category)</small></label>
                         <p id="selectCategoryHint" style="color:#9ca3af; font-size:13px; margin:8px 0;">
                             <i class='bx bx-info-circle'></i> Please select a category above to see the eligibility rule fields.
                         </p>
 
-                        <!-- Car Insurance Rules -->
                         <div id="rules-car" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1107,7 +1183,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Health Insurance Rules -->
                         <div id="rules-health" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1141,7 +1216,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Life Insurance Rules -->
                         <div id="rules-life" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field">
@@ -1172,7 +1246,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- Property Insurance Rules -->
                         <div id="rules-property" class="eligibility-rules-panel" style="display:none;">
                             <div class="rules-grid">
                                 <div class="rule-field" style="grid-column: 1 / -1;">
@@ -1204,12 +1277,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                             </div>
                         </div>
 
-                        <!-- JSON Preview -->
                         <div id="jsonPreview" style="display:none; margin-top:12px;">
                             <pre id="jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                         </div>
 
-                        <!-- Hidden field that holds the final JSON -->
                         <input type="hidden" name="eligibility_rules" id="eligibilityRulesHidden">
                     </div>
 
@@ -1230,7 +1301,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                 const hiddenField = document.getElementById('eligibilityRulesHidden');
                 const allPanels = document.querySelectorAll('.eligibility-rules-panel');
 
-                // Map category names to panel IDs
                 function getCategoryKey(name) {
                     name = name.toLowerCase();
                     if (name.includes('car') || name.includes('motor') || name.includes('vehicle')) return 'car';
@@ -1245,7 +1315,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     const catName = selected.getAttribute('data-name') || '';
                     const key = getCategoryKey(catName);
 
-                    // Hide all panels
                     allPanels.forEach(p => p.style.display = 'none');
 
                     if (key) {
@@ -1262,7 +1331,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     buildJson();
                 });
 
-                // Build JSON from all visible rule inputs
                 function buildJson() {
                     const visiblePanel = document.querySelector('.eligibility-rules-panel[style*="display: block"], .eligibility-rules-panel[style*="display:block"]');
                     if (!visiblePanel) {
@@ -1274,7 +1342,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     const inputs = visiblePanel.querySelectorAll('.rule-input');
                     const json = {};
 
-                    // Group array-type checkboxes
                     const arrayGroups = {};
 
                     inputs.forEach(input => {
@@ -1282,7 +1349,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         const type = input.getAttribute('data-type');
 
                         if (type === 'array') {
-                            // Checkbox array
                             if (!arrayGroups[key]) arrayGroups[key] = [];
                             if (input.checked) {
                                 arrayGroups[key].push(input.value);
@@ -1302,14 +1368,12 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         }
                     });
 
-                    // Merge array groups
                     for (const [key, arr] of Object.entries(arrayGroups)) {
                         if (arr.length > 0) {
                             json[key] = arr;
                         }
                     }
 
-                    // Update hidden field and preview
                     if (Object.keys(json).length > 0) {
                         const jsonStr = JSON.stringify(json, null, 2);
                         hiddenField.value = JSON.stringify(json);
@@ -1321,7 +1385,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     }
                 }
 
-                // Attach listeners to all rule inputs
                 document.addEventListener('input', function(e) {
                     if (e.target.classList.contains('rule-input')) buildJson();
                 });
@@ -1332,7 +1395,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </script>
 
         <?php elseif ($active_tab === 'messages'): ?>
-            <div class="page-title"><i class='bx bx-envelope'></i>Messeges</div>
+            <div class="page-title"><i class='bx bx-envelope'></i> Messeges</div>
             <div class="page-subtitle">All messages received from customers.</div>
 
            <div class="card">
@@ -1381,8 +1444,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         </table>
     </div>
 </div>
-
-  <!-- popup -->
    <div id="messageModal" class="custom-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1410,7 +1471,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             </div>
         </div>
     </div>
-    <!-- endpopup -->
 
 
         <?php endif; ?>
@@ -1418,9 +1478,12 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    window.AdminDashboardRevenueData = <?= $chart_data_json ?>;
+    window.AdminDashboardRevenueLabels = <?= $chart_labels_json ?>;
+</script>
 <script src="/Graduation-Project/assets/js/admindashboard.js"></script>
 
-<!-- Custom Confirmation Modal -->
 <div id="customConfirmModal" class="custom-modal">
     <div class="modal-content" style="max-width: 400px; text-align: center; padding: 30px 24px;">
         <div style="font-size: 48px; color: #EF4444; margin-bottom: 16px;">
@@ -1435,7 +1498,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 </div>
 
-<!-- Edit Agent Modal -->
 <div id="editAgentModal" class="custom-modal">
     <div class="modal-content" style="max-width: 500px;">
         <div class="modal-header">
@@ -1471,7 +1533,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     </div>
 </div>
 
-<!-- Edit Plan Modal -->
 <div id="editPlanModal" class="custom-modal">
     <div class="modal-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
         <div class="modal-header">
@@ -1520,15 +1581,17 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     <input type="number" step="0.01" name="base_price" id="edit-plan-price" placeholder="Enter base price" required>
                 </div>
                 <div class="form-group">
+                    <label>Commission Rate</label>
+                    <input type="number" step="0.01" name="commission_rate" id="edit-plan-commission" placeholder="Commission Rate (e.g. 0.15)" required>
+                </div>
+                <div class="form-group">
                     <label>Details / Bio</label>
                     <textarea name="bio" id="edit-plan-bio" rows="3" placeholder="Enter plan details" required></textarea>
                 </div>
 
-                <!-- Dynamic Eligibility Rules Builder for Edit Modal -->
                 <div class="form-group">
                     <label><i class='bx bx-list-check' style="margin-right:6px;"></i>Eligibility Rules</label>
                     
-                    <!-- Car Insurance Rules -->
                     <div id="edit-rules-car" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1557,7 +1620,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Health Insurance Rules -->
                     <div id="edit-rules-health" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1591,7 +1653,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Life Insurance Rules -->
                     <div id="edit-rules-life" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field">
@@ -1622,7 +1683,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- Property Insurance Rules -->
                     <div id="edit-rules-property" class="edit-eligibility-rules-panel" style="display:none; background:white; border-radius:8px; padding:16px;">
                         <div class="rules-grid">
                             <div class="rule-field" style="grid-column: 1 / -1;">
@@ -1654,15 +1714,10 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                         </div>
                     </div>
 
-                    <!-- JSON Preview in Edit Modal -->
                     <div id="edit-jsonPreview" style="display:none; margin-top:12px;">
-                        <label style="font-size:12px; color:#9ca3af; margin-bottom:4px; display:block;">
-                            <!-- <i class='bx bx-code-alt'></i> Generatedzzz JSON (auto-filled) -->
-                        </label>
                         <pre id="edit-jsonPreviewText" style=" display:none; background:#1a1a2e; color:#4ade80; padding:14px 18px; border-radius:10px; font-size:13px; overflow-x:auto; margin:0; white-space:pre-wrap; word-break:break-word;"></pre>
                     </div>
 
-                    <!-- Hidden field to hold rules JSON -->
                     <input type="hidden" name="eligibility_rules" id="edit-eligibilityRulesHidden">
                 </div>
 
@@ -1695,7 +1750,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
         return null;
     }
 
-    // Toggle rules panel inside edit modal
     function toggleRulesPanel() {
         const selected = categorySelect.options[categorySelect.selectedIndex];
         const catName = selected ? (selected.getAttribute('data-name') || '') : '';
@@ -1717,7 +1771,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
 
     categorySelect.addEventListener('change', toggleRulesPanel);
 
-    // Build JSON for Edit Rules Panel
     function buildJson() {
         const visiblePanel = document.querySelector('.edit-eligibility-rules-panel[style*="display: block"], .edit-eligibility-rules-panel[style*="display:block"]');
         if (!visiblePanel) {
@@ -1791,6 +1844,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
             document.getElementById('edit-plan-category').value = plan.category_id;
             document.getElementById('edit-plan-company').value = plan.insurance_company;
             document.getElementById('edit-plan-price').value = plan.base_price;
+            document.getElementById('edit-plan-commission').value = plan.commission_rate;
             document.getElementById('edit-plan-bio').value = plan.bio;
 
             // Trigger Rules Panel Display
@@ -1886,7 +1940,6 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
     });
 })();
 
-// Edit modal logo upload preview
 const editZone = document.getElementById('editLogoZone');
 const editInput = document.getElementById('editLogoInput');
 const editPreview = document.getElementById('editLogoPreview');
@@ -1911,14 +1964,12 @@ if (editZone) {
     });
 }
 
-// Edit Agent Modal logic
 (function() {
     const editAgentModal = document.getElementById('editAgentModal');
     const closeBtn = document.getElementById('closeEditAgentModalBtn');
     const cancelBtn = document.getElementById('cancelEditAgentBtn');
     if (!editAgentModal) return;
 
-    // Attach click handlers to all Edit Agent buttons
     document.addEventListener('click', function(e) {
         const btn = e.target.closest('.edit-agent-btn');
         if (btn) {
@@ -1928,13 +1979,12 @@ if (editZone) {
             document.getElementById('edit-agent-id').value = agentData.user_id;
             document.getElementById('edit-agent-name').value = agentData.name;
             document.getElementById('edit-agent-email').value = agentData.email;
-            document.getElementById('edit-agent-password').value = ''; // reset password input
+            document.getElementById('edit-agent-password').value = '';
 
             editAgentModal.classList.add('show');
         }
     });
 
-    // Close Modal helpers
     function closeModal() {
         editAgentModal.classList.remove('show');
     }
@@ -1945,7 +1995,6 @@ if (editZone) {
     });
 })();
 
-// Custom Confirmation Modal logic
 (function() {
     const confirmModal = document.getElementById('customConfirmModal');
     const cancelBtn = document.getElementById('confirmModalCancelBtn');
