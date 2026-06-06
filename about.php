@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1000&auto=format&fit=crop" alt="COVERLY Team" class="img-fluid rounded-4 shadow-lg">
+                    <img src="assets/img/about-service.png" alt="COVERLY Team" class="img-fluid rounded-4 shadow-lg">
                 </div>
             </div>
         </div>
