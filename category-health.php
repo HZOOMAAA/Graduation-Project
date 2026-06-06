@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $birth_year = isset($_POST['birth_year']) ? intval($_POST['birth_year']) : 0;
 
     $client_name = isset($_POST['client_name']) ? trim(mysqli_real_escape_string($connect, $_POST['client_name'])) : '';
-    $client_phone = isset($_POST['client_phone']) ? trim(mysqli_real_escape_string($connect, $_POST['client_phone'])) : '';
+    $client_phone = isset($_POST['phone']) ? trim(mysqli_real_escape_string($connect, $_POST['phone'])) : '';
 
     $family_chronic = isset($_POST['family_chronic']) ? trim($_POST['family_chronic']) : 'no';
 
@@ -109,6 +109,19 @@ include 'includes/nav2.php';
 $user_name = isset($_SESSION['name']) ? $_SESSION['name'] : '';
 $phone = isset($_SESSION['phone']) ? $_SESSION['phone'] : '';
 
+if (isset($_SESSION['user_id'])) {
+    $user_id = intval($_SESSION['user_id']);
+    $u_query = mysqli_query($connect, "SELECT name, phone FROM users WHERE user_id = $user_id");
+    if ($u_query && mysqli_num_rows($u_query) > 0) {
+        $u_row = mysqli_fetch_assoc($u_query);
+        $user_name = $u_row['name'];
+        $phone = $u_row['phone'];
+        // Keep session in sync
+        $_SESSION['name'] = $user_name;
+        $_SESSION['phone'] = $phone;
+    }
+}
+
 $draft = $_SESSION['temp_application_data'] ?? null;
 $draft_bd = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['birth_day'] : '';
 $draft_bm = ($draft && isset($draft['category']) && $draft['category'] === 'health') ? $draft['birth_month'] : '';
@@ -170,7 +183,7 @@ $draft_children = ($draft && isset($draft['category']) && $draft['category'] ===
                             <span>+20</span>
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <input type="tel" name="client_phone" value="<?php echo htmlspecialchars($phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
+                        <input type="tel" name="phone" value="<?php echo htmlspecialchars($phone); ?>" placeholder="010 01234567" readonly class="insurance-readonly-field">
                         <i class="fa-solid fa-phone insurance-phone-icon-right"></i>
                     </div>
                 </div>
