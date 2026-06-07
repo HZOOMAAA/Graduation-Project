@@ -22,7 +22,7 @@
                     <p>Providing high-end technical solutions to elevate business efficiency. Trust and innovation are our core values in every project we deliver.</p>
                     <div class="socials">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.instagram.com/coverly2026?igsh=MTZqZWVzN25mNzk3dw==" target="_blank"  ><i class="fab fa-instagram"></i></a>
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
