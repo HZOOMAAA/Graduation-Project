@@ -1418,6 +1418,7 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                     <th style="width: 15%;">Email</th>
                     <th style="width: 15%;">Message</th>
                     <th style="width: 15%;">Date Received</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -1430,6 +1431,11 @@ $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'overview';
                                 <?php echo htmlspecialchars($msg['message']); ?>
                             </td>
                             <td style="color: var(--text-muted); font-size: 13px;"><?php echo date('M d, Y, h:i A', strtotime($msg['created_at'])); ?></td>
+                            <td>
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<?php echo urlencode($msg['email']); ?>&su=<?php echo urlencode('Reply to: ' . $msg['subject']); ?>" target="_blank" class="btn btn-sm btn-gmail" title="Send email via Gmail to <?php echo htmlspecialchars($msg['name']); ?>">
+                                    <i class='bx bx-mail-send'></i> Gmail
+                                </a>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>

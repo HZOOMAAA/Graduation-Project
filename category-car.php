@@ -11,14 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brand     = isset($_POST['brand'])     ? trim(mysqli_real_escape_string($connect, $_POST['brand']))     : '';
     $model     = isset($_POST['model'])     ? trim(mysqli_real_escape_string($connect, $_POST['model']))     : '';
     $year      = isset($_POST['year'])      ? intval($_POST['year'])                                         : 0;
-    $price     = isset($_POST['price'])     ? floatval($_POST['price'])                                      : 0;
+    $raw_price = isset($_POST['price'])     ? str_replace(',', '', $_POST['price'])                         : '0';
+    $price     = floatval($raw_price);
     $condition = isset($_POST['condition']) ? trim(mysqli_real_escape_string($connect, $_POST['condition'])) : '';
 
     $errors = [];
     if (empty($brand))     $errors[] = 'Car brand is required.';
     if (empty($model))     $errors[] = 'Car model is required.';
     if ($year < 1900)      $errors[] = 'Valid manufacture year is required.';
-    if ($price <= 0)       $errors[] = 'Estimated price must be a positive number.';
+    if ($price < 100000)   $errors[] = 'Estimated price must be at least 100,000 LE.';
     if (!in_array($condition, ['new', 'used'])) $errors[] = 'Car condition must be new or used.';
 
     if (!empty($errors)) {
@@ -153,7 +154,7 @@ $draft_condition = ($draft && isset($draft['category']) && $draft['category'] ==
 
                 <div class="input-group">
                     <label for="price">Estimated Price (EGP)</label>
-                    <input type="number" id="price" name="price" placeholder="e.g. 500000" value="<?php echo htmlspecialchars($draft_price); ?>">
+                    <input type="text" id="price" name="price" placeholder="e.g. 500,000" value="<?php echo (is_numeric($draft_price) && $draft_price > 0) ? htmlspecialchars(number_format($draft_price)) : ''; ?>">
                 </div>
 
                 <div class="radio-group">

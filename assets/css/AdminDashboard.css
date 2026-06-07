@@ -723,6 +723,18 @@ table tr:last-child td {
     background-color: #FEE2E2;
 }
 
+.btn-gmail {
+    background-color: #FEF2F2;
+    color: #EF4444;
+    border: 1px solid #FEE2E2;
+}
+
+.btn-gmail:hover {
+    background-color: #EF4444;
+    color: #FFFFFF;
+}
+
+
 /* ── 🌟 حاوية هيدر الكارت المشتركة (العنوان + البحث) ── */
 .card-search-header {
     display: flex;

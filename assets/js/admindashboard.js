@@ -208,6 +208,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!row || row.classList.contains('no-data-row') || row.id === 'messageNoResultsRow') return;
 
+        // Prevent opening the message modal if clicking on the Gmail reply button or any link
+        if (e.target.closest('.btn-gmail') || e.target.closest('a')) return;
+
         const sender  = row.cells[0].innerText.trim();
         const email   = row.cells[1].innerText.trim();
         const message = row.cells[2].innerText.trim();

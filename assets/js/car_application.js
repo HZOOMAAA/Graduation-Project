@@ -2,6 +2,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('carInsuranceForm');
     if (!form) return;
 
+    // Price input formatting as user types
+    const priceInput = document.getElementById('price');
+    if (priceInput) {
+        priceInput.addEventListener('input', function (e) {
+            let selectionStart = this.selectionStart;
+            let selectionEnd = this.selectionEnd;
+            let originalLength = this.value.length;
+
+            // Strip non-digits
+            let clean = this.value.replace(/\D/g, '');
+            // Format with commas as thousands separator
+            let formatted = clean.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            this.value = formatted;
+
+            // Adjust cursor position so it doesn't jump to the end
+            let lengthDifference = formatted.length - originalLength;
+            this.setSelectionRange(selectionStart + lengthDifference, selectionEnd + lengthDifference);
+        });
+    }
+
     form.addEventListener('submit', async function (e) {
         e.preventDefault();
 
@@ -23,8 +43,10 @@ document.addEventListener('DOMContentLoaded', function () {
             showModal('error', 'Missing Field', 'Please select the manufacture year.');
             return;
         }
-        if (!price || parseFloat(price) <= 0) {
-            showModal('error', 'Missing Field', 'Please enter a valid estimated price.');
+
+        const rawPrice = price.replace(/,/g, '');
+        if (!price || isNaN(rawPrice) || parseFloat(rawPrice) < 100000) {
+            showModal('error', 'Validation Error', 'Estimated price must be at least 100,000 LE.');
             return;
         }
         if (!condition) {
@@ -37,6 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('submitBtn').disabled = true;
 
         const formData = new FormData(form);
+        // Clean the formatted price (remove commas) before sending to the server
+        formData.set('price', rawPrice);
 
         try {
             const response = await fetch('/Graduation-Project/category-car.php', {
