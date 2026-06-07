@@ -368,12 +368,14 @@ $total_agents = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cn
 $total_customers = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM users WHERE role='customer'"))['cnt'];
 $total_plans  = mysqli_fetch_assoc(mysqli_query($connect, "SELECT COUNT(*) as cnt FROM insurance_plans"))['cnt'];
 
-// Calculate total revenue as SUM(base_price * commission_rate) for paid applications
+// Calculate total revenue as SUM(base_price * commission_rate) for completed payments
 $revenue_result = mysqli_fetch_assoc(mysqli_query($connect, "
     SELECT COALESCE(SUM(p.base_price * p.commission_rate), 0) as total_revenue
-    FROM applications a
+    FROM payments pay
+    JOIN policies pol ON pay.policy_id = pol.policy_id
+    JOIN applications a ON pol.application_id = a.application_id
     JOIN insurance_plans p ON a.plan_id = p.plan_id
-    WHERE a.status = 'paid'
+    WHERE pay.status = 'completed'
 "));
 $total_revenue = (float)($revenue_result['total_revenue'] ?? 0);
 
